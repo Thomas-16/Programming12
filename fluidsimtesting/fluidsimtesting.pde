@@ -4,12 +4,12 @@ float[] particleProperties;
 float[] densities;
 
 float particleSize = 0.02;  // In simulation units
-float particleSpacing = 0.01;
+float particleSpacing = 0.04;
 int numParticles = 800;
 
 float collisionDamping = 0.7;
 float gravity = 0;
-float smoothingRadius = 0.5;  // In simulation units
+float smoothingRadius = 0.4;  // In simulation units
 float mass = 1;
 
 float targetDensity = 2.7;
@@ -47,7 +47,7 @@ void setup() {
   }
   updateDensities();
   
-  //setupParticles();
+  setupParticles();
   
   // Update background image
   bgImg.loadPixels();
