@@ -17,6 +17,8 @@ float pressureMultiplier = 8;
 
 float viscosityStrength = 0.1;
 
+float maxSpeed = 2.5;
+
 int lastTime = 0;
 
 PImage bgImg;
@@ -114,6 +116,13 @@ void draw() {
   
   // Draw
   for (int i = 0; i < positions.length; i++) {
+    // Calculate velocity magnitude
+    float speed = velocities[i].mag();
+    
+    color particleColor = calculateParticleColor(speed);
+    fill(particleColor);
+    noStroke();
+    
     // Convert to screen space for drawing
     PVector screenPos = simToScreen(positions[i]);
     float screenSize = particleSize * (height / simHeight);
@@ -232,6 +241,24 @@ void resolveCollisions(int particleIndex) {
 
 float exampleFunction(PVector pos) {
   return cos(pos.y * 3 - 3 + sin(pos.x * 3));
+}
+
+color calculateParticleColor(float speed) {
+  float t = constrain(speed / maxSpeed, 0, 1);
+  
+  if (t < 0.25) {
+    // Blue to Cyan
+    return lerpColor(color(0, 100, 255), color(0, 255, 255), t * 4);
+  } else if (t < 0.5) {
+    // Cyan to Green
+    return lerpColor(color(0, 255, 255), color(0, 255, 0), (t - 0.25) * 4);
+  } else if (t < 0.75) {
+    // Green to Yellow
+    return lerpColor(color(0, 255, 0), color(255, 255, 0), (t - 0.5) * 4);
+  } else {
+    // Yellow to Red
+    return lerpColor(color(255, 255, 0), color(255, 50, 0), (t - 0.75) * 4);
+  }
 }
 
 //float smoothingKernel(float radius, float dist) {
