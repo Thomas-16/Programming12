@@ -6,18 +6,39 @@ color roofColor = #2684ff;
 color doorColor = #f1ff26;
 color doorKnobColor = 0;
 
+color skyColorDay = #d4fcff;
+color skyColorNight = #101414;
+
 int groundHeight = 500;
+
+float sunAngle;
 
 void setup() {
   size(800, 720);
-  
-  background(#d4fcff);
+
+}
+
+void draw() {
+  int value = (int)(degrees(sunAngle) + 90) % 360;
+  println(value);
+  color skyColor = lerpColor(skyColorNight, skyColorDay, map(value, 0, 360, 0, 1));
+  background(skyColor);
   
   stroke(0); // black outlines
   strokeWeight(3);
   
+  // draw sun
+  strokeWeight(3);
+  sunAngle += radians(1);
+  float sunX = cos(sunAngle) * 300 + width/2;
+  float sunY = sin(sunAngle) * 250 + groundHeight;
+  
+  fill(doorColor);
+  circle(sunX, sunY, 150);
+  
   // draw ground
   fill(groundColor);
+  rectMode(CORNER);
   rect(0, groundHeight, width, height);
   
   // draw house
@@ -49,12 +70,4 @@ void setup() {
   square(470, groundHeight - 70, windowHalfSize * 2);
   line(470 - windowHalfSize, groundHeight-70, 470 + windowHalfSize, groundHeight-70);
   line(470, groundHeight - 70 - windowHalfSize, 470, groundHeight - 70 + windowHalfSize);
-  
-  // draw sun
-  strokeWeight(3);
-  circle(0, 0, 250);
-  
-  
-  
-  
 }
