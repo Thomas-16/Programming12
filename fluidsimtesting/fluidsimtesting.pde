@@ -259,20 +259,6 @@ color calculateParticleColor(float speed) {
   }
 }
 
-//float smoothingKernel(float radius, float dist) {
-//  if(dist >= radius) return 0;
-  
-//  float volume = (PI * pow(radius, 4)) / 6;
-//  return (radius - dist) * (radius - dist) / volume;
-//}
-
-//float smoothingKernelDerivative(float radius, float dist) {
-//  if(dist >= radius) return 0;
-  
-//  float scale = 12 / (pow(radius, 4) * PI);
-//  return (dist - radius) * scale;
-//}
-
 PVector indexTo2D(int index, int width) {
   return new PVector(index % width, index / width);
 }
