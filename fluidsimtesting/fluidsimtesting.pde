@@ -14,7 +14,7 @@ float mass = 1;
 float targetDensity = 2.7;
 float pressureMultiplier = 6;
 
-float viscosityStrength = 0.12;
+float viscosityStrength = 0.1;
 
 float maxSpeed = 2;
 float minDistance = 0.01;
