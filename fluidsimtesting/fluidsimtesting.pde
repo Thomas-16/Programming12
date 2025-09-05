@@ -128,7 +128,7 @@ void draw() {
     // Convert to screen space for drawing
     PVector screenPos = simToScreen(positions[i]);
     float screenSize = particleSize * (height / simHeight);
-    circle(screenPos.x, screenPos.y, screenSize * 2);
+    square(screenPos.x, screenPos.y, screenSize * 2);
   }
   
   lastTime = millis();
