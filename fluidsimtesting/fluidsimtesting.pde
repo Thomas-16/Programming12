@@ -30,7 +30,8 @@ float simHeight;
 void setup() {
   frameRate = 120;
   
-  size(1280, 720, P2D);
+  // Experiemented with P2D renderer but it seems to be less efficient for some reason
+  size(1280, 720);
   
   simWidth = 4.0 * (width/ (float) height);
   simHeight = 4.0;
