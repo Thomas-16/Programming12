@@ -88,7 +88,7 @@ void setupParticles() {
 }
 
 void draw() {
-  float deltaTime = (millis() - lastTime) / 1000.0;
+  float deltaTime = min((millis() - lastTime) / 1000.0, 1.0/30.0); // Cap at 30 FPS minimum
   
   background(bgImg);
   
