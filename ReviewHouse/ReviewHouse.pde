@@ -5,6 +5,7 @@ color houseColor = #f78d23;
 color roofColor = #2684ff;
 color doorColor = #f1ff26;
 color doorKnobColor = 0;
+color moonColor = #b8b8b8;
 
 color skyColorDay = #d4fcff;
 color skyColorNight = #101414;
@@ -23,6 +24,9 @@ void draw() {
   float sunX = cos(sunAngle) * 300 + width/2;
   float sunY = sin(sunAngle) * 250 + groundHeight;
   
+  float moonX = cos(sunAngle + PI) * 300 + width/2;
+  float moonY = sin(sunAngle + PI) * 250 + groundHeight;
+  
   float t = map(sunY, groundHeight - 250, groundHeight + 250, 1.0, 0.0);
   
   color skyColor = lerpColor(skyColorNight, skyColorDay, t);
@@ -34,7 +38,11 @@ void draw() {
   // draw sun
   strokeWeight(3);
   fill(doorColor);
-  circle(sunX, sunY, 150);
+  circle(sunX, sunY, 130);
+  
+  // draw moon
+  fill(moonColor);
+  circle(moonX, moonY, 130);
   
   // draw ground
   fill(groundColor);
