@@ -19,6 +19,7 @@ float viscosityStrength = 0.12;
 
 float maxSpeed = 2;
 float minDistance = 0.01;
+float maxForce = 600;
 
 int lastTime = 0;
 
@@ -185,7 +186,6 @@ PVector calculatePressureForce(int particleIndex) {
     float sharedPressure = calculateSharedPressure(density, densities[particleIndex]);
     PVector forceContribution = PVector.mult(dir, sharedPressure * slope * mass / density);
     
-    float maxForce = 500;
     if(forceContribution.magSq() > maxForce * maxForce) {
       forceContribution.setMag(maxForce);
     }
