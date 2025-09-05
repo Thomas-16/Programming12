@@ -29,7 +29,8 @@ float simHeight;
 
 void setup() {
   frameRate = 120;
-  size(1920, 1080);
+  
+  size(1280, 720, P2D);
   
   simWidth = 4.0 * (width/ (float) height);
   simHeight = 4.0;
