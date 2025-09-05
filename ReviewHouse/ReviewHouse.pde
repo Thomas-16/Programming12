@@ -19,9 +19,13 @@ void setup() {
 }
 
 void draw() {
-  int value = (int)(degrees(sunAngle) + 90) % 360;
-  println(value);
-  color skyColor = lerpColor(skyColorNight, skyColorDay, map(value, 0, 360, 0, 1));
+  sunAngle += radians(1);
+  float sunX = cos(sunAngle) * 300 + width/2;
+  float sunY = sin(sunAngle) * 250 + groundHeight;
+  
+  float t = map(sunY, groundHeight - 250, groundHeight + 250, 1.0, 0.0);
+  
+  color skyColor = lerpColor(skyColorNight, skyColorDay, t);
   background(skyColor);
   
   stroke(0); // black outlines
@@ -29,10 +33,6 @@ void draw() {
   
   // draw sun
   strokeWeight(3);
-  sunAngle += radians(1);
-  float sunX = cos(sunAngle) * 300 + width/2;
-  float sunY = sin(sunAngle) * 250 + groundHeight;
-  
   fill(doorColor);
   circle(sunX, sunY, 150);
   
