@@ -241,10 +241,6 @@ void resolveCollisions(int particleIndex) {
   }
 }
 
-float exampleFunction(PVector pos) {
-  return cos(pos.y * 3 - 3 + sin(pos.x * 3));
-}
-
 color calculateParticleColor(float speed) {
   float t = constrain(speed / maxSpeed, 0, 1);
   
