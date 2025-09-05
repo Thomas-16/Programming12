@@ -1,6 +1,5 @@
 PVector[] positions;
 PVector[] velocities;
-float[] particleProperties;
 float[] densities;
 
 float particleSize = 0.02;  // In simulation units
@@ -42,13 +41,11 @@ void setup() {
   
   positions = new PVector[numParticles];
   velocities = new PVector[numParticles];
-  particleProperties = new float[numParticles];
   densities = new float[numParticles];
   
   for(int i = 0; i < numParticles; i++) {
     positions[i] = new PVector(random(simWidth), random(simHeight));
     velocities[i] = new PVector(0, 0);
-    particleProperties[i] = exampleFunction(positions[i]);
     
   }
   updateDensities();
@@ -58,8 +55,7 @@ void setup() {
   // Update background image
   bgImg.loadPixels();
   for(int pixel = 0; pixel < bgImg.width * bgImg.height; pixel++) {
-    PVector screenPos = indexTo2D(pixel, width);
-    PVector simPos = screenToSim(screenPos);
+    //PVector screenPos = indexTo2D(pixel, width);
     
     //float density = calculateDensity(simPos);
     //color clr = lerpColor(color(0), color(#abf8ff), density/40);
@@ -67,8 +63,6 @@ void setup() {
     
     //bgImg.pixels[pixel] = color(map(exampleFunction(simPos), -1, 1, 0, 255));
     
-    //float property = calculateProperty(simPos);
-    //bgImg.pixels[pixel] = color(property * 40);
   }
   bgImg.updatePixels();
   
@@ -85,7 +79,6 @@ void setupParticles() {
     float y = simHeight/2 + (i / particlesPerRow - particlesPerCol / 2f + 0.5f) * spacing;
     positions[i] = new PVector(x, y);
     velocities[i] = new PVector(0, 0);
-    particleProperties[i] = exampleFunction(positions[i]);
   }
   
   updateDensities();
@@ -218,18 +211,6 @@ float calculateDensity(PVector samplePoint) {
   return density;
 }
 
-float calculateProperty(PVector samplePoint) {
-  float property = 0;
-  
-  for(int i = 0; i < numParticles; i++) {
-    float dist = PVector.sub(positions[i], samplePoint).mag();
-    float influence = spikyKernel(smoothingRadius, dist);
-    float density = densities[i];
-    property += particleProperties[i] * influence * mass / density;
-  }
-  
-  return property;
-}
 
 void updateDensities() {
   for(int i = 0; i < numParticles; i++) {
