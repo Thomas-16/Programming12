@@ -1,6 +1,13 @@
+import java.util.Arrays;
+import java.util.Comparator;
+import java.util.HashMap;
+
 PVector[] positions;
 PVector[] velocities;
 float[] densities;
+
+Entry[] spatialLookup;
+HashMap<Long, Integer> startIndices;
 
 float particleSize = 0.02;  // In simulation units
 float particleSpacing = 0.04;
@@ -143,6 +150,8 @@ void draw() {
     positions[i].add(PVector.mult(velocities[i], deltaTime));
     resolveCollisions(i);
   }
+  
+  updateSpatialLookup(positions, smoothingRadius);
   
   // Draw interaction area indicator
   if (mousePressed) {
