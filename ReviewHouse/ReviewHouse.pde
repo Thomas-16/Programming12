@@ -27,55 +27,124 @@ void draw() {
   float moonX = cos(sunAngle + PI) * 300 + width/2;
   float moonY = sin(sunAngle + PI) * 250 + groundHeight;
   
-  float t = map(sunY, groundHeight - 250, groundHeight + 250, 1.0, 0.0);
+  // Draw sky 
+  drawSky(sunY);
   
+  // Draw sun and moon
+  drawSun(sunX, sunY);
+  drawMoon(moonX, moonY);
+  
+  // Draw landscape
+  drawGround();
+  drawHouse(550, groundHeight);
+}
+
+void drawSky(float sunY) {
+  float t = map(sunY, groundHeight - 250, groundHeight + 250, 1.0, 0.0);
   color skyColor = lerpColor(skyColorNight, skyColorDay, t);
   background(skyColor);
+}
+
+void drawSun(float x, float y) {
+  pushMatrix();
+  translate(x, y);
   
-  stroke(0); // black outlines
-  strokeWeight(3);
-  
-  // draw sun
+  stroke(0);
   strokeWeight(3);
   fill(doorColor);
-  circle(sunX, sunY, 130);
+  circle(0, 0, 130);
   
-  // draw moon
+  popMatrix();
+}
+
+void drawMoon(float x, float y) {
+  pushMatrix();
+  translate(x, y);
+  
+  stroke(0);
+  strokeWeight(3);
   fill(moonColor);
-  circle(moonX, moonY, 130);
+  circle(0, 0, 130);
   
-  // draw ground
+  popMatrix();
+}
+
+void drawGround() {
+  stroke(0);
+  strokeWeight(3);
   fill(groundColor);
   rectMode(CORNER);
   rect(0, groundHeight, width, height);
+}
+
+void drawHouse(float x, float y) {
+  pushMatrix();
+  translate(x, y);
   
-  // draw house
+  drawHouseBase();
+  drawChimney();
+  drawRoof();
+  drawDoor();
+  drawWindow();
+  
+  popMatrix();
+}
+
+void drawHouseBase() {
   int houseHeight = 150;
+  stroke(0);
+  strokeWeight(3);
   fill(houseColor);
   rectMode(CORNERS);
-  rect(400, groundHeight, 700, groundHeight - houseHeight);
-  
-  // draw chimney
-  rect(430, groundHeight - houseHeight, 470, groundHeight - houseHeight - 100);
-  
-  // draw roof
+  rect(-150, 0, 150, -houseHeight);
+}
+
+void drawRoof() {
+  stroke(0);
+  strokeWeight(3);
   fill(roofColor);
-  triangle(400-20, groundHeight - houseHeight, 700+20, groundHeight - houseHeight, 550, groundHeight-houseHeight - 120);
+  triangle(-170, -150, 170, -150, 0, -270);
+}
+
+void drawChimney() {
+  stroke(0);
+  strokeWeight(3);
+  fill(houseColor);
+  rectMode(CORNERS);
+  rect(-120, -150, -80, -250);
+}
+
+void drawDoor() {
+  pushMatrix();
+  translate(50, 0);
   
-  // draw door
+  stroke(0);
+  strokeWeight(3);
   fill(doorColor);
-  rect(600, groundHeight, 660, groundHeight - 100);
+  rectMode(CORNERS);
+  rect(0, 0, 60, -100);
   
-  // draw door knob
+  // Door knob
   fill(doorKnobColor);
-  circle(648, groundHeight - 50, 8);
+  circle(48, -50, 8);
   
-  // draw window
-  fill(doorColor);
+  popMatrix();
+}
+
+void drawWindow() {
+  pushMatrix();
+  translate(-80, -70);
+  
+  stroke(0);
   strokeWeight(2);
+  fill(doorColor);
   rectMode(CENTER);
   int windowHalfSize = 33;
-  square(470, groundHeight - 70, windowHalfSize * 2);
-  line(470 - windowHalfSize, groundHeight-70, 470 + windowHalfSize, groundHeight-70);
-  line(470, groundHeight - 70 - windowHalfSize, 470, groundHeight - 70 + windowHalfSize);
+  square(0, 0, windowHalfSize * 2);
+  
+  // Window cross
+  line(-windowHalfSize, 0, windowHalfSize, 0);
+  line(0, -windowHalfSize, 0, windowHalfSize);
+  
+  popMatrix();
 }
