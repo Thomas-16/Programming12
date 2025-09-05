@@ -17,7 +17,7 @@ float pressureMultiplier = 6;
 
 float viscosityStrength = 0.12;
 
-float maxSpeed = 2.5;
+float maxSpeed = 2;
 
 int lastTime = 0;
 
