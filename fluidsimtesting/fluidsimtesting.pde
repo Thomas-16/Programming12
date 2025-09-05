@@ -18,6 +18,7 @@ float pressureMultiplier = 6;
 float viscosityStrength = 0.12;
 
 float maxSpeed = 2;
+float minDistance = 0.01;
 
 int lastTime = 0;
 
@@ -132,7 +133,7 @@ void draw() {
   }
   
   lastTime = millis();
-  println(frameRate);
+  //println(frameRate);
 }
 
 float densityToPressure(float density) {
@@ -148,6 +149,13 @@ PVector calculateViscosityForce(int particleIndex) {
     if(particleIndex == i) continue;
     
     float dist = PVector.sub(positions[i], positions[particleIndex]).mag();
+    
+    if(dist > 0 && dist <= minDistance) {
+      dist = minDistance;
+    } else if (dist < 0 && dist >= -minDistance) {
+      dist = -minDistance;
+    }
+    
     if(dist < smoothingRadius && dist > 0) {
       PVector velocityDiff = PVector.sub(velocities[i], velocities[particleIndex]);
       float influence = viscosityKernel(smoothingRadius, dist);
@@ -166,12 +174,23 @@ PVector calculatePressureForce(int particleIndex) {
     if(particleIndex == i) continue;
     
     float dist = PVector.sub(positions[i], positions[particleIndex]).mag();
+    
+    // Clamp distance to prevent extreme forces
+    dist = max(dist, minDistance);
+    
     PVector dir = dist == 0 ? getRandomDir() : PVector.div(PVector.sub(positions[i], positions[particleIndex]), dist);
     
     float slope = spikyKernelDerivative(smoothingRadius, dist);
     float density = densities[i];
     float sharedPressure = calculateSharedPressure(density, densities[particleIndex]);
-    pressureForce.add(PVector.mult(dir, sharedPressure * slope * mass / density));
+    PVector forceContribution = PVector.mult(dir, sharedPressure * slope * mass / density);
+    
+    float maxForce = 500;
+    if(forceContribution.magSq() > maxForce * maxForce) {
+      forceContribution.setMag(maxForce);
+    }
+    
+    pressureForce.add(forceContribution);
   }
   
   return pressureForce;
