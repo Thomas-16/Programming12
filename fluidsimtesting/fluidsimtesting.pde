@@ -16,6 +16,9 @@ float pressureMultiplier = 6;
 
 float viscosityStrength = 0.1;
 
+float interactionRadius = 0.6;
+float interactionStrength = 60;
+
 float maxSpeed = 2;
 float minDistance = 0.01;
 float maxForce = 600;
@@ -50,7 +53,7 @@ void setup() {
   }
   updateDensities();
   
-  setupParticles();
+  //setupParticles();
   
   // Update background image
   bgImg.loadPixels();
@@ -85,18 +88,47 @@ void setupParticles() {
 }
 
 void draw() {
-  float deltaTime = min((millis() - lastTime) / 1000.0, 1.0/30.0); // Cap at 30 FPS minimum
+  float deltaTime = min((millis() - lastTime) / 1000.0, 1.0/30.0);
   
   background(bgImg);
   
   noStroke();
   fill(#00aaf2);
   
+  // Get mouse position in simulation space
+  PVector mouseSimPos = screenToSim(new PVector(mouseX, mouseY));
+  boolean isInteracting = mousePressed;
+  float currentStrength = 0;
+  
+  if (mousePressed) {
+    // Left click = push (positive), Right click = pull (negative)
+    currentStrength = (mouseButton == LEFT) ? interactionStrength : -interactionStrength;
+  }
+  
+  // Apply forces
   for (int i = 0; i < positions.length; i++) {
-    velocities[i].add(new PVector(0, gravity * deltaTime));
+    // Check if particle is within interaction radius
+    boolean affectedByInteraction = false;
+    if (isInteracting) {
+      float distToMouse = PVector.sub(mouseSimPos, positions[i]).mag();
+      affectedByInteraction = (distToMouse < interactionRadius);
+    }
+    
+    // Only apply gravity if not being interacted with
+    if (!affectedByInteraction) {
+      velocities[i].add(new PVector(0, gravity * deltaTime));
+    }
+    
+    // Apply interaction force if mouse is pressed
+    if (isInteracting && affectedByInteraction) {
+      PVector intForce = interactionForce(mouseSimPos, interactionRadius, currentStrength, i);
+      velocities[i].add(PVector.mult(intForce, deltaTime));
+    }
+    
     densities[i] = calculateDensity(positions[i]);
   }
   
+  // Continue with pressure and viscosity forces
   for (int i = 0; i < positions.length; i++) {
     PVector pressureForce = calculatePressureForce(i);
     PVector pressureAccel = PVector.div(pressureForce, densities[i]);
@@ -106,28 +138,36 @@ void draw() {
     velocities[i].add(PVector.mult(viscosityForce, deltaTime));
   }
   
+  // Update positions
   for (int i = 0; i < positions.length; i++) {
     positions[i].add(PVector.mult(velocities[i], deltaTime));
     resolveCollisions(i);
   }
   
-  // Draw
+  // Draw interaction area indicator
+  if (mousePressed) {
+    noFill();
+    stroke(255, 100);
+    strokeWeight(2);
+    PVector mouseScreenPos = simToScreen(mouseSimPos);
+    float screenRadius = interactionRadius * (height / simHeight);
+    circle(mouseScreenPos.x, mouseScreenPos.y, screenRadius * 2);
+  }
+  
+  // Draw particles
   for (int i = 0; i < positions.length; i++) {
-    // Calculate velocity magnitude
     float speed = velocities[i].mag();
     
     color particleColor = calculateParticleColor(speed);
     fill(particleColor);
     noStroke();
     
-    // Convert to screen space for drawing
     PVector screenPos = simToScreen(positions[i]);
     float screenSize = particleSize * (height / simHeight);
     circle(screenPos.x, screenPos.y, screenSize * 2);
   }
   
   lastTime = millis();
-  //println(frameRate);
 }
 
 float densityToPressure(float density) {
@@ -216,6 +256,41 @@ void updateDensities() {
   for(int i = 0; i < numParticles; i++) {
     densities[i] = calculateDensity(positions[i]);
   }
+}
+
+PVector interactionForce(PVector inputPos, float radius, float strength, int particleIndex) {
+  PVector interactionForce = new PVector(0, 0);
+  PVector offset = PVector.sub(inputPos, positions[particleIndex]);
+  float sqrDist = PVector.dot(offset, offset);
+  
+  if(sqrDist < radius * radius) {
+    float dist = sqrt(sqrDist);
+    PVector dirToInputPoint = dist <= 0 ? new PVector(0, 0) : PVector.div(offset, dist);
+    
+    if(strength > 0) {
+      // Pushing
+      float centreT = 1 - dist / radius;
+      interactionForce.add(PVector.mult(PVector.sub(PVector.mult(dirToInputPoint, strength), velocities[particleIndex]), centreT));
+    } else {
+      // Pulling
+      // Only apply force if particle is trying to escape the radius
+      // This creates a "soft boundary" effect
+      float edgeDistance = radius - dist;
+      float edgeFalloff = 1 - (edgeDistance / radius); // Stronger force near edge
+      
+      // Apply damping to velocity to "hold" the particles
+      PVector dampingForce = PVector.mult(velocities[particleIndex], -0.8);
+      
+      // Only pull if particle is near the edge of the radius
+      if(edgeFalloff > 0.5) {
+        PVector pullForce = PVector.mult(dirToInputPoint, strength * edgeFalloff);
+        interactionForce.add(pullForce);
+      }
+      interactionForce.add(dampingForce);
+    }
+  }
+  
+  return interactionForce;
 }
 
 void resolveCollisions(int particleIndex) {
