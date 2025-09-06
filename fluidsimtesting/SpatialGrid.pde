@@ -1,3 +1,17 @@
+int[][] cellOffsets = {
+  {-1, -1},
+  {0, -1},
+  {1, -1},
+  {-1, 0},
+  {0, 0},
+  {1, 0},
+  {-1, 1},
+  {0, 1},
+  {1, 1}
+};
+
+
+
 void updateSpatialLookup(PVector[] points, float radius) {
   // Initialize spatial lookup array
   spatialLookup = new Entry[points.length];
