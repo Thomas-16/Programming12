@@ -59,7 +59,7 @@ long hashCell(PVector cell) {
 }
 
 long getKeyFromHash(long hash, int tableLength) {
-  return hash % tableLength;
+  return hash % (tableLength * 2);
 }
 
 

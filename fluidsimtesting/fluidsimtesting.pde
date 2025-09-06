@@ -276,9 +276,9 @@ PVector calculatePressureForce(int particleIndex) {
         float sharedPressure = calculateSharedPressure(density, densities[particleIndex]);
         PVector forceContribution = PVector.mult(dir, sharedPressure * slope * mass / density);
         
-        if (forceContribution.magSq() > maxForce * maxForce) {
-          forceContribution.setMag(maxForce);
-        }
+        //if (forceContribution.magSq() > maxForce * maxForce) {
+        //  forceContribution.setMag(maxForce);
+        //}
         
         pressureForce.add(forceContribution);
       }
