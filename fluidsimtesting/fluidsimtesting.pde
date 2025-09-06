@@ -98,6 +98,9 @@ void draw() {
   noStroke();
   fill(#00aaf2);
   
+  // Update the spatial grid lookups
+  updateSpatialLookup(positions, smoothingRadius);
+  
   // Get mouse position in simulation space
   PVector mouseSimPos = screenToSim(new PVector(mouseX, mouseY));
   boolean isInteracting = mousePressed;
@@ -130,9 +133,6 @@ void draw() {
     
     densities[i] = calculateDensity(positions[i]);
   }
-  
-  // Update the spatial grid lookups
-  updateSpatialLookup(positions, smoothingRadius);
   
   // Continue with pressure and viscosity forces
   for (int i = 0; i < positions.length; i++) {
