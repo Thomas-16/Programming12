@@ -142,6 +142,10 @@ void draw() {
     
     PVector viscosityForce = calculateViscosityForce(i);
     velocities[i].add(PVector.mult(viscosityForce, deltaTime));
+    
+    if (velocities[i].magSq() > maxSpeed * maxSpeed) {
+      velocities[i].setMag(maxSpeed);
+    }
   }
   
   // Update positions
