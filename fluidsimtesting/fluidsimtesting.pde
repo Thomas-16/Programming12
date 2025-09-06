@@ -15,10 +15,10 @@ int numParticles = 1400;
 
 float collisionDamping = 0.67;
 float gravity = 0;
-float smoothingRadius = 0.35;  // In simulation units
+float smoothingRadius = 0.3;  // In simulation units
 float mass = 1;
 
-float targetDensity = 2.4;
+float targetDensity = 2.7;
 float pressureMultiplier = 5;
 
 float viscosityStrength = 0.1;
