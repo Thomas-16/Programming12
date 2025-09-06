@@ -63,20 +63,6 @@ void setup() {
   
   setupParticles();
   
-  // Update background image
-  bgImg.loadPixels();
-  for(int pixel = 0; pixel < bgImg.width * bgImg.height; pixel++) {
-    //PVector screenPos = indexTo2D(pixel, width);
-    
-    //float density = calculateDensity(simPos);
-    //color clr = lerpColor(color(0), color(#abf8ff), density/40);
-    //bgImg.pixels[pixel] = clr;
-    
-    //bgImg.pixels[pixel] = color(map(exampleFunction(simPos), -1, 1, 0, 255));
-    
-  }
-  bgImg.updatePixels();
-  
   lastTime = millis();
 }
 
