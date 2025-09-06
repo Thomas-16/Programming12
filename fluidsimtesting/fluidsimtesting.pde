@@ -11,19 +11,19 @@ HashMap<Long, Integer> startIndices;
 
 float particleSize = 0.02;  // In simulation units
 float particleSpacing = 0.04;
-int numParticles = 800;
+int numParticles = 1400;
 
 float collisionDamping = 0.67;
 float gravity = 0;
-float smoothingRadius = 0.4;  // In simulation units
+float smoothingRadius = 0.35;  // In simulation units
 float mass = 1;
 
-float targetDensity = 2.7;
-float pressureMultiplier = 6;
+float targetDensity = 2.4;
+float pressureMultiplier = 5;
 
 float viscosityStrength = 0.1;
 
-float interactionRadius = 0.6;
+float interactionRadius = 0.5;
 float interactionStrength = 60;
 
 float maxSpeed = 2;
@@ -42,7 +42,7 @@ void setup() {
   frameRate = 120;
   
   // Experiemented with P2D renderer but it seems to be less efficient for some reason
-  size(1280, 720);
+  size(1280, 820);
   
   simWidth = 4.0 * (width/ (float) height);
   simHeight = 4.0;
@@ -61,7 +61,7 @@ void setup() {
   updateSpatialLookup(positions, smoothingRadius);
   updateDensities();
   
-  //setupParticles();
+  setupParticles();
   
   // Update background image
   bgImg.loadPixels();
