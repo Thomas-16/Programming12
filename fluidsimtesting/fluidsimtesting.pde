@@ -6,6 +6,9 @@ PVector[] positions;
 PVector[] velocities;
 float[] densities;
 
+int gridCellsX;
+int gridCellsY;
+
 Entry[] spatialLookup;
 HashMap<Long, Integer> startIndices;
 
@@ -46,6 +49,10 @@ void setup() {
   
   simWidth = 4.0 * (width/ (float) height);
   simHeight = 4.0;
+  
+  // Calculate grid dimensions
+  gridCellsX = (int)ceil(simWidth / smoothingRadius);
+  gridCellsY = (int)ceil(simHeight / smoothingRadius);
   
   bgImg = new PImage(width, height);
   
@@ -191,7 +198,7 @@ PVector calculateViscosityForce(int particleIndex) {
     int cellX = centerX + offset[0];
     int cellY = centerY + offset[1];
     
-    if (cellX < 0 || cellY < 0) continue;
+    if (cellX < 0 || cellY < 0 || cellX >= gridCellsX || cellY >= gridCellsY) continue;
     
     long cellHash = hashCell(new PVector(cellX, cellY));
     long key = getKeyFromHash(cellHash, numParticles);
@@ -240,7 +247,7 @@ PVector calculatePressureForce(int particleIndex) {
     int cellX = centerX + offset[0];
     int cellY = centerY + offset[1];
     
-    if (cellX < 0 || cellY < 0) continue;
+    if (cellX < 0 || cellY < 0 || cellX >= gridCellsX || cellY >= gridCellsY) continue;
     
     long cellHash = hashCell(new PVector(cellX, cellY));
     long key = getKeyFromHash(cellHash, numParticles);
@@ -299,7 +306,7 @@ float calculateDensity(PVector samplePoint) {
     int cellX = centerX + offset[0];
     int cellY = centerY + offset[1];
     
-    if (cellX < 0 || cellY < 0) continue;
+    if (cellX < 0 || cellY < 0 || cellX >= gridCellsX || cellY >= gridCellsY) continue;
     
     long cellHash = hashCell(new PVector(cellX, cellY));
     long key = getKeyFromHash(cellHash, numParticles);
