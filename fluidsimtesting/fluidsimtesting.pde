@@ -1,6 +1,7 @@
 import java.util.Arrays;
 import java.util.Comparator;
 import java.util.HashMap;
+import java.util.stream.IntStream;
 
 PVector[] positions;
 PVector[] velocities;
@@ -24,7 +25,7 @@ float mass = 1;
 float targetDensity = 2.7;
 float pressureMultiplier = 5;
 
-float viscosityStrength = 0.1;
+float viscosityStrength = 0.05;
 
 float interactionRadius = 0.5;
 float interactionStrength = 60;
@@ -130,22 +131,26 @@ void draw() {
       PVector intForce = interactionForce(mouseSimPos, interactionRadius, currentStrength, i);
       velocities[i].add(PVector.mult(intForce, deltaTime));
     }
-    
-    densities[i] = calculateDensity(positions[i]);
   }
   
-  // Continue with pressure and viscosity forces
-  for (int i = 0; i < positions.length; i++) {
-    PVector pressureForce = calculatePressureForce(i);
-    PVector pressureAccel = PVector.div(pressureForce, densities[i]);
+  // update densities
+  updateDensities();
+  
+  // Calculate forces in parallel
+  PVector[] pressureForces = new PVector[numParticles];
+  PVector[] viscosityForces = new PVector[numParticles];
+  
+  IntStream.range(0, numParticles).parallel().forEach(i -> {
+    densities[i] = calculateDensity(positions[i]);
+    pressureForces[i] = calculatePressureForce(i);
+    viscosityForces[i] = calculateViscosityForce(i);
+  });
+  
+  // Then apply forces sequentially
+  for (int i = 0; i < numParticles; i++) {
+    PVector pressureAccel = PVector.div(pressureForces[i], densities[i]);
     velocities[i].add(PVector.mult(pressureAccel, deltaTime));
-    
-    PVector viscosityForce = calculateViscosityForce(i);
-    velocities[i].add(PVector.mult(viscosityForce, deltaTime));
-    
-    if (velocities[i].magSq() > maxSpeed * maxSpeed) {
-      velocities[i].setMag(maxSpeed);
-    }
+    velocities[i].add(PVector.mult(viscosityForces[i], deltaTime));
   }
   
   // Update positions
@@ -180,7 +185,7 @@ void draw() {
   
   lastTime = millis();
   
-  println(frameRate);
+  //println(frameRate);
 }
 
 float densityToPressure(float density) {
@@ -340,11 +345,10 @@ float calculateDensity(PVector samplePoint) {
 
 
 void updateDensities() {
-  for(int i = 0; i < numParticles; i++) {
+  IntStream.range(0, numParticles).parallel().forEach(i -> {
     densities[i] = calculateDensity(positions[i]);
-  }
+  });
 }
-
 PVector interactionForce(PVector inputPos, float radius, float strength, int particleIndex) {
   PVector interactionForce = new PVector(0, 0);
   PVector offset = PVector.sub(inputPos, positions[particleIndex]);
