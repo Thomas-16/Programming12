@@ -14,13 +14,13 @@ int gridCellsY;
 Entry[] spatialLookup;
 HashMap<Long, Integer> startIndices;
 
-float particleSize = 0.02;  // In simulation units
-float particleSpacing = 0.02;
-int numParticles = 3000;
+float particleSize = 0.0175;  // In simulation units
+float particleSpacing = 0.015;
+int numParticles = 3500;
 
 float collisionDamping = 0.67;
 float gravity = 0;
-float smoothingRadius = 0.45;  // In simulation units
+float smoothingRadius = 0.35;  // In simulation units
 float mass = 1;
 
 float targetDensity = 2.7;
