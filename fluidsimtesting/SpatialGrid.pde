@@ -17,13 +17,13 @@ void updateSpatialLookup(PVector[] points, float radius) {
   spatialLookup = new Entry[points.length];
   startIndices = new HashMap<Long, Integer>();
   
-  // Create spatial lookup entries (unordered)
-  for (int i = 0; i < points.length; i++) {
+  // Create spatial lookup entries in parallel (unordered)
+  IntStream.range(0, numParticles).parallel().forEach(i -> {
     PVector cellCoord = positionToCellCoord(points[i], radius);
     long cellHash = hashCell(cellCoord);
     long cellKey = getKeyFromHash(cellHash, points.length);
     spatialLookup[i] = new Entry(i, cellKey);
-  }
+  });
   
   // Sort by cell key
   Arrays.sort(spatialLookup, new Comparator<Entry>() {
