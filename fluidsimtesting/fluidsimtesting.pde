@@ -105,15 +105,13 @@ void draw() {
   // Get mouse position in simulation space
   PVector mouseSimPos = screenToSim(new PVector(mouseX, mouseY));
   boolean isInteracting = mousePressed;
-  float currentStrength = 0;
   
-  if (mousePressed) {
-    // Left click = push (positive), Right click = pull (negative)
-    currentStrength = (mouseButton == LEFT) ? interactionStrength : -interactionStrength;
-  }
+  // Make currentStrength final by initializing it in one statement
+  final float currentStrength = mousePressed ? 
+    ((mouseButton == LEFT) ? interactionStrength : -interactionStrength) : 0;
   
-  // Apply forces
-  for (int i = 0; i < positions.length; i++) {
+  // Apply forces in parallel
+  IntStream.range(0, positions.length).parallel().forEach(i -> {
     // Check if particle is within interaction radius
     boolean affectedByInteraction = false;
     if (isInteracting) {
@@ -134,7 +132,7 @@ void draw() {
     
     // Predict next positions
     predictedPositions[i] = PVector.add(positions[i], PVector.mult(velocities[i], 1 / 60.0));
-  }
+  });
   
   // Update the spatial grid lookups
   updateSpatialLookup(predictedPositions, smoothingRadius);
@@ -158,11 +156,11 @@ void draw() {
     velocities[i].add(PVector.mult(viscosityForces[i], deltaTime));
   }
   
-  // Update positions
-  for (int i = 0; i < positions.length; i++) {
+  // Update positions in parallel
+  IntStream.range(0, positions.length).parallel().forEach(i -> {
     positions[i].add(PVector.mult(velocities[i], deltaTime));
     resolveCollisions(i);
-  }
+  });
   
   
   // Draw interaction area indicator
