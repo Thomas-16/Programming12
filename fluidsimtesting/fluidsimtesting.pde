@@ -117,8 +117,8 @@ void draw() {
   final float currentStrength = mousePressed ? 
     ((mouseButton == LEFT) ? interactionStrength : -interactionStrength) : 0;
   
-  // Apply forces in parallel
-  IntStream.range(0, positions.length).parallel().forEach(i -> {
+  // Apply gravity and interaction forces and calculate predict next positions
+  for(int i = 0; i < numParticles; i++) {
     // Check if particle is within interaction radius
     boolean affectedByInteraction = false;
     if (isInteracting) {
@@ -139,7 +139,7 @@ void draw() {
     
     // Predict next positions
     predictedPositions[i] = PVector.add(positions[i], PVector.mult(velocities[i], 1 / 60.0));
-  });
+  }
   
   // Update the spatial grid lookups
   updateSpatialLookup(predictedPositions, smoothingRadius);
@@ -157,11 +157,11 @@ void draw() {
     velocities[i].add(PVector.mult(viscosityForce, deltaTime));
   });
   
-  // Update positions in parallel
-  IntStream.range(0, positions.length).parallel().forEach(i -> {
+  // Update positions
+  for(int i = 0; i < numParticles; i++) {
     positions[i].add(PVector.mult(velocities[i], deltaTime));
     resolveCollisions(i);
-  });
+  }
   
   
   // Draw interaction area indicator
