@@ -116,8 +116,8 @@ void draw() {
     // Check if particle is within interaction radius
     boolean affectedByInteraction = false;
     if (isInteracting) {
-      float distToMouse = PVector.sub(mouseSimPos, positions[i]).mag();
-      affectedByInteraction = (distToMouse < interactionRadius);
+      float distToMouseSq = PVector.sub(mouseSimPos, positions[i]).magSq();
+      affectedByInteraction = (distToMouseSq < interactionRadius * interactionRadius);
     }
     
     // Only apply gravity if not being interacted with
@@ -266,10 +266,11 @@ PVector calculatePressureForce(int particleIndex) {
       int neighborIndex = spatialLookup[i].particleIndex;
       if (neighborIndex == particleIndex) continue;
       
-      float dist = PVector.sub(positions[neighborIndex], particlePos).mag();
+      float distSq = PVector.sub(positions[neighborIndex], particlePos).magSq();
       
       // Only process if within smoothing radius
-      if (dist < smoothingRadius) {
+      if (distSq < smoothingRadius * smoothingRadius) {
+        float dist = sqrt(distSq);
         dist = max(dist, minDistance);
         
         PVector dir = dist == 0 ? getRandomDir() : 
@@ -324,9 +325,10 @@ float calculateDensity(PVector samplePoint) {
       if (spatialLookup[i].cellKey != key) break;
       
       int particleIndex = spatialLookup[i].particleIndex;
-      float dist = PVector.sub(positions[particleIndex], samplePoint).mag();
+      float distSq = PVector.sub(positions[particleIndex], samplePoint).magSq();
       
-      if (dist < smoothingRadius) {
+      if (distSq < smoothingRadius * smoothingRadius) {
+        float dist = sqrt(distSq);
         float influence = poly6Kernel(smoothingRadius, dist);
         density += mass * influence;
       }
