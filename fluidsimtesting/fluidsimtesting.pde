@@ -15,8 +15,8 @@ Entry[] spatialLookup;
 HashMap<Long, Integer> startIndices;
 
 float particleSize = 0.02;  // In simulation units
-float particleSpacing = 0.04;
-int numParticles = 1400;
+float particleSpacing = 0.02;
+int numParticles = 3000;
 
 float collisionDamping = 0.67;
 float gravity = 0;
