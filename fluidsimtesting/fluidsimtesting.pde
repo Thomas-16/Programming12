@@ -99,9 +99,6 @@ void draw() {
   noStroke();
   fill(#00aaf2);
   
-  // Update the spatial grid lookups
-  updateSpatialLookup(positions, smoothingRadius);
-  
   // Get mouse position in simulation space
   PVector mouseSimPos = screenToSim(new PVector(mouseX, mouseY));
   boolean isInteracting = mousePressed;
@@ -133,6 +130,9 @@ void draw() {
     }
   }
   
+  // Update the spatial grid lookups
+  updateSpatialLookup(positions, smoothingRadius);
+  
   // update densities
   updateDensities();
   
@@ -141,7 +141,6 @@ void draw() {
   PVector[] viscosityForces = new PVector[numParticles];
   
   IntStream.range(0, numParticles).parallel().forEach(i -> {
-    densities[i] = calculateDensity(positions[i]);
     pressureForces[i] = calculatePressureForce(i);
     viscosityForces[i] = calculateViscosityForce(i);
   });
