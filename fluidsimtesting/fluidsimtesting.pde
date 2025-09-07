@@ -276,6 +276,7 @@ PVector calculatePressureForce(int particleIndex) {
           PVector.div(PVector.sub(positions[neighborIndex], particlePos), dist);
         
         float slope = spikyKernelDerivative(smoothingRadius, dist);
+        slope = constrain(slope, -1000, 1000);
         float density = densities[neighborIndex];
         float sharedPressure = calculateSharedPressure(density, densities[particleIndex]);
         PVector forceContribution = PVector.mult(dir, sharedPressure * slope * mass / density);
