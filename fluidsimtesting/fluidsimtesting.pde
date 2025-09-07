@@ -6,6 +6,7 @@ import java.util.stream.IntStream;
 PVector[] positions;
 PVector[] velocities;
 float[] densities;
+PVector[] predictedPositions;
 
 int gridCellsX;
 int gridCellsY;
@@ -25,7 +26,7 @@ float mass = 1;
 float targetDensity = 2.7;
 float pressureMultiplier = 5;
 
-float viscosityStrength = 0.05;
+float viscosityStrength = 0.04;
 
 float interactionRadius = 0.5;
 float interactionStrength = 60;
@@ -60,14 +61,15 @@ void setup() {
   positions = new PVector[numParticles];
   velocities = new PVector[numParticles];
   densities = new float[numParticles];
+  predictedPositions = new PVector[numParticles];
   
   for(int i = 0; i < numParticles; i++) {
     positions[i] = new PVector(random(simWidth), random(simHeight));
     velocities[i] = new PVector(0, 0);
-    
+    predictedPositions[i] = positions[i].copy();
   }
   updateSpatialLookup(positions, smoothingRadius);
-  updateDensities();
+  updateDensities(positions);
   
   setupParticles();
   
@@ -84,10 +86,11 @@ void setupParticles() {
     float y = simHeight/2 + (i / particlesPerRow - particlesPerCol / 2f + 0.5f) * spacing;
     positions[i] = new PVector(x, y);
     velocities[i] = new PVector(0, 0);
+    predictedPositions[i] = positions[i].copy();
   }
   
   updateSpatialLookup(positions, smoothingRadius);
-  updateDensities();
+  updateDensities(positions);
   
 }
 
@@ -128,21 +131,24 @@ void draw() {
       PVector intForce = interactionForce(mouseSimPos, interactionRadius, currentStrength, i);
       velocities[i].add(PVector.mult(intForce, deltaTime));
     }
+    
+    // Predict next positions
+    predictedPositions[i] = PVector.add(positions[i], PVector.mult(velocities[i], 1 / 60.0));
   }
   
   // Update the spatial grid lookups
-  updateSpatialLookup(positions, smoothingRadius);
+  updateSpatialLookup(predictedPositions, smoothingRadius);
   
   // update densities
-  updateDensities();
+  updateDensities(predictedPositions);
   
   // Calculate forces in parallel
   PVector[] pressureForces = new PVector[numParticles];
   PVector[] viscosityForces = new PVector[numParticles];
   
   IntStream.range(0, numParticles).parallel().forEach(i -> {
-    pressureForces[i] = calculatePressureForce(i);
-    viscosityForces[i] = calculateViscosityForce(i);
+    pressureForces[i] = calculatePressureForce(predictedPositions, i);
+    viscosityForces[i] = calculateViscosityForce(predictedPositions, i);
   });
   
   // Then apply forces sequentially
@@ -193,9 +199,9 @@ float densityToPressure(float density) {
   return pressure;
 }
 
-PVector calculateViscosityForce(int particleIndex) {
+PVector calculateViscosityForce(PVector[] posArr, int particleIndex) {
   PVector viscosityForce = new PVector(0, 0);
-  PVector particlePos = positions[particleIndex];
+  PVector particlePos = posArr[particleIndex];
   
   PVector centerCell = positionToCellCoord(particlePos, smoothingRadius);
   int centerX = (int)centerCell.x;
@@ -221,7 +227,7 @@ PVector calculateViscosityForce(int particleIndex) {
       int neighborIndex = spatialLookup[i].particleIndex;
       if (neighborIndex == particleIndex) continue;
       
-      float dist = PVector.sub(positions[neighborIndex], particlePos).mag();
+      float dist = PVector.sub(posArr[neighborIndex], particlePos).mag();
       
       if (dist > 0 && dist <= minDistance) {
         dist = minDistance;
@@ -242,9 +248,9 @@ PVector calculateViscosityForce(int particleIndex) {
   return viscosityForce;
 }
 
-PVector calculatePressureForce(int particleIndex) {
+PVector calculatePressureForce(PVector[] posArr, int particleIndex) {
   PVector pressureForce = new PVector(0, 0);
-  PVector particlePos = positions[particleIndex];
+  PVector particlePos = posArr[particleIndex];
   
   PVector centerCell = positionToCellCoord(particlePos, smoothingRadius);
   int centerX = (int)centerCell.x;
@@ -270,7 +276,7 @@ PVector calculatePressureForce(int particleIndex) {
       int neighborIndex = spatialLookup[i].particleIndex;
       if (neighborIndex == particleIndex) continue;
       
-      float distSq = PVector.sub(positions[neighborIndex], particlePos).magSq();
+      float distSq = PVector.sub(posArr[neighborIndex], particlePos).magSq();
       
       // Only process if within smoothing radius
       if (distSq < smoothingRadius * smoothingRadius) {
@@ -278,7 +284,7 @@ PVector calculatePressureForce(int particleIndex) {
         dist = max(dist, minDistance);
         
         PVector dir = dist == 0 ? getRandomDir() : 
-          PVector.div(PVector.sub(positions[neighborIndex], particlePos), dist);
+          PVector.div(PVector.sub(posArr[neighborIndex], particlePos), dist);
         
         float slope = spikyKernelDerivative(smoothingRadius, dist);
         slope = constrain(slope, -1000, 1000);
@@ -304,7 +310,7 @@ float calculateSharedPressure(float densityA, float densityB) {
   return (pressureA + pressureB) / 2;
 }
 
-float calculateDensity(PVector samplePoint) {
+float calculateDensity(PVector[] posArr, PVector samplePoint) {
   float density = 0;
   
   PVector centerCell = positionToCellCoord(samplePoint, smoothingRadius);
@@ -329,7 +335,7 @@ float calculateDensity(PVector samplePoint) {
       if (spatialLookup[i].cellKey != key) break;
       
       int particleIndex = spatialLookup[i].particleIndex;
-      float distSq = PVector.sub(positions[particleIndex], samplePoint).magSq();
+      float distSq = PVector.sub(posArr[particleIndex], samplePoint).magSq();
       
       if (distSq < smoothingRadius * smoothingRadius) {
         float dist = sqrt(distSq);
@@ -343,9 +349,9 @@ float calculateDensity(PVector samplePoint) {
 }
 
 
-void updateDensities() {
+void updateDensities(PVector[] posArr) {
   IntStream.range(0, numParticles).parallel().forEach(i -> {
-    densities[i] = calculateDensity(positions[i]);
+    densities[i] = calculateDensity(posArr, posArr[i]);
   });
 }
 PVector interactionForce(PVector inputPos, float radius, float strength, int particleIndex) {
