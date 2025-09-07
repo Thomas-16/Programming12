@@ -1,54 +1,81 @@
-// ============ POLY6 KERNEL (for density) ============
-// Smooth everywhere, good for density calculations
-float poly6Kernel(float radius, float dist) {
-  if (dist >= radius) return 0;
-  
-  float scale = 4.0 / (PI * pow(radius, 8));  // 2D normalization
-  float diff = radius * radius - dist * dist;
-  return scale * diff * diff * diff;
+float densityKernel(float dst, float radius)
+{
+  return SpikyKernelPow2(dst, radius);
 }
 
-float poly6KernelDerivative(float radius, float dist) {
-  if (dist >= radius) return 0;
-  
-  float scale = -24.0 / (PI * pow(radius, 8));  // 2D normalization
-  float diff = radius * radius - dist * dist;
-  return scale * dist * diff * diff;
+float nearDensityKernel(float dst, float radius)
+{
+  return SpikyKernelPow3(dst, radius);
 }
 
-// ============ SPIKY KERNEL (for pressure) ============
-// Better for pressure - avoids particle clustering
-float spikyKernel(float radius, float dist) {
-  if (dist >= radius) return 0;
-  
-  float scale = 10.0 / (PI * pow(radius, 5));  // 2D normalization
-  float diff = radius - dist;
-  return scale * diff * diff * diff;
+float densityDerivative(float dst, float radius)
+{
+  return DerivativeSpikyPow2(dst, radius);
 }
 
-float spikyKernelDerivative(float radius, float dist) {
-  if (dist >= radius) return 0;
-  
-  float scale = -30.0 / (PI * pow(radius, 5));  // 2D normalization
-  float diff = radius - dist;
-  return scale * diff * diff;
+float nearDensityDerivative(float dst, float radius)
+{
+  return DerivativeSpikyPow3(dst, radius);
 }
 
-// ============ VISCOSITY KERNEL (for viscosity) ============
-// Linear in distance, positive Laplacian everywhere
-float viscosityKernel(float radius, float dist) {
-  if (dist >= radius) return 0;
-  
-  float scale = 40.0 / (PI * pow(radius, 5));  // 2D normalization
-  float term1 = -dist * dist * dist / (2 * radius * radius * radius);
-  float term2 = dist * dist / (radius * radius);
-  float term3 = radius / (2 * dist);
-  return scale * (term1 + term2 + term3 - 1);
+float viscosityKernel(float dst, float radius)
+{
+  return SmoothingKernelPoly6(dst, radius);
 }
 
-float viscosityKernelLaplacian(float radius, float dist) {
-  if (dist >= radius) return 0;
-  
-  float scale = 40.0 / (PI * pow(radius, 5));  // 2D normalization
-  return scale * (radius - dist);
+
+float Poly6ScalingFactor = 1;
+float SpikyPow3ScalingFactor = 1;
+float SpikyPow2ScalingFactor = 1;
+float SpikyPow3DerivativeScalingFactor = 1;
+float SpikyPow2DerivativeScalingFactor = 1;
+
+float SmoothingKernelPoly6(float dst, float radius)
+{
+  if (dst < radius)
+  {
+    float v = radius * radius - dst * dst;
+    return v * v * v * Poly6ScalingFactor;
+  }
+  return 0;
+}
+
+float SpikyKernelPow3(float dst, float radius)
+{
+  if (dst < radius)
+  {
+    float v = radius - dst;
+    return v * v * v * SpikyPow3ScalingFactor;
+  }
+  return 0;
+}
+
+float SpikyKernelPow2(float dst, float radius)
+{
+  if (dst < radius)
+  {
+    float v = radius - dst;
+    return v * v * SpikyPow2ScalingFactor;
+  }
+  return 0;
+}
+
+float DerivativeSpikyPow3(float dst, float radius)
+{
+  if (dst <= radius)
+  {
+    float v = radius - dst;
+    return -v * v * SpikyPow3DerivativeScalingFactor;
+  }
+  return 0;
+}
+
+float DerivativeSpikyPow2(float dst, float radius)
+{
+  if (dst <= radius)
+  {
+    float v = radius - dst;
+    return -v * SpikyPow2DerivativeScalingFactor;
+  }
+  return 0;
 }

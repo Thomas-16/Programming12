@@ -19,14 +19,14 @@ float particleSpacing = 0.015;
 int numParticles = 3500;
 
 float collisionDamping = 0.67;
-float gravity = 0;
-float smoothingRadius = 0.35;  // In simulation units
+float gravity = 10;
+float smoothingRadius = 0.4;  // In simulation units
 float mass = 1;
 
-float targetDensity = 2.7;
-float pressureMultiplier = 5;
+float targetDensity = 110;
+float pressureMultiplier = 55;
 
-float viscosityStrength = 0.04;
+float viscosityStrength = 0.8;
 
 float interactionRadius = 0.5;
 float interactionStrength = 60;
@@ -49,12 +49,19 @@ void setup() {
   // Experiemented with P2D renderer but it seems to be less efficient for some reason
   size(1280, 820);
   
-  simWidth = 4.0 * (width/ (float) height);
-  simHeight = 4.0;
+  simWidth = 4.5 * (width/ (float) height);
+  simHeight = 4.5;
   
   // Calculate grid dimensions
   gridCellsX = (int)ceil(simWidth / smoothingRadius);
   gridCellsY = (int)ceil(simHeight / smoothingRadius);
+  
+  // Init kernel scaling factors
+  Poly6ScalingFactor = PI * pow(smoothingRadius, 8);
+  SpikyPow3ScalingFactor = 10 / (PI * pow(smoothingRadius, 5));
+  SpikyPow2ScalingFactor = 6 / (PI * pow(smoothingRadius, 4));
+  SpikyPow3DerivativeScalingFactor = 30 / (pow(smoothingRadius, 5) * PI);
+  SpikyPow2DerivativeScalingFactor = 12 / (pow(smoothingRadius, 4) * PI);
   
   bgImg = new PImage(width, height);
   
@@ -229,7 +236,7 @@ PVector calculateViscosityForce(PVector[] posArr, int particleIndex) {
       
       if (dist < smoothingRadius && dist > 0) {
         PVector velocityDiff = PVector.sub(velocities[neighborIndex], velocities[particleIndex]);
-        float influence = viscosityKernel(smoothingRadius, dist);
+        float influence = viscosityKernel(dist, smoothingRadius);
         
         viscosityForce.add(PVector.mult(velocityDiff, 
           viscosityStrength * influence * mass / densities[neighborIndex]));
@@ -278,7 +285,7 @@ PVector calculatePressureForce(PVector[] posArr, int particleIndex) {
         PVector dir = dist == 0 ? getRandomDir() : 
           PVector.div(PVector.sub(posArr[neighborIndex], particlePos), dist);
         
-        float slope = spikyKernelDerivative(smoothingRadius, dist);
+        float slope = densityDerivative(dist, smoothingRadius);
         slope = constrain(slope, -1000, 1000);
         float density = densities[neighborIndex];
         float sharedPressure = calculateSharedPressure(density, densities[particleIndex]);
@@ -331,7 +338,7 @@ float calculateDensity(PVector[] posArr, PVector samplePoint) {
       
       if (distSq < smoothingRadius * smoothingRadius) {
         float dist = sqrt(distSq);
-        float influence = poly6Kernel(smoothingRadius, dist);
+        float influence = densityKernel(dist, smoothingRadius);
         density += mass * influence;
       }
     }
