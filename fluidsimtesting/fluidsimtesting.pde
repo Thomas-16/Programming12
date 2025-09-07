@@ -141,20 +141,14 @@ void draw() {
   updateDensities(predictedPositions);
   
   // Calculate forces in parallel
-  PVector[] pressureForces = new PVector[numParticles];
-  PVector[] viscosityForces = new PVector[numParticles];
-  
   IntStream.range(0, numParticles).parallel().forEach(i -> {
-    pressureForces[i] = calculatePressureForce(predictedPositions, i);
-    viscosityForces[i] = calculateViscosityForce(predictedPositions, i);
-  });
-  
-  // Then apply forces sequentially
-  for (int i = 0; i < numParticles; i++) {
-    PVector pressureAccel = PVector.div(pressureForces[i], densities[i]);
+    PVector pressureForce = calculatePressureForce(predictedPositions, i);
+    PVector viscosityForce = calculateViscosityForce(predictedPositions, i);
+    
+    PVector pressureAccel = PVector.div(pressureForce, densities[i]);
     velocities[i].add(PVector.mult(pressureAccel, deltaTime));
-    velocities[i].add(PVector.mult(viscosityForces[i], deltaTime));
-  }
+    velocities[i].add(PVector.mult(viscosityForce, deltaTime));
+  });
   
   // Update positions in parallel
   IntStream.range(0, positions.length).parallel().forEach(i -> {
