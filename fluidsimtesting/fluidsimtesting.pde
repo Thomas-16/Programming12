@@ -6,6 +6,7 @@ import java.util.stream.IntStream;
 PVector[] positions;
 PVector[] velocities;
 float[] densities;
+float[] nearDensities;
 PVector[] predictedPositions;
 
 int gridCellsX;
@@ -23,8 +24,9 @@ float gravity = 10;
 float smoothingRadius = 0.35;  // In simulation units
 float mass = 1;
 
-float targetDensity = 110;
+float targetDensity = 120;
 float pressureMultiplier = 55;
+float nearPressureMultiplier = 14;
 
 float viscosityStrength = 0.8;
 
@@ -68,6 +70,7 @@ void setup() {
   positions = new PVector[numParticles];
   velocities = new PVector[numParticles];
   densities = new float[numParticles];
+  nearDensities = new float[numParticles];
   predictedPositions = new PVector[numParticles];
   
   for(int i = 0; i < numParticles; i++) {
@@ -192,11 +195,6 @@ void draw() {
   //println(frameRate);
 }
 
-float densityToPressure(float density) {
-  float densityError = density - targetDensity;
-  float pressure = densityError * pressureMultiplier;
-  return pressure;
-}
 
 PVector calculateViscosityForce(PVector[] posArr, int particleIndex) {
   PVector viscosityForce = new PVector(0, 0);
@@ -286,14 +284,15 @@ PVector calculatePressureForce(PVector[] posArr, int particleIndex) {
           PVector.div(PVector.sub(posArr[neighborIndex], particlePos), dist);
         
         float slope = densityDerivative(dist, smoothingRadius);
+        float nearDensitySlope = nearDensityDerivative(dist, smoothingRadius);
         slope = constrain(slope, -1000, 1000);
         float density = densities[neighborIndex];
+        float nearDensity = nearDensities[neighborIndex];
         float sharedPressure = calculateSharedPressure(density, densities[particleIndex]);
+        float sharedNearPressure = calculateSharedNearPressure(nearDensity, nearDensities[particleIndex]);
         PVector forceContribution = PVector.mult(dir, sharedPressure * slope * mass / density);
+        forceContribution.add(PVector.mult(dir, sharedNearPressure * nearDensitySlope * mass / density));
         
-        //if (forceContribution.magSq() > maxForce * maxForce) {
-        //  forceContribution.setMag(maxForce);
-        //}
         
         pressureForce.add(forceContribution);
       }
@@ -308,50 +307,57 @@ float calculateSharedPressure(float densityA, float densityB) {
   float pressureB = densityToPressure(densityB);
   return (pressureA + pressureB) / 2;
 }
-
-float calculateDensity(PVector[] posArr, PVector samplePoint) {
-  float density = 0;
-  
-  PVector centerCell = positionToCellCoord(samplePoint, smoothingRadius);
-  int centerX = (int)centerCell.x;
-  int centerY = (int)centerCell.y;
-  
-  // Loop over 3x3 grid of cells
-  for (int[] offset : cellOffsets) {
-    int cellX = centerX + offset[0];
-    int cellY = centerY + offset[1];
-    
-    if (cellX < 0 || cellY < 0 || cellX >= gridCellsX || cellY >= gridCellsY) continue;
-    
-    long cellHash = hashCell(new PVector(cellX, cellY));
-    long key = getKeyFromHash(cellHash, numParticles);
-    
-    Integer cellStartIndex = startIndices.get(key);
-    if (cellStartIndex == null) continue;
-    
-    // Loop over particles in this cell
-    for (int i = cellStartIndex; i < spatialLookup.length; i++) {
-      if (spatialLookup[i].cellKey != key) break;
-      
-      int particleIndex = spatialLookup[i].particleIndex;
-      float distSq = PVector.sub(posArr[particleIndex], samplePoint).magSq();
-      
-      if (distSq < smoothingRadius * smoothingRadius) {
-        float dist = sqrt(distSq);
-        float influence = densityKernel(dist, smoothingRadius);
-        density += mass * influence;
-      }
-    }
-  }
-  
-  return density;
+float calculateSharedNearPressure(float nearDensityA, float nearDensityB) {
+    float nearPressureA = densityToNearPressure(nearDensityA);
+    float nearPressureB = densityToNearPressure(nearDensityB);
+    return (nearPressureA + nearPressureB) / 2;
 }
 
 
 void updateDensities(PVector[] posArr) {
   IntStream.range(0, numParticles).parallel().forEach(i -> {
-    densities[i] = calculateDensity(posArr, posArr[i]);
+    float density = 0;
+    float nearDensity = 0;
+    PVector samplePoint = posArr[i];
+  
+    PVector centerCell = positionToCellCoord(samplePoint, smoothingRadius);
+    int centerX = (int)centerCell.x;
+    int centerY = (int)centerCell.y;
+    
+    // Loop over 3x3 grid of cells
+    for (int[] offset : cellOffsets) {
+      int cellX = centerX + offset[0];
+      int cellY = centerY + offset[1];
+      
+      if (cellX < 0 || cellY < 0 || cellX >= gridCellsX || cellY >= gridCellsY) continue;
+      
+      long cellHash = hashCell(new PVector(cellX, cellY));
+      long key = getKeyFromHash(cellHash, numParticles);
+      
+      Integer cellStartIndex = startIndices.get(key);
+      if (cellStartIndex == null) continue;
+      
+      // Loop over particles in this cell
+      for (int j = cellStartIndex; j < spatialLookup.length; j++) {
+        if (spatialLookup[j].cellKey != key) break;
+        
+        int particleIndex = spatialLookup[j].particleIndex;
+        float distSq = PVector.sub(posArr[particleIndex], samplePoint).magSq();
+        
+        if (distSq < smoothingRadius * smoothingRadius) {
+          float dist = sqrt(distSq);
+          float influence = densityKernel(dist, smoothingRadius);
+          density += mass * influence;
+          nearDensity += mass * nearDensityKernel(dist, smoothingRadius);
+        }
+        
+      }
+    }
+    
+    densities[i] = density;
+    nearDensities[i] = nearDensity;
   });
+  
 }
 PVector interactionForce(PVector inputPos, float radius, float strength, int particleIndex) {
   PVector interactionForce = new PVector(0, 0);
@@ -386,6 +392,15 @@ PVector interactionForce(PVector inputPos, float radius, float strength, int par
   }
   
   return interactionForce;
+}
+
+float densityToPressure(float density) {
+  float densityError = density - targetDensity;
+  float pressure = densityError * pressureMultiplier;
+  return pressure;
+}
+float densityToNearPressure(float nearDensity) {
+  return nearPressureMultiplier * nearDensity;
 }
 
 void resolveCollisions(int particleIndex) {
