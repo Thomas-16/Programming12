@@ -349,7 +349,6 @@ void updateDensities(PVector[] posArr) {
         
         int particleIndex = spatialLookup[j].particleIndex;
         
-        // Avoid PVector.sub() here:
         float dx = posArr[particleIndex].x - samplePoint.x;
         float dy = posArr[particleIndex].y - samplePoint.y;
         float distSq = dx*dx + dy*dy;
