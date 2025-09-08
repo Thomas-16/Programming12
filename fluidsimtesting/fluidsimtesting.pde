@@ -38,11 +38,6 @@ float maxSpeed = 3f;
 float minDistance = 0.01f;
 float maxForce = 600f;
 
-// Reusable vectors to avoid allocation in loops
-PVector tempVec = new PVector();
-PVector tempVec2 = new PVector();
-PVector gravityForce = new PVector(0, 0);
-
 int lastTime = 0;
 
 PImage bgImg;
