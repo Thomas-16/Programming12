@@ -273,10 +273,10 @@ PVector calculatePressureForce(PVector[] posArr, int particleIndex) {
       int neighborIndex = spatialLookup[i].particleIndex;
       if (neighborIndex == particleIndex) continue;
       
-      float distSq = PVector.sub(posArr[neighborIndex], particlePos).magSq();
-      
-      // Only process if within smoothing radius
-      if (distSq < smoothingRadius * smoothingRadius) {
+      float dx = posArr[neighborIndex].x - particlePos.x;
+      float dy = posArr[neighborIndex].y - particlePos.y;
+      float distSq = dx*dx + dy*dy;
+      if (distSq < smoothingRadius * smoothingRadius && distSq > 0) {
         float dist = sqrt(distSq);
         dist = max(dist, minDistance);
         
