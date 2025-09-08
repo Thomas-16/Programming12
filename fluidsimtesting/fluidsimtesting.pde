@@ -18,7 +18,7 @@ int maxCellKey;
 
 float particleSize = 0.0175f;  // In simulation units
 float particleSpacing = 0.015f;
-int numParticles = 3500;
+int numParticles = 2500;
 
 float collisionDamping = 0.67f;
 float gravity = 10;
