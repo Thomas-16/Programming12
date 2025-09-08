@@ -1,3 +1,8 @@
+// Thomas Fang
+// Pattern 1: https://www.vecteezy.com/video/8079150-animated-hypnotic-looping-tunnel-seamless-loop-background-animation
+// Pattern 2: https://tenor.com/view/satisfying-gif-12900166457966624679
+// Pattern 3: 
+
 
 int currentPattern = 0;
 
