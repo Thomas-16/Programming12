@@ -40,10 +40,6 @@ void draw() {
   text(">", rightButton.getX(), rightButton.getY());
 }
 
-void drawPattern1() {
-  
-}
-
 void leftButtonOnClickCallback() {
   
 }
