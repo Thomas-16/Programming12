@@ -13,7 +13,8 @@ int gridCellsX;
 int gridCellsY;
 
 Entry[] spatialLookup;
-HashMap<Long, Integer> startIndices;
+int[] startIndices;
+int maxCellKey;
 
 float particleSize = 0.0175f;  // In simulation units
 float particleSpacing = 0.015f;
@@ -214,8 +215,8 @@ PVector calculateViscosityForce(PVector[] posArr, int particleIndex) {
     long cellHash = hashCell(new PVector(cellX, cellY));
     long key = getKeyFromHash(cellHash, numParticles);
     
-    Integer cellStartIndex = startIndices.get(key);
-    if (cellStartIndex == null) continue;
+    int cellStartIndex = startIndices[(int)key];
+    if (cellStartIndex == -1) continue;
     
     // Loop over particles in this cell
     for (int i = cellStartIndex; i < spatialLookup.length; i++) {
@@ -263,8 +264,8 @@ PVector calculatePressureForce(PVector[] posArr, int particleIndex) {
     long cellHash = hashCell(new PVector(cellX, cellY));
     long key = getKeyFromHash(cellHash, numParticles);
     
-    Integer cellStartIndex = startIndices.get(key);
-    if (cellStartIndex == null) continue;
+    int cellStartIndex = startIndices[(int)key];
+    if (cellStartIndex == -1) continue;
     
     // Loop over particles in this cell
     for (int i = cellStartIndex; i < spatialLookup.length; i++) {
@@ -334,8 +335,8 @@ void updateDensities(PVector[] posArr) {
       long cellHash = hashCell(new PVector(cellX, cellY));
       long key = getKeyFromHash(cellHash, numParticles);
       
-      Integer cellStartIndex = startIndices.get(key);
-      if (cellStartIndex == null) continue;
+      int cellStartIndex = startIndices[(int)key];
+      if (cellStartIndex == -1) continue;
       
       // Loop over particles in this cell
       for (int j = cellStartIndex; j < spatialLookup.length; j++) {

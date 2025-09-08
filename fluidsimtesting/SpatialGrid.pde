@@ -15,7 +15,11 @@ int[][] cellOffsets = {
 void updateSpatialLookup(PVector[] points, float radius) {
   // Initialize spatial lookup array
   spatialLookup = new Entry[points.length];
-  startIndices = new HashMap<Long, Integer>();
+  
+  // Initialize startIndices array with -1 (meaning empty cell)
+  maxCellKey = points.length * 2;
+  startIndices = new int[maxCellKey];
+  Arrays.fill(startIndices, -1);
   
   // Create spatial lookup entries in parallel (unordered)
   IntStream.range(0, numParticles).parallel().forEach(i -> {
@@ -38,7 +42,7 @@ void updateSpatialLookup(PVector[] points, float radius) {
     long keyPrev = (i == 0) ? Long.MAX_VALUE : spatialLookup[i - 1].cellKey;
     
     if (key != keyPrev) {
-      startIndices.put(key, i);
+      startIndices[(int)key] = i;  // Cast to int since we know it's within array bounds
     }
   }
 }
