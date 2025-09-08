@@ -13,18 +13,17 @@ int[][] cellOffsets = {
 
 
 void updateSpatialLookup(PVector[] points, float radius) {
-  // Initialize spatial lookup array
   spatialLookup = new Entry[points.length];
   
-  // Initialize startIndices array with -1 (meaning empty cell)
   maxCellKey = points.length * 2;
   startIndices = new int[maxCellKey];
   Arrays.fill(startIndices, -1);
   
-  // Create spatial lookup entries in parallel (unordered)
+  // Create spatial lookup entries
   IntStream.range(0, numParticles).parallel().forEach(i -> {
-    PVector cellCoord = positionToCellCoord(points[i], radius);
-    long cellHash = hashCell(cellCoord);
+    int cellX = (int)(points[i].x / radius);
+    int cellY = (int)(points[i].y / radius);
+    long cellHash = hashCell(cellX, cellY);  // Use the int version
     long cellKey = getKeyFromHash(cellHash, points.length);
     spatialLookup[i] = new Entry(i, cellKey);
   });
@@ -48,17 +47,11 @@ void updateSpatialLookup(PVector[] points, float radius) {
 }
 
 
-PVector positionToCellCoord(PVector point, float radius) {
-  int cellX = (int)(point.x / radius);
-  int cellY = (int)(point.y / radius);
-  return new PVector(cellX, cellY);
-}
-
 // Converts a cell's coordinate to a single number
 // Hash collisions are unavoidable but whatever
-long hashCell(PVector cell) {
-  long a = (long)cell.x * 15823;
-  long b = (long)cell.y * 973733;
+long hashCell(int cellX, int cellY) {
+  long a = (long)cellX * 15823;
+  long b = (long)cellY * 973733;
   return a + b;
 }
 
