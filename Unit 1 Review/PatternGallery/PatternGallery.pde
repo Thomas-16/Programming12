@@ -1,1 +1,60 @@
 
+int currentPattern = 0;
+
+CircleButton leftButton, rightButton;
+
+void setup() {
+  size(1200, 800);
+  
+  // initialize buttons
+  leftButton = new CircleButton(100, height/2, 80, color(255), color(0), color(100), color(210), 3);
+  rightButton = new CircleButton(width - 100, height/2, 80, color(255), color(0), color(100), color(210), 3);
+  
+  // setup onClick callbacks
+  leftButton.setOnClick(() -> {
+    leftButtonOnClickCallback();
+  });
+  rightButton.setOnClick(() -> {
+    rightButtonOnClickCallback();
+  });
+}
+
+void draw() {
+  background(0);
+  
+  // Draw pattern
+  drawPattern1();
+  
+  // Draw buttons
+  leftButton.draw();
+  rightButton.draw();
+  textAlign(CENTER, CENTER);
+  textSize(50);
+  fill(0);
+  text("<", leftButton.getX(), leftButton.getY());
+  text(">", rightButton.getX(), rightButton.getY());
+}
+
+void drawPattern1() {
+  
+}
+
+void leftButtonOnClickCallback() {
+  
+}
+void rightButtonOnClickCallback() {
+  
+}
+
+void mousePressed() {
+  leftButton.mousePressed();
+  rightButton.mousePressed();
+}
+void mouseReleased() {
+  leftButton.mouseReleased();
+  rightButton.mouseReleased();
+}
+
+float sqrMagnitude(int x1, int y1, int x2, int y2) {
+  return pow(x1 - x2, 2) + pow(y1 - y2, 2);
+}

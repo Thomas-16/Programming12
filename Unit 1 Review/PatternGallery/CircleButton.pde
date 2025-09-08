@@ -1,6 +1,5 @@
 
 class CircleButton {
-  private PGraphics pGraphics;
   private int x, y;
   private int diameter;
   private color buttonColor;
@@ -14,8 +13,7 @@ class CircleButton {
   private Runnable onClick; // onClick callback
   private boolean isBeingPressed;
   
-  CircleButton(PGraphics pGraphics, int x, int y, int diameter, color buttonColor, color outlineColor, color hoveringOutlineColor, color clickingButtonColor, int outlineWidth) {
-    this.pGraphics = pGraphics;
+  CircleButton(int x, int y, int diameter, color buttonColor, color outlineColor, color hoveringOutlineColor, color clickingButtonColor, int outlineWidth) {
     this.x = x;
     this.y = y;
     this.diameter = diameter;
@@ -30,15 +28,13 @@ class CircleButton {
     color currentOutlineColor = isHoveredOver() ? hoveringOutlineColor : outlineColor;
     color currentButtonColor = isBeingPressed ? lerpColor(clickingButtonColor, buttonColor, 0.4) : buttonColor;
     
-    pGraphics.beginDraw();
-    pGraphics.stroke(currentOutlineColor);
-    pGraphics.strokeWeight(outlineWidth);
+    stroke(currentOutlineColor);
+    strokeWeight(outlineWidth);
     if(alpha(currentButtonColor) == 0)
-      pGraphics.noFill();
+      noFill();
     else
-      pGraphics.fill(currentButtonColor);
-    pGraphics.circle(x, y, diameter);
-    pGraphics.endDraw();
+      fill(currentButtonColor);
+    circle(x, y, diameter);
   }
   public void setButtonColor(color buttonColor) {
     this.buttonColor = buttonColor;
@@ -67,4 +63,7 @@ class CircleButton {
   }
   
   public color getButtonColor() { return buttonColor; }
+  
+  public int getX() { return x; }
+  public int getY() { return y; }
 }
