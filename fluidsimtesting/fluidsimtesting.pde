@@ -25,15 +25,15 @@ float smoothingRadius = 0.35;  // In simulation units
 float mass = 1;
 
 float targetDensity = 120;
-float pressureMultiplier = 55;
+float pressureMultiplier = 65;
 float nearPressureMultiplier = 14;
 
 float viscosityStrength = 0.8;
 
 float interactionRadius = 0.5;
-float interactionStrength = 60;
+float interactionStrength = 130;
 
-float maxSpeed = 2;
+float maxSpeed = 3;
 float minDistance = 0.01;
 float maxForce = 600;
 
