@@ -15,27 +15,27 @@ int gridCellsY;
 Entry[] spatialLookup;
 HashMap<Long, Integer> startIndices;
 
-float particleSize = 0.0175;  // In simulation units
-float particleSpacing = 0.015;
+float particleSize = 0.0175f;  // In simulation units
+float particleSpacing = 0.015f;
 int numParticles = 3500;
 
-float collisionDamping = 0.67;
+float collisionDamping = 0.67f;
 float gravity = 10;
-float smoothingRadius = 0.35;  // In simulation units
+float smoothingRadius = 0.35f;  // In simulation units
 float mass = 1;
 
-float targetDensity = 120;
-float pressureMultiplier = 65;
-float nearPressureMultiplier = 14;
+float targetDensity = 120f;
+float pressureMultiplier = 65f;
+float nearPressureMultiplier = 14f;
 
-float viscosityStrength = 0.8;
+float viscosityStrength = 0.8f;
 
-float interactionRadius = 0.5;
-float interactionStrength = 130;
+float interactionRadius = 0.5f;
+float interactionStrength = 130f;
 
-float maxSpeed = 3;
-float minDistance = 0.01;
-float maxForce = 600;
+float maxSpeed = 3f;
+float minDistance = 0.01f;
+float maxForce = 600f;
 
 int lastTime = 0;
 
@@ -51,8 +51,8 @@ void setup() {
   // Experiemented with P2D renderer but it seems to be less efficient for some reason
   size(1280, 820);
   
-  simWidth = 4.5 * (width/ (float) height);
-  simHeight = 4.5;
+  simWidth = 4.5f * (width/ (float) height);
+  simHeight = 4.5f;
   
   // Calculate grid dimensions
   gridCellsX = (int)ceil(simWidth / smoothingRadius);
@@ -60,10 +60,10 @@ void setup() {
   
   // Init kernel scaling factors
   Poly6ScalingFactor = PI * pow(smoothingRadius, 8);
-  SpikyPow3ScalingFactor = 10 / (PI * pow(smoothingRadius, 5));
-  SpikyPow2ScalingFactor = 6 / (PI * pow(smoothingRadius, 4));
-  SpikyPow3DerivativeScalingFactor = 30 / (pow(smoothingRadius, 5) * PI);
-  SpikyPow2DerivativeScalingFactor = 12 / (pow(smoothingRadius, 4) * PI);
+  SpikyPow3ScalingFactor = 10f / (PI * pow(smoothingRadius, 5));
+  SpikyPow2ScalingFactor = 6f / (PI * pow(smoothingRadius, 4));
+  SpikyPow3DerivativeScalingFactor = 30f / (pow(smoothingRadius, 5) * PI);
+  SpikyPow2DerivativeScalingFactor = 12f / (pow(smoothingRadius, 4) * PI);
   
   bgImg = new PImage(width, height);
   
@@ -89,11 +89,11 @@ void setup() {
 void setupParticles() {
   int particlesPerRow = (int) sqrt(numParticles);
   int particlesPerCol = (numParticles - 1) / particlesPerRow + 1;
-  float spacing = particleSize * 2 + particleSpacing;
+  float spacing = particleSize * 2f + particleSpacing;
 
   for(int i = 0; i < numParticles; i++) {
-    float x = simWidth/2 + (i % particlesPerRow - particlesPerRow / 2f + 0.5f) * spacing;
-    float y = simHeight/2 + (i / particlesPerRow - particlesPerCol / 2f + 0.5f) * spacing;
+    float x = simWidth/2f + (i % particlesPerRow - particlesPerRow / 2f + 0.5f) * spacing;
+    float y = simHeight/2f + (i / particlesPerRow - particlesPerCol / 2f + 0.5f) * spacing;
     positions[i] = new PVector(x, y);
     velocities[i] = new PVector(0, 0);
     predictedPositions[i] = positions[i].copy();
@@ -305,19 +305,19 @@ PVector calculatePressureForce(PVector[] posArr, int particleIndex) {
 float calculateSharedPressure(float densityA, float densityB) {
   float pressureA = densityToPressure(densityA);
   float pressureB = densityToPressure(densityB);
-  return (pressureA + pressureB) / 2;
+  return (pressureA + pressureB) / 2f;
 }
 float calculateSharedNearPressure(float nearDensityA, float nearDensityB) {
     float nearPressureA = densityToNearPressure(nearDensityA);
     float nearPressureB = densityToNearPressure(nearDensityB);
-    return (nearPressureA + nearPressureB) / 2;
+    return (nearPressureA + nearPressureB) / 2f;
 }
 
 
 void updateDensities(PVector[] posArr) {
   IntStream.range(0, numParticles).parallel().forEach(i -> {
-    float density = 0;
-    float nearDensity = 0;
+    float density = 0f;
+    float nearDensity = 0f;
     PVector samplePoint = posArr[i];
   
     PVector centerCell = positionToCellCoord(samplePoint, smoothingRadius);
@@ -383,7 +383,7 @@ PVector interactionForce(PVector inputPos, float radius, float strength, int par
       PVector dampingForce = PVector.mult(velocities[particleIndex], -0.8);
       
       // Only pull if particle is near the edge of the radius
-      if(edgeFalloff > 0.5) {
+      if(edgeFalloff > 0.5f) {
         PVector pullForce = PVector.mult(dirToInputPoint, strength * edgeFalloff);
         interactionForce.add(pullForce);
       }
@@ -429,13 +429,13 @@ void resolveCollisions(int particleIndex) {
 color calculateParticleColor(float speed) {
   float t = constrain(speed / maxSpeed, 0, 1);
   
-  if (t < 0.25) {
+  if (t < 0.25f) {
     // Blue to Cyan
     return lerpColor(color(0, 100, 255), color(0, 255, 255), t * 4);
-  } else if (t < 0.5) {
+  } else if (t < 0.5f) {
     // Cyan to Green
     return lerpColor(color(0, 255, 255), color(0, 255, 0), (t - 0.25) * 4);
-  } else if (t < 0.75) {
+  } else if (t < 0.75f) {
     // Green to Yellow
     return lerpColor(color(0, 255, 0), color(255, 255, 0), (t - 0.5) * 4);
   } else {
