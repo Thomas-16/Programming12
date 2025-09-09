@@ -19,5 +19,5 @@ void drawPattern1() {
     popMatrix();
   }
   deg += 0.2;
-  largestSize *= 1.001;
+  largestSize *= 1.002;
 }
