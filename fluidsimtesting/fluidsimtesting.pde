@@ -40,7 +40,6 @@ float maxForce = 600f;
 
 int lastTime = 0;
 
-PImage bgImg;
 
 // Simulation space dimensions
 float simWidth;
@@ -65,8 +64,6 @@ void setup() {
   SpikyPow2ScalingFactor = 6f / (PI * pow(smoothingRadius, 4));
   SpikyPow3DerivativeScalingFactor = 30f / (pow(smoothingRadius, 5) * PI);
   SpikyPow2DerivativeScalingFactor = 12f / (pow(smoothingRadius, 4) * PI);
-  
-  bgImg = new PImage(width, height);
   
   positions = new PVector[numParticles];
   velocities = new PVector[numParticles];
@@ -108,7 +105,7 @@ void setupParticles() {
 void draw() {
   float deltaTime = min((millis() - lastTime) / 1000.0f, 1.0f/30.0f);
   
-  background(bgImg);
+  background(0);
   
   noStroke();
   fill(#00aaf2);
