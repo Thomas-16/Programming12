@@ -22,13 +22,23 @@ void setup() {
   rightButton.setOnClick(() -> {
     rightButtonOnClickCallback();
   });
+  
+  
+  // for pattern 2
+  leftShape = createShape();
+  leftShape.beginShape();
+  leftShape.fill(leftColor);
+  leftShape.stroke(#297071);
+  leftShape.strokeWeight(2);
+  leftShape.vertex(0, 0);
+  
 }
 
 void draw() {
   background(0);
   
   // Draw pattern
-  drawPattern1();
+  drawPattern2();
   
   // Draw buttons
   leftButton.draw();
