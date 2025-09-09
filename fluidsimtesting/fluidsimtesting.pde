@@ -16,16 +16,16 @@ Entry[] spatialLookup;
 int[] startIndices;
 int maxCellKey;
 
-float particleSize = 0.0175f;  // In simulation units
-float particleSpacing = 0.015f;
-int numParticles = 2500;
+float particleSize = 0.017f;  // In simulation units
+float particleSpacing = 0.013f;
+int numParticles = 3200;
 
 float collisionDamping = 0.1f;
 float gravity = 10;
 float smoothingRadius = 0.35f;  // In simulation units
 float mass = 1;
 
-float targetDensity = 120f;
+float targetDensity = 160f;
 float pressureMultiplier = 65f;
 float nearPressureMultiplier = 14f;
 
