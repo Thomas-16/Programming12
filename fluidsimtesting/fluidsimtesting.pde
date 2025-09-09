@@ -20,7 +20,7 @@ float particleSize = 0.0175f;  // In simulation units
 float particleSpacing = 0.015f;
 int numParticles = 2500;
 
-float collisionDamping = 0.67f;
+float collisionDamping = 0.1f;
 float gravity = 10;
 float smoothingRadius = 0.35f;  // In simulation units
 float mass = 1;
