@@ -23,14 +23,21 @@ void setup() {
     rightButtonOnClickCallback();
   });
   
+  float ROOT_THREE = sqrt(3);
   
   // for pattern 2
   leftShape = createShape();
+  leftShape.setFill(leftColor);
   leftShape.beginShape();
-  leftShape.fill(leftColor);
   leftShape.stroke(#297071);
-  leftShape.strokeWeight(2);
+  leftShape.strokeWeight(3);
   leftShape.vertex(0, 0);
+  leftShape.vertex(0, 100);
+  leftShape.vertex(-(50f/3f), 100 -(50f / ROOT_THREE / 3f));
+  leftShape.vertex(-(50f/3f), 50f/3f);
+  leftShape.vertex(-(50f/3f) - (50f * ROOT_THREE / 3f), 0);
+  leftShape.vertex(-(50f/3f) - (50f * ROOT_THREE / 3f), -(100f/3f));
+  leftShape.endShape(CLOSE);
   
 }
 

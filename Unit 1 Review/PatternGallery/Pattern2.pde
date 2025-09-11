@@ -3,12 +3,16 @@ color rightColor = color(#41ac90);
 color topColor = color(#ece862);
 
 
-PShape leftShape;
+PShape leftShape, rightShape, topShape;
 
 void drawPattern2() {
+  pushMatrix();
+  translate(width/2, height/2);
+  shape(leftShape);
+  //shape(rightShape);
+  //shape(topShape);
   
-  fill(leftColor);
-  
+  popMatrix();
   
 }
 
