@@ -3,12 +3,12 @@ ArrayList<PVector> leftPosArr = new ArrayList<PVector>();
 ArrayList<PVector> rightPosArr = new ArrayList<PVector>();
 ArrayList<PVector> topPosArr = new ArrayList<PVector>();
 
-float targetDistance = 151.3;
-float moveDuration = 2000;
-float pauseDuration = 500;
+double targetDistance = 151.3;
+double moveDuration = 2000;
+double pauseDuration = 500;
 
-float cycleStartTime = 0;
-float t = 0;
+double cycleStartTime = 0;
+double t = 0;
 boolean isMoving = true;
 
 ArrayList<PVector> leftStartPos = new ArrayList<PVector>();
@@ -53,9 +53,9 @@ void pattern2Setup() {
   rightShape.endShape();
   
   // init pos arrays
-  for(float x = 0; x <= width + 100; x += 260.54) {
-    for(float y = 0; y <= height + 100; y += 151.31) {
-      PVector pos = new PVector(x, y);
+  for(double x = -300; x <= width + 300; x += 260.54) {
+    for(double y = -300; y <= height + 300; y += 151.31) {
+      PVector pos = new PVector((float)x, (float)y);
       leftPosArr.add(pos.copy());
       rightPosArr.add(pos.copy());
       topPosArr.add(pos.copy());
@@ -66,9 +66,9 @@ void pattern2Setup() {
     }
   }
   
-  for(float x = -130.27; x <= width + 100; x += 260.54) {
-    for(float y = -151.31 + 76.97; y <= height + 100; y += 151.31) {
-      PVector pos = new PVector(x, y);
+  for(double x = -300 -130.27; x <= width + 300; x += 260.54) {
+    for(double y = -300 -151.31 + 76.97; y <= height + 300; y += 151.31) {
+      PVector pos = new PVector((float)x, (float)y);
       leftPosArr.add(pos.copy());
       rightPosArr.add(pos.copy());
       topPosArr.add(pos.copy());
@@ -107,8 +107,8 @@ void calculateTargetPositions() {
 }
 
 void drawPattern2() {
-  float currentTime = millis();
-  float elapsedTime = currentTime - cycleStartTime;
+  double currentTime = millis();
+  double elapsedTime = currentTime - cycleStartTime;
   
   if (isMoving) {
     t = elapsedTime / moveDuration;
@@ -128,9 +128,9 @@ void drawPattern2() {
     
     // Move shapes by lerping
     for(int i = 0; i < leftPosArr.size(); i++) {
-      leftPosArr.set(i, PVector.lerp(leftStartPos.get(i), leftTargetPos.get(i), t));
-      rightPosArr.set(i, PVector.lerp(rightStartPos.get(i), rightTargetPos.get(i), t));
-      topPosArr.set(i, PVector.lerp(topStartPos.get(i), topTargetPos.get(i), t));
+      leftPosArr.set(i, PVector.lerp(leftStartPos.get(i), leftTargetPos.get(i), (float)t));
+      rightPosArr.set(i, PVector.lerp(rightStartPos.get(i), rightTargetPos.get(i), (float)t));
+      topPosArr.set(i, PVector.lerp(topStartPos.get(i), topTargetPos.get(i), (float)t));
     }
   } else {
     // Pausing
