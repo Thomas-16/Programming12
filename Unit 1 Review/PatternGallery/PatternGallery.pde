@@ -6,7 +6,7 @@
 
 
 
-int currentPattern = 0;
+int currentPattern = 2;
 
 CircleButton leftButton, rightButton;
 
@@ -25,40 +25,8 @@ void setup() {
     rightButtonOnClickCallback();
   });
   
-  
-  color leftColor = color(#85d079);
-  color rightColor = color(#41ac90);
-  color topColor = color(#ece862);
-  color outlineColor = color(#297071);
-
   // for pattern 2
-  leftShape = createShape();
-  leftShape.beginShape();
-  leftShape.fill(leftColor);
-  leftShape.stroke(outlineColor);
-  leftShape.strokeWeight(2);
-  leftShape.vertex(0, 0);
-  leftShape.vertex(0, 100);
-  leftShape.vertex(-44.44, 100-25.66);
-  leftShape.vertex(-44.44, 25.66);
-  leftShape.vertex(-85.83, 0);
-  leftShape.vertex(-85.83, -51.32);
-  leftShape.endShape(CLOSE);
-  leftShape.setFill(leftColor);
-  
-  topShape = copyAndRotateShape(leftShape, radians(120));
-  topShape.beginShape();
-  topShape.fill(topColor);
-  topShape.stroke(outlineColor);
-  topShape.strokeWeight(2);
-  topShape.endShape();
-  
-  rightShape = copyAndRotateShape(topShape, radians(120));
-  rightShape.beginShape();
-  rightShape.fill(rightColor);
-  rightShape.stroke(outlineColor);
-  rightShape.strokeWeight(2);
-  rightShape.endShape();
+  pattern2Setup();
   
 }
 
@@ -66,7 +34,18 @@ void draw() {
   background(0);
   
   // Draw pattern
-  drawPattern2();
+  switch(currentPattern) {
+    case 1:
+      drawPattern1();
+      break;
+    case 2:
+      drawPattern2();
+      break;
+    case 3:
+      drawPattern3();
+      break;
+    
+  }
   
   // Draw buttons
   leftButton.draw();
