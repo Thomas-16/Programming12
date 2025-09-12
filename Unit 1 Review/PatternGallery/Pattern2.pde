@@ -4,8 +4,8 @@ ArrayList<PVector> rightPosArr = new ArrayList<PVector>();
 ArrayList<PVector> topPosArr = new ArrayList<PVector>();
 
 float targetDistance = 151.3;
-float moveDuration = 4000;
-float pauseDuration = 1500;
+float moveDuration = 2000;
+float pauseDuration = 500;
 
 float cycleStartTime = 0;
 float t = 0;
