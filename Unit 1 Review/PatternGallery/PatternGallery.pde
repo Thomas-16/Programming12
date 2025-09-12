@@ -58,10 +58,16 @@ void draw() {
 }
 
 void leftButtonOnClickCallback() {
-  
+  currentPattern--;
+  if(currentPattern <= 0) {
+    currentPattern = 3;
+  }
 }
 void rightButtonOnClickCallback() {
-  
+  currentPattern++;
+  if(currentPattern >= 4) {
+    currentPattern = 1;
+  }
 }
 
 PShape copyAndRotateShape(PShape original, float ang) {
