@@ -3,7 +3,7 @@ ArrayList<PVector> leftPosArr = new ArrayList<PVector>();
 ArrayList<PVector> rightPosArr = new ArrayList<PVector>();
 ArrayList<PVector> topPosArr = new ArrayList<PVector>();
 
-float targetDistance = 151.31;
+float targetDistance = 151.3;
 float moveDuration = 4000;
 float pauseDuration = 1500;
 
@@ -117,8 +117,16 @@ void drawPattern2() {
       t = 1.0;
       isMoving = false;
       cycleStartTime = currentTime;
+      
+      // snap in place so it doesnt overshoot
+      for(int i = 0; i < leftPosArr.size(); i++) {
+        leftPosArr.set(i, leftTargetPos.get(i));
+        rightPosArr.set(i, leftTargetPos.get(i));
+        topPosArr.set(i, leftTargetPos.get(i));
+      }
     }
     
+    // Move shapes by lerping
     for(int i = 0; i < leftPosArr.size(); i++) {
       leftPosArr.set(i, PVector.lerp(leftStartPos.get(i), leftTargetPos.get(i), t));
       rightPosArr.set(i, PVector.lerp(rightStartPos.get(i), rightTargetPos.get(i), t));
