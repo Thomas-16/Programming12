@@ -3,36 +3,31 @@ PShape leftShape, rightShape, topShape;
 
 void drawPattern2() {
   pushMatrix();
-  translate(width/2, height/2);
+  //translate(width/2, height/2);
   
-  shape(leftShape);
-  shape(rightShape);
-  shape(topShape);
+  for(float x = 0; x <= width + 100; x += 260.54) {
+    for(float y = 0; y <= height + 100; y += 151.31) {
+      drawYShape(x, y);
+    }
+  }
   
-  translate(0, 151.31);
+  for(float x = -130.27; x <= width + 100; x += 260.54) {
+    for(float y = -151.31 + 76.97; y <= height + 100; y += 151.31) {
+      drawYShape(x, y);
+    }
+  }
   
-  shape(leftShape);
-  shape(rightShape);
-  shape(topShape);
+  popMatrix();
   
-  translate(260.54, 0);
-  
-  shape(leftShape);
-  shape(rightShape);
-  shape(topShape);
-  
-  translate(-130.27, 76.97);
-  
-  shape(leftShape);
-  shape(rightShape);
-  shape(topShape);
-  
-  translate(0, -151.31);
+}
+
+void drawYShape(float x, float y) {
+  pushMatrix();
+  translate(x, y);
   
   shape(leftShape);
   shape(rightShape);
   shape(topShape);
   
   popMatrix();
-  
 }
