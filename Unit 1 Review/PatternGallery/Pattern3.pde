@@ -19,6 +19,11 @@ ArrayList<PVector> leftTargetPos = new ArrayList<PVector>();
 ArrayList<PVector> rightTargetPos = new ArrayList<PVector>();
 ArrayList<PVector> topTargetPos = new ArrayList<PVector>();
 
+ArrayList<Float> leftDelays = new ArrayList<Float>();
+ArrayList<Float> rightDelays = new ArrayList<Float>();
+ArrayList<Float> topDelays = new ArrayList<Float>();
+float maxDelay = 1000;
+
 void pattern3Setup() {
   color leftColor = color(#85d079);
   color rightColor = color(#41ac90);
@@ -81,6 +86,8 @@ void pattern3Setup() {
   }
   
   calculateTargetPositions();
+  calculateDelays();
+  
   cycleStartTime = millis();
 }
 
@@ -113,27 +120,34 @@ void drawPattern3() {
   double elapsedTime = currentTime - cycleStartTime;
   
   if (isMoving) {
-    t = elapsedTime / moveDuration;
+    boolean allFinished = true;
     
-    if (t >= 1.0) {
-      t = 1.0;
+    for(int i = 0; i < leftPosArr.size(); i++) {
+      float leftT = (float)((elapsedTime - leftDelays.get(i)) / moveDuration);
+      float rightT = (float)((elapsedTime - rightDelays.get(i)) / moveDuration);
+      float topT = (float)((elapsedTime - topDelays.get(i)) / moveDuration);
+      
+      leftT = constrain(leftT, 0, 1);
+      rightT = constrain(rightT, 0, 1);
+      topT = constrain(topT, 0, 1);
+      
+      leftT = easeInOut(leftT);
+      rightT = easeInOut(rightT);
+      topT = easeInOut(topT);
+      
+      // Lerp each shape
+      leftPosArr.set(i, PVector.lerp(leftOriginalPos.get(i), leftTargetPos.get(i), leftT));
+      rightPosArr.set(i, PVector.lerp(rightOriginalPos.get(i), rightTargetPos.get(i), rightT));
+      topPosArr.set(i, PVector.lerp(topOriginalPos.get(i), topTargetPos.get(i), topT));
+      
+      if (leftT < 1.0 || rightT < 1.0 || topT < 1.0) {
+        allFinished = false;
+      }
+    }
+    
+    if (allFinished) {
       isMoving = false;
       cycleStartTime = currentTime;
-      
-      // snap to target positions
-      for(int i = 0; i < leftPosArr.size(); i++) {
-        leftPosArr.set(i, leftTargetPos.get(i).copy());
-        rightPosArr.set(i, rightTargetPos.get(i).copy());
-        topPosArr.set(i, topTargetPos.get(i).copy());
-      }
-    } else {
-      // Move shapes by lerping
-      t = easeInOut((float)t);
-      for(int i = 0; i < leftPosArr.size(); i++) {
-        leftPosArr.set(i, PVector.lerp(leftOriginalPos.get(i), leftTargetPos.get(i), (float)t));
-        rightPosArr.set(i, PVector.lerp(rightOriginalPos.get(i), rightTargetPos.get(i), (float)t));
-        topPosArr.set(i, PVector.lerp(topOriginalPos.get(i), topTargetPos.get(i), (float)t));
-      }
     }
   } else {
     // Pausing
@@ -176,6 +190,28 @@ void drawPattern3() {
   }
   
   popMatrix();
+}
+
+void calculateDelays() {
+  leftDelays.clear();
+  rightDelays.clear();
+  topDelays.clear();
+  
+  float centerX = width / 2.0;
+  float centerY = height / 2.0;
+  float maxDistance = dist(0, 0, centerX, centerY);
+  
+  for(int i = 0; i < leftOriginalPos.size(); i++) {
+    // Calculate distance from center
+    float leftDist = dist(leftOriginalPos.get(i).x, leftOriginalPos.get(i).y, centerX, centerY);
+    float rightDist = dist(rightOriginalPos.get(i).x, rightOriginalPos.get(i).y, centerX, centerY);
+    float topDist = dist(topOriginalPos.get(i).x, topOriginalPos.get(i).y, centerX, centerY);
+    
+    // Calculate delay
+    leftDelays.add((leftDist / maxDistance) * maxDelay);
+    rightDelays.add((rightDist / maxDistance) * maxDelay);
+    topDelays.add((topDist / maxDistance) * maxDelay);
+  }
 }
 
 float easeInOut(float t) {
