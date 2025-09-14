@@ -11,9 +11,9 @@ double cycleStartTime = 0;
 double t = 0;
 boolean isMoving = true;
 
-ArrayList<PVector> leftStartPos = new ArrayList<PVector>();
-ArrayList<PVector> rightStartPos = new ArrayList<PVector>();
-ArrayList<PVector> topStartPos = new ArrayList<PVector>();
+ArrayList<PVector> leftOriginalPos = new ArrayList<PVector>();
+ArrayList<PVector> rightOriginalPos = new ArrayList<PVector>();
+ArrayList<PVector> topOriginalPos = new ArrayList<PVector>();
 ArrayList<PVector> leftTargetPos = new ArrayList<PVector>();
 ArrayList<PVector> rightTargetPos = new ArrayList<PVector>();
 ArrayList<PVector> topTargetPos = new ArrayList<PVector>();
@@ -56,26 +56,26 @@ void pattern2Setup() {
   for(double x = -300; x <= width + 300; x += 260.54) {
     for(double y = -300; y <= height + 300; y += 151.31) {
       PVector pos = new PVector((float)x, (float)y);
+      leftOriginalPos.add(pos.copy());
+      rightOriginalPos.add(pos.copy());
+      topOriginalPos.add(pos.copy());
+      
       leftPosArr.add(pos.copy());
       rightPosArr.add(pos.copy());
       topPosArr.add(pos.copy());
-      
-      leftStartPos.add(pos.copy());
-      rightStartPos.add(pos.copy());
-      topStartPos.add(pos.copy());
     }
   }
   
   for(double x = -300 -130.27; x <= width + 300; x += 260.54) {
     for(double y = -300 -151.31 + 76.97; y <= height + 300; y += 151.31) {
       PVector pos = new PVector((float)x, (float)y);
+      leftOriginalPos.add(pos.copy());
+      rightOriginalPos.add(pos.copy());
+      topOriginalPos.add(pos.copy());
+      
       leftPosArr.add(pos.copy());
       rightPosArr.add(pos.copy());
       topPosArr.add(pos.copy());
-      
-      leftStartPos.add(pos.copy());
-      rightStartPos.add(pos.copy());
-      topStartPos.add(pos.copy());
     }
   }
   
@@ -88,18 +88,19 @@ void calculateTargetPositions() {
   rightTargetPos.clear();
   topTargetPos.clear();
   
-  for(int i = 0; i < leftStartPos.size(); i++) {
-    PVector leftTarget = leftStartPos.get(i).copy();
+  // Calculate targets from original positions
+  for(int i = 0; i < leftOriginalPos.size(); i++) {
+    PVector leftTarget = leftOriginalPos.get(i).copy();
     leftTarget.x += cos(radians(150)) * targetDistance;
     leftTarget.y += sin(radians(150)) * targetDistance;
     leftTargetPos.add(leftTarget);
     
-    PVector rightTarget = rightStartPos.get(i).copy();
+    PVector rightTarget = rightOriginalPos.get(i).copy();
     rightTarget.x += cos(radians(30)) * targetDistance;
     rightTarget.y += sin(radians(30)) * targetDistance;
     rightTargetPos.add(rightTarget);
     
-    PVector topTarget = topStartPos.get(i).copy();
+    PVector topTarget = topOriginalPos.get(i).copy();
     topTarget.x += cos(radians(-90)) * targetDistance;
     topTarget.y += sin(radians(-90)) * targetDistance;
     topTargetPos.add(topTarget);
@@ -118,32 +119,30 @@ void drawPattern2() {
       isMoving = false;
       cycleStartTime = currentTime;
       
-      // snap in place so it doesnt overshoot
+      // snap to target positions
       for(int i = 0; i < leftPosArr.size(); i++) {
-        leftPosArr.set(i, leftTargetPos.get(i));
-        rightPosArr.set(i, leftTargetPos.get(i));
-        topPosArr.set(i, leftTargetPos.get(i));
+        leftPosArr.set(i, leftTargetPos.get(i).copy());
+        rightPosArr.set(i, rightTargetPos.get(i).copy());
+        topPosArr.set(i, topTargetPos.get(i).copy());
       }
-    }
-    
-    // Move shapes by lerping
-    for(int i = 0; i < leftPosArr.size(); i++) {
-      leftPosArr.set(i, PVector.lerp(leftStartPos.get(i), leftTargetPos.get(i), (float)t));
-      rightPosArr.set(i, PVector.lerp(rightStartPos.get(i), rightTargetPos.get(i), (float)t));
-      topPosArr.set(i, PVector.lerp(topStartPos.get(i), topTargetPos.get(i), (float)t));
+    } else {
+      // Move shapes by lerping
+      t = easeInOut((float)t);
+      for(int i = 0; i < leftPosArr.size(); i++) {
+        leftPosArr.set(i, PVector.lerp(leftOriginalPos.get(i), leftTargetPos.get(i), (float)t));
+        rightPosArr.set(i, PVector.lerp(rightOriginalPos.get(i), rightTargetPos.get(i), (float)t));
+        topPosArr.set(i, PVector.lerp(topOriginalPos.get(i), topTargetPos.get(i), (float)t));
+      }
     }
   } else {
     // Pausing
     if (elapsedTime >= pauseDuration) {
-      // Set current positions as new start positions
+      // Reset to original positions
       for(int i = 0; i < leftPosArr.size(); i++) {
-        leftStartPos.set(i, leftPosArr.get(i).copy());
-        rightStartPos.set(i, rightPosArr.get(i).copy());
-        topStartPos.set(i, topPosArr.get(i).copy());
+        leftPosArr.set(i, leftOriginalPos.get(i).copy());
+        rightPosArr.set(i, rightOriginalPos.get(i).copy());
+        topPosArr.set(i, topOriginalPos.get(i).copy());
       }
-      
-      // Calculate new targets from the new start positions
-      calculateTargetPositions();
       
       isMoving = true;
       cycleStartTime = currentTime;
@@ -176,4 +175,8 @@ void drawPattern2() {
   }
   
   popMatrix();
+}
+
+float easeInOut(float t) {
+  return -(cos(PI * t) - 1) / 2;
 }
