@@ -6,7 +6,7 @@
 
 
 
-int currentPattern = 2;
+int currentPattern = 3;
 
 CircleButton leftButton, rightButton;
 
@@ -25,8 +25,8 @@ void setup() {
     rightButtonOnClickCallback();
   });
   
-  // for pattern 2
-  pattern2Setup();
+  // for pattern 3
+  pattern3Setup();
   
 }
 
