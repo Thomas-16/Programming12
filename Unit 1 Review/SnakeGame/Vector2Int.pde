@@ -48,3 +48,27 @@ class Vector2Int {
     return sqrt(this.sqrMag());
   }
 }
+
+Vector2Int add(Vector2Int one, Vector2Int other) {
+  return new Vector2Int(one.x + other.x, one.y + other.y);
+}
+
+Vector2Int add(Vector2Int one, int x, int y) {
+  return new Vector2Int(one.x + x, one.y + y);
+}
+
+Vector2Int sub(Vector2Int one, Vector2Int other) {
+  return new Vector2Int(one.x - other.x, one.y - other.y);
+}
+
+Vector2Int sub(Vector2Int one, int x, int y) {
+  return new Vector2Int(one.x - x, one.y - y);
+}
+
+Vector2Int mult(Vector2Int one, int value) {
+  return new Vector2Int(one.x * value, one.y * value);
+}
+
+Vector2Int div(Vector2Int one, int value) {
+  return new Vector2Int(one.x / value, one.y / value);
+}
