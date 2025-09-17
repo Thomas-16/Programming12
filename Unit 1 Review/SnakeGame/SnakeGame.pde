@@ -1,32 +1,39 @@
 color blueColor = #2170d9;
 color redColor = #e3442b;
 
-int gridSize = 80;
+int gridSize = 50;
 
-// Grid 2d array for the game space
-int[][] grid = new int[16][10];
-// 0 means empty
-// 1 means blue
-// 2 means red
-
-Snake redSnake, blueSnake;
+Snake blueSnake, redSnake;
 Vector2Int foodPos;
 
 void setup() {
-  size(1280, 800);
+  size(1200, 800);
+  
+  blueSnake = new Snake(true);
+  redSnake = new Snake(false);
 }
 
 void draw() {
   background(#d9bc93);
   
   update();
-  drawSnake();
+  drawSnakes();
 }
 
 void update() {
   
 }
 
-void drawSnake() {
+void drawSnakes() {
+  rectMode(CORNER);
+  noStroke();
+  for(Vector2Int pos : blueSnake.getBody()) {
+    fill(blueColor);
+    rect(pos.x * gridSize, pos.y * gridSize, gridSize, gridSize);
+  }
   
+  for(Vector2Int pos : redSnake.getBody()) {
+    fill(redColor);
+    rect(pos.x * gridSize, pos.y * gridSize, gridSize, gridSize);
+  }
 }
