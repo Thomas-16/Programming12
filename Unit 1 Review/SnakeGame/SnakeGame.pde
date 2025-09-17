@@ -7,6 +7,7 @@ Snake blueSnake, redSnake;
 Vector2Int foodPos;
 
 void setup() {
+  frameRate(10);
   size(1200, 800);
   
   blueSnake = new Snake(true);
@@ -21,7 +22,21 @@ void draw() {
 }
 
 void update() {
+  if(keyPressed) {
+    if(key == 'w' || key == 'W') blueSnake.changeDir(Dir.UP);
+    if(key == 'a' || key == 'A') blueSnake.changeDir(Dir.LEFT);
+    if(key == 's' || key == 'S') blueSnake.changeDir(Dir.DOWN);
+    if(key == 'd' || key == 'D') blueSnake.changeDir(Dir.RIGHT);
+    
+    if(keyCode == UP) redSnake.changeDir(Dir.UP);
+    if(keyCode == DOWN) redSnake.changeDir(Dir.DOWN);
+    if(keyCode == LEFT) redSnake.changeDir(Dir.LEFT);
+    if(keyCode == RIGHT) redSnake.changeDir(Dir.RIGHT);
+    
+  }
   
+  blueSnake.move();
+  redSnake.move();
 }
 
 void drawSnakes() {
