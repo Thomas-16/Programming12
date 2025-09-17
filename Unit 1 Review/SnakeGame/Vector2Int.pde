@@ -48,12 +48,6 @@ public class Vector2Int {
     return sqrt(this.sqrMag());
   }
   
-  public Vector2Int one() { return new Vector2Int(1, 1); }
-  public Vector2Int zero() { return new Vector2Int(0, 0); }
-  public Vector2Int up() { return new Vector2Int(0, -1); }
-  public Vector2Int down() { return new Vector2Int(0, 1); }
-  public Vector2Int left() { return new Vector2Int(-1, 0); }
-  public Vector2Int right() { return new Vector2Int(1, 0); }
 }
 
 Vector2Int add(Vector2Int one, Vector2Int other) {
@@ -79,3 +73,10 @@ Vector2Int mult(Vector2Int one, int value) {
 Vector2Int div(Vector2Int one, int value) {
   return new Vector2Int(one.x / value, one.y / value);
 }
+
+public Vector2Int vector2IntOne() { return new Vector2Int(1, 1); }
+public Vector2Int vector2IntZero() { return new Vector2Int(0, 0); }
+public Vector2Int vector2IntUp() { return new Vector2Int(0, -1); }
+public Vector2Int vector2IntDown() { return new Vector2Int(0, 1); }
+public Vector2Int vector2IntLeft() { return new Vector2Int(-1, 0); }
+public Vector2Int vector2IntRight() { return new Vector2Int(1, 0); }
