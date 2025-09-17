@@ -4,7 +4,6 @@ class Snake {
   private Dir dir;
   
   public Snake(boolean isBlue) {
-    this.isBlue = isBlue;
     this.body = new ArrayList<Vector2Int>();
     
     if(isBlue) {
