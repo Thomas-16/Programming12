@@ -26,7 +26,7 @@ class Snake {
     Vector2Int moveDir = getDirVector(this.dir);
     
     body.get(0).add(moveDir);
-    // move end to the gap we just made
+    // move end piece to the gap we just made
     Vector2Int end = body.get(body.size() - 1);
     end.x = body.get(0).x - moveDir.x;
     end.y = body.get(0).y - moveDir.y;
