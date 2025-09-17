@@ -1,4 +1,4 @@
-class Vector2Int {
+public class Vector2Int {
   public int x, y;
   
   public Vector2Int(int x, int y) {
@@ -47,6 +47,13 @@ class Vector2Int {
   public float mag() {
     return sqrt(this.sqrMag());
   }
+  
+  public Vector2Int one() { return new Vector2Int(1, 1); }
+  public Vector2Int zero() { return new Vector2Int(0, 0); }
+  public Vector2Int up() { return new Vector2Int(0, -1); }
+  public Vector2Int down() { return new Vector2Int(0, 1); }
+  public Vector2Int left() { return new Vector2Int(-1, 0); }
+  public Vector2Int right() { return new Vector2Int(1, 0); }
 }
 
 Vector2Int add(Vector2Int one, Vector2Int other) {
