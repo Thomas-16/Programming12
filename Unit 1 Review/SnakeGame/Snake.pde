@@ -1,7 +1,6 @@
 class Snake {
   private Vector2Int pos;
   private ArrayList<Vector2Int> body; // Arraylist of the snake body from head to end
-  private boolean isBlue;
   private Dir dir;
   
   public Snake(boolean isBlue) {
