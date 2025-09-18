@@ -47,6 +47,9 @@ void handleInput() {
 void update() {
   blueSnake.move();
   redSnake.move();
+  
+  // check collisions
+  //if(blueSnake.getBody().contains())
 }
 
 void drawSnakes() {
