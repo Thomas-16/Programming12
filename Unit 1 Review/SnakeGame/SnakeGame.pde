@@ -6,8 +6,10 @@ int gridSize = 50;
 Snake blueSnake, redSnake;
 Vector2Int foodPos;
 
+int frames;
+
 void setup() {
-  frameRate(10);
+  frames = 0;
   size(1200, 800);
   
   blueSnake = new Snake(true);
@@ -17,11 +19,17 @@ void setup() {
 void draw() {
   background(#d9bc93);
   
-  update();
+  handleInput();
+  
+  if(frames % 6 == 0)
+    update();
+    
   drawSnakes();
+  
+  frames++;
 }
 
-void update() {
+void handleInput() {
   if(keyPressed) {
     if(key == 'w' || key == 'W') blueSnake.changeDir(Dir.UP);
     if(key == 'a' || key == 'A') blueSnake.changeDir(Dir.LEFT);
@@ -34,7 +42,9 @@ void update() {
     if(keyCode == RIGHT) redSnake.changeDir(Dir.RIGHT);
     
   }
-  
+}
+
+void update() {
   blueSnake.move();
   redSnake.move();
 }
