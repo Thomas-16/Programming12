@@ -31,15 +31,15 @@ void draw() {
 
 void handleInput() {
   if(keyPressed) {
-    if(key == 'w' || key == 'W') blueSnake.changeDir(Dir.UP);
-    if(key == 'a' || key == 'A') blueSnake.changeDir(Dir.LEFT);
-    if(key == 's' || key == 'S') blueSnake.changeDir(Dir.DOWN);
-    if(key == 'd' || key == 'D') blueSnake.changeDir(Dir.RIGHT);
+    if((key == 'w' || key == 'W') && canMoveInDir(blueSnake, Dir.UP)) blueSnake.changeDir(Dir.UP);
+    if((key == 'a' || key == 'A') && canMoveInDir(blueSnake, Dir.LEFT)) blueSnake.changeDir(Dir.LEFT);
+    if((key == 's' || key == 'S') && canMoveInDir(blueSnake, Dir.DOWN)) blueSnake.changeDir(Dir.DOWN);
+    if((key == 'd' || key == 'D') && canMoveInDir(blueSnake, Dir.RIGHT)) blueSnake.changeDir(Dir.RIGHT);
     
-    if(keyCode == UP) redSnake.changeDir(Dir.UP);
-    if(keyCode == DOWN) redSnake.changeDir(Dir.DOWN);
-    if(keyCode == LEFT) redSnake.changeDir(Dir.LEFT);
-    if(keyCode == RIGHT) redSnake.changeDir(Dir.RIGHT);
+    if(keyCode == UP && canMoveInDir(redSnake, Dir.UP)) redSnake.changeDir(Dir.UP);
+    if(keyCode == DOWN && canMoveInDir(redSnake, Dir.DOWN)) redSnake.changeDir(Dir.DOWN);
+    if(keyCode == LEFT && canMoveInDir(redSnake, Dir.LEFT)) redSnake.changeDir(Dir.LEFT);
+    if(keyCode == RIGHT && canMoveInDir(redSnake, Dir.RIGHT)) redSnake.changeDir(Dir.RIGHT);
     
   }
 }
@@ -60,5 +60,30 @@ void drawSnakes() {
   for(Vector2Int pos : redSnake.getBody()) {
     fill(redColor);
     rect(pos.x * gridSize, pos.y * gridSize, gridSize, gridSize);
+  }
+}
+
+boolean canMoveInDir(Snake snake, Dir targetDir) {
+  Vector2Int cantGoInDirVec = sub(snake.getBody().get(1), snake.getBody().get(0));
+  Dir cantGoInDir = vectorToDir(cantGoInDirVec);
+  
+  return targetDir != cantGoInDir;
+}
+
+Dir vectorToDir(Vector2Int vec) {
+  if(vec.equals(vector2IntUp())) {
+    return Dir.UP;
+  }
+  else if(vec.equals(vector2IntDown())) {
+    return Dir.DOWN;
+  }
+  else if(vec.equals(vector2IntLeft())) {
+    return Dir.LEFT;
+  }
+  else if(vec.equals(vector2IntRight())) {
+    return Dir.RIGHT;
+  }
+  else {
+    return Dir.UP;
   }
 }
