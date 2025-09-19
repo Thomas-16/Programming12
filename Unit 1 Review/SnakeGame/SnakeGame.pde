@@ -49,7 +49,7 @@ void update() {
   redSnake.move();
   
   // check collisions
-  //if(blueSnake.getBody().contains())
+  handleCollisions();
 }
 
 void drawSnakes() {
@@ -63,6 +63,25 @@ void drawSnakes() {
   for(Vector2Int pos : redSnake.getBody()) {
     fill(redColor);
     rect(pos.x * gridSize, pos.y * gridSize, gridSize, gridSize);
+  }
+}
+
+void handleCollisions() {
+  for(Vector2Int pos : blueSnake.getBody()) {
+    // if a body pos of the blue snake is the same as the head pos of the red snake
+    if(pos.equals(redSnake.getBody().get(0))) {
+      // red lost
+      
+      break;
+    }
+  }
+  for(Vector2Int pos : redSnake.getBody()) {
+    // if a body pos of the red snake is the same as the head pos of the blue snake
+    if(pos.equals(blueSnake.getBody().get(0))) {
+      // blue lost
+      
+      break;
+    }
   }
 }
 
