@@ -19,29 +19,12 @@ void setup() {
 void draw() {
   background(#d9bc93);
   
-  handleInput();
-  
   if(frames % 6 == 0)
     update();
     
   drawSnakes();
   
   frames++;
-}
-
-void handleInput() {
-  if(keyPressed) {
-    if((key == 'w' || key == 'W') && canMoveInDir(blueSnake, Dir.UP)) blueSnake.changeDir(Dir.UP);
-    if((key == 'a' || key == 'A') && canMoveInDir(blueSnake, Dir.LEFT)) blueSnake.changeDir(Dir.LEFT);
-    if((key == 's' || key == 'S') && canMoveInDir(blueSnake, Dir.DOWN)) blueSnake.changeDir(Dir.DOWN);
-    if((key == 'd' || key == 'D') && canMoveInDir(blueSnake, Dir.RIGHT)) blueSnake.changeDir(Dir.RIGHT);
-    
-    if(keyCode == UP && canMoveInDir(redSnake, Dir.UP)) redSnake.changeDir(Dir.UP);
-    if(keyCode == DOWN && canMoveInDir(redSnake, Dir.DOWN)) redSnake.changeDir(Dir.DOWN);
-    if(keyCode == LEFT && canMoveInDir(redSnake, Dir.LEFT)) redSnake.changeDir(Dir.LEFT);
-    if(keyCode == RIGHT && canMoveInDir(redSnake, Dir.RIGHT)) redSnake.changeDir(Dir.RIGHT);
-    
-  }
 }
 
 void update() {
@@ -83,6 +66,18 @@ void handleCollisions() {
       break;
     }
   }
+}
+
+void keyPressed() {
+  if((key == 'w' || key == 'W') && canMoveInDir(blueSnake, Dir.UP)) blueSnake.changeDir(Dir.UP);
+  if((key == 'a' || key == 'A') && canMoveInDir(blueSnake, Dir.LEFT)) blueSnake.changeDir(Dir.LEFT);
+  if((key == 's' || key == 'S') && canMoveInDir(blueSnake, Dir.DOWN)) blueSnake.changeDir(Dir.DOWN);
+  if((key == 'd' || key == 'D') && canMoveInDir(blueSnake, Dir.RIGHT)) blueSnake.changeDir(Dir.RIGHT);
+  
+  if(keyCode == UP && canMoveInDir(redSnake, Dir.UP)) redSnake.changeDir(Dir.UP);
+  if(keyCode == DOWN && canMoveInDir(redSnake, Dir.DOWN)) redSnake.changeDir(Dir.DOWN);
+  if(keyCode == LEFT && canMoveInDir(redSnake, Dir.LEFT)) redSnake.changeDir(Dir.LEFT);
+  if(keyCode == RIGHT && canMoveInDir(redSnake, Dir.RIGHT)) redSnake.changeDir(Dir.RIGHT);
 }
 
 boolean canMoveInDir(Snake snake, Dir targetDir) {
