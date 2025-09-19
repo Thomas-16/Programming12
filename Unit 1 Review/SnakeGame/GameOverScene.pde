@@ -1,0 +1,8 @@
+
+void gameOverSceneSetup() {
+  
+}
+
+void gameOverSceneDraw() {
+  
+}

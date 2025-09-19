@@ -8,15 +8,13 @@ Vector2Int foodPos;
 
 int frames;
 
-void setup() {
+void gameSceneSetup() {
   frames = 0;
-  size(1200, 800);
-  
   blueSnake = new Snake(true);
   redSnake = new Snake(false);
 }
 
-void draw() {
+void gameSceneDraw() {
   background(#d9bc93);
   
   if(frames % 6 == 0)
@@ -54,7 +52,7 @@ void handleCollisions() {
     // if a body pos of the blue snake is the same as the head pos of the red snake
     if(pos.equals(redSnake.getBody().get(0))) {
       // red lost
-      
+      println("RED LOST");
       break;
     }
   }
@@ -62,13 +60,13 @@ void handleCollisions() {
     // if a body pos of the red snake is the same as the head pos of the blue snake
     if(pos.equals(blueSnake.getBody().get(0))) {
       // blue lost
-      
+      println("BLUE LOST");
       break;
     }
   }
 }
 
-void keyPressed() {
+void gameSceneKeyPressed() {
   if((key == 'w' || key == 'W') && canMoveInDir(blueSnake, Dir.UP)) blueSnake.changeDir(Dir.UP);
   if((key == 'a' || key == 'A') && canMoveInDir(blueSnake, Dir.LEFT)) blueSnake.changeDir(Dir.LEFT);
   if((key == 's' || key == 'S') && canMoveInDir(blueSnake, Dir.DOWN)) blueSnake.changeDir(Dir.DOWN);
