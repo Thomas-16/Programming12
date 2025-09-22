@@ -6,7 +6,7 @@ void introSceneSetup() {
   playButton = new RectButton(width/2, 600, 140, 80, #d18645, #e0a570, #966a42, #b8753b, 4, 8);
   
   playButton.setOnClick(() -> {
-    scene = 1;
+    switchScene(1);
   });
   
   font = createFont("Heavitas.ttf", 40);

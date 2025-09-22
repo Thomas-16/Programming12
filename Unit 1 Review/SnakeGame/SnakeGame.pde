@@ -59,7 +59,7 @@ void handleCollisions() {
     if(pos.equals(redSnake.getBody().get(0))) {
       // red lost
       winner = 1;
-      scene = GAMEOVER_SCENE;
+      switchScene(GAMEOVER_SCENE);
       return;
     }
   }
@@ -68,7 +68,7 @@ void handleCollisions() {
     if(pos.equals(blueSnake.getBody().get(0))) {
       // blue lost
       winner = 2;
-      scene = GAMEOVER_SCENE;
+      switchScene(GAMEOVER_SCENE);
       return;
     }
   }
@@ -78,7 +78,7 @@ void handleCollisions() {
     if(blueSnake.getBody().get(i).equals(blueSnake.getBody().get(0))) {
       // blue lost
       winner = 2;
-      scene = GAMEOVER_SCENE;
+      switchScene(GAMEOVER_SCENE);
       return;
     }
   }
@@ -87,7 +87,7 @@ void handleCollisions() {
     if(redSnake.getBody().get(i).equals(redSnake.getBody().get(0))) {
       // red lost
       winner = 1;
-      scene = GAMEOVER_SCENE;
+      switchScene(GAMEOVER_SCENE);
       return;
     }
   }

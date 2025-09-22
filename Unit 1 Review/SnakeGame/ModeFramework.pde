@@ -9,8 +9,6 @@ void setup() {
   size(1200, 800);
   
   introSceneSetup();
-  gameSceneSetup();
-  gameOverSceneSetup();
 }
 
 void draw() {
@@ -27,8 +25,25 @@ void draw() {
   }
 }
 
+void switchScene(int newScene) {
+  scene = newScene;
+  
+  switch(scene) {
+    case INTRO_SCENE:
+      introSceneSetup();
+      break;
+    case GAME_SCENE:
+      gameSceneSetup();
+      break;
+    case GAMEOVER_SCENE:
+      gameOverSceneSetup();
+      break;
+  }
+}
+
 void keyPressed() {
-  gameSceneKeyPressed();
+  if(scene == GAME_SCENE)
+    gameSceneKeyPressed();
 }
 
 void mousePressed() {
