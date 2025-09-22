@@ -72,6 +72,25 @@ void handleCollisions() {
       return;
     }
   }
+  
+  for(int i = 1; i < blueSnake.getBody().size(); i++) {
+    // if a body pos of the blue snake is the same as the head pos of itself
+    if(blueSnake.getBody().get(i).equals(blueSnake.getBody().get(0))) {
+      // blue lost
+      winner = 2;
+      scene = GAMEOVER_SCENE;
+      return;
+    }
+  }
+  for(int i = 1; i < redSnake.getBody().size(); i++) {
+    // if a body pos of the red snake is the same as the head pos of itself
+    if(redSnake.getBody().get(i).equals(redSnake.getBody().get(0))) {
+      // red lost
+      winner = 1;
+      scene = GAMEOVER_SCENE;
+      return;
+    }
+  }
 }
 
 void gameSceneKeyPressed() {
