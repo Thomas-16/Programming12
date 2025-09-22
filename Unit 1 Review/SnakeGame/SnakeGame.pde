@@ -8,6 +8,9 @@ int gridWidth, gridHeight;
 
 Snake blueSnake, redSnake;
 Vector2Int foodPos;
+boolean foodExists;
+
+PImage foodImg;
 
 int frames;
 
@@ -18,6 +21,8 @@ void gameSceneSetup() {
   
   gridWidth = width / gridSize;
   gridHeight = height / gridSize;
+  
+  foodImg = scaleImage(loadImage("apple.png"), gridSize, gridSize);
 }
 
 void gameSceneDraw() {
@@ -26,7 +31,13 @@ void gameSceneDraw() {
   if(frames % 6 == 0)
     update();
     
+    
+  if(frames % 480 == 0 && !foodExists) {
+    spawnFood();
+  }
+    
   drawSnakes();
+  drawFood();
   
   frames++;
 }
@@ -51,6 +62,17 @@ void drawSnakes() {
     fill(redColor);
     rect(pos.x * gridSize, pos.y * gridSize, gridSize, gridSize);
   }
+}
+void drawFood() {
+  image(foodImg, foodPos.x * gridSize, foodPos.y * gridSize);
+}
+
+void spawnFood() {
+  foodPos = new Vector2Int(int(random(0, gridWidth + 1)), int(random(0, gridHeight + 1)));
+  while(arrayListContainsPos(blueSnake.getBody(), foodPos) || arrayListContainsPos(redSnake.getBody(), foodPos)) {
+    foodPos = new Vector2Int(int(random(0, gridWidth + 1)), int(random(0, gridHeight + 1)));
+  }
+  foodExists = true;
 }
 
 void handleCollisions() {
@@ -128,4 +150,27 @@ Dir vectorToDir(Vector2Int vec) {
   else {
     return Dir.UP;
   }
+}
+
+boolean arrayListContainsPos(ArrayList<Vector2Int> list, Vector2Int pos) {
+  for(Vector2Int p : list) {
+    if(p.equals(pos)) return true;
+  }
+  return false;
+}
+
+PImage scaleImage(PImage src, int w, int h) {
+  PImage out = createImage(w, h, ARGB);
+  out.loadPixels();
+  src.loadPixels();
+
+  for (int y = 0; y < h; y++) {
+    int sy = int(y * src.height / (float) h); 
+    for (int x = 0; x < w; x++) {
+      int sx = int(x * src.width / (float) w);
+      out.pixels[y * w + x] = src.pixels[sy * src.width + sx];
+    }
+  }
+  out.updatePixels();
+  return out;
 }
