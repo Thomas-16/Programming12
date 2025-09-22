@@ -36,6 +36,22 @@ class Snake {
     // move it in the arraylist too
     body.remove(body.size() - 1);
     body.add(1, end);
+    
+    // loop snake around edges
+    for(Vector2Int part : body) {
+      if(part.x >= gridWidth) {
+        part.sub(gridWidth, 0);
+      }
+      if(part.y >= gridHeight) {
+        part.sub(0, gridHeight);
+      }
+      if(part.x < 0) {
+        part.add(gridWidth, 0);
+      }
+      if(part.y < 0) {
+        part.add(0, gridHeight);
+      }
+    }
   }
   
   public void changeDir(Dir dir) { this.dir = dir; }

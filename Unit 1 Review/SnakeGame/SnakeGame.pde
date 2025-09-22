@@ -4,6 +4,7 @@ color redColor = #e3442b;
 color bgColor = #d9bc93;
 
 int gridSize = 50;
+int gridWidth, gridHeight;
 
 Snake blueSnake, redSnake;
 Vector2Int foodPos;
@@ -14,6 +15,9 @@ void gameSceneSetup() {
   frames = 0;
   blueSnake = new Snake(true);
   redSnake = new Snake(false);
+  
+  gridWidth = width / gridSize;
+  gridHeight = height / gridSize;
 }
 
 void gameSceneDraw() {
