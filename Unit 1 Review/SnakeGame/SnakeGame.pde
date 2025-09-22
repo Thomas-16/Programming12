@@ -69,9 +69,9 @@ void drawFood() {
 }
 
 void spawnFood() {
-  foodPos = new Vector2Int(int(random(0, gridWidth + 1)), int(random(0, gridHeight + 1)));
+  foodPos = new Vector2Int(int(random(0, gridWidth)), int(random(0, gridHeight)));
   while(arrayListContainsPos(blueSnake.getBody(), foodPos) || arrayListContainsPos(redSnake.getBody(), foodPos)) {
-    foodPos = new Vector2Int(int(random(0, gridWidth + 1)), int(random(0, gridHeight + 1)));
+    foodPos = new Vector2Int(int(random(0, gridWidth)), int(random(0, gridHeight)));
   }
   foodExists = true;
 }
