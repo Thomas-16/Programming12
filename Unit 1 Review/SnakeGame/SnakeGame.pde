@@ -1,6 +1,8 @@
 color blueColor = #2170d9;
 color redColor = #e3442b;
 
+color bgColor = #d9bc93;
+
 int gridSize = 50;
 
 Snake blueSnake, redSnake;
@@ -15,7 +17,7 @@ void gameSceneSetup() {
 }
 
 void gameSceneDraw() {
-  background(#d9bc93);
+  background(bgColor);
   
   if(frames % 6 == 0)
     update();
@@ -52,16 +54,18 @@ void handleCollisions() {
     // if a body pos of the blue snake is the same as the head pos of the red snake
     if(pos.equals(redSnake.getBody().get(0))) {
       // red lost
-      println("RED LOST");
-      break;
+      winner = 1;
+      scene = GAMEOVER_SCENE;
+      return;
     }
   }
   for(Vector2Int pos : redSnake.getBody()) {
     // if a body pos of the red snake is the same as the head pos of the blue snake
     if(pos.equals(blueSnake.getBody().get(0))) {
       // blue lost
-      println("BLUE LOST");
-      break;
+      winner = 2;
+      scene = GAMEOVER_SCENE;
+      return;
     }
   }
 }

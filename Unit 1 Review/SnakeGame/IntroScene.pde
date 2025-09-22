@@ -13,7 +13,7 @@ void introSceneSetup() {
 }
 
 void introSceneDraw() {
-  background(#d9bc93);
+  background(bgColor);
 
   playButton.draw();
   
@@ -36,9 +36,9 @@ void introSceneDraw() {
   text("SNAKE", width/2, 200);
 }
 
-void mousePressed() {
+void introMousePressed() {
   playButton.mousePressed();
 }
-void mouseReleased() {
+void introMouseReleased() {
   playButton.mouseReleased();
 }
