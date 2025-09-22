@@ -65,6 +65,7 @@ void drawSnakes() {
   }
 }
 void drawFood() {
+  imageMode(CORNER);
   image(foodImg, foodPos.x * gridSize, foodPos.y * gridSize);
 }
 
