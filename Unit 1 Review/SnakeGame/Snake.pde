@@ -54,6 +54,12 @@ class Snake {
     }
   }
   
+  public void grow() {
+    Vector2Int newPos = body.get(body.size() - 1).copy();
+    newPos.add(sub(body.get(body.size() - 1), body.get(body.size() - 2)));
+    body.add(newPos);
+  }
+  
   public void changeDir(Dir dir) { this.dir = dir; }
   
   public ArrayList<Vector2Int> getBody() { return body; }

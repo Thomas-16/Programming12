@@ -48,6 +48,10 @@ public class Vector2Int {
     return sqrt(this.sqrMag());
   }
   
+  public Vector2Int copy() {
+    return new Vector2Int(x, y);
+  }
+  
 }
 
 Vector2Int add(Vector2Int one, Vector2Int other) {

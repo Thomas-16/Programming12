@@ -37,17 +37,18 @@ void gameSceneDraw() {
   }
     
   drawSnakes();
-  drawFood();
+  if(foodExists)
+    drawFood();
   
   frames++;
 }
 
 void update() {
-  blueSnake.move();
-  redSnake.move();
-  
   // check collisions
   handleCollisions();
+  
+  blueSnake.move();
+  redSnake.move();
 }
 
 void drawSnakes() {
@@ -76,6 +77,24 @@ void spawnFood() {
 }
 
 void handleCollisions() {
+  // check food collision
+  if(foodExists) {
+    for(Vector2Int pos : blueSnake.getBody()) {
+      if(pos.equals(foodPos)) {
+        blueSnake.grow();
+        foodExists = false;
+        break;
+      }
+    }
+    for(Vector2Int pos : redSnake.getBody()) {
+      if(pos.equals(foodPos)) {
+        redSnake.grow();
+        foodExists = false;
+        break;
+      }
+    }
+  }
+  
   for(Vector2Int pos : blueSnake.getBody()) {
     // if a body pos of the blue snake is the same as the head pos of the red snake
     if(pos.equals(redSnake.getBody().get(0))) {
