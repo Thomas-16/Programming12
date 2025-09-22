@@ -29,12 +29,12 @@ void introSceneDraw() {
   // title text shadow
   fill(0,0,0, 80);
   textSize(200);
-  text("SNAKE", width/2+5, 200+5);
+  text("SNAKE", width/2+5, 230+5);
   
   // title text
   fill(#a1601f);
   textSize(200);
-  text("SNAKE", width/2, 200);
+  text("SNAKE", width/2, 230);
 }
 
 void introMousePressed() {
