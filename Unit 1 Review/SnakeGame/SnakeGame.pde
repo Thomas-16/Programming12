@@ -12,6 +12,8 @@ boolean foodExists;
 
 PImage foodImg;
 
+SoundFile eatFoodSFX, gameOverSFX;
+
 int frames;
 
 void gameSceneSetup() {
@@ -23,6 +25,9 @@ void gameSceneSetup() {
   gridHeight = height / gridSize;
   
   foodImg = scaleImage(loadImage("apple.png"), gridSize, gridSize);
+  
+  eatFoodSFX = new SoundFile(this, "SUCCESS.wav");
+  gameOverSFX = new SoundFile(this, "FAILURE.wav");
 }
 
 void gameSceneDraw() {
@@ -84,6 +89,7 @@ void handleCollisions() {
       if(pos.equals(foodPos)) {
         blueSnake.grow();
         foodExists = false;
+        eatFoodSFX.play();
         break;
       }
     }
@@ -91,6 +97,7 @@ void handleCollisions() {
       if(pos.equals(foodPos)) {
         redSnake.grow();
         foodExists = false;
+        eatFoodSFX.play();
         break;
       }
     }
@@ -101,6 +108,7 @@ void handleCollisions() {
     if(pos.equals(redSnake.getBody().get(0))) {
       // red lost
       winner = 1;
+      gameOverSFX.play();
       switchScene(GAMEOVER_SCENE);
       return;
     }
@@ -110,6 +118,7 @@ void handleCollisions() {
     if(pos.equals(blueSnake.getBody().get(0))) {
       // blue lost
       winner = 2;
+      gameOverSFX.play();
       switchScene(GAMEOVER_SCENE);
       return;
     }
@@ -120,6 +129,7 @@ void handleCollisions() {
     if(blueSnake.getBody().get(i).equals(blueSnake.getBody().get(0))) {
       // blue lost
       winner = 2;
+      gameOverSFX.play();
       switchScene(GAMEOVER_SCENE);
       return;
     }
@@ -129,6 +139,7 @@ void handleCollisions() {
     if(redSnake.getBody().get(i).equals(redSnake.getBody().get(0))) {
       // red lost
       winner = 1;
+      gameOverSFX.play();
       switchScene(GAMEOVER_SCENE);
       return;
     }
