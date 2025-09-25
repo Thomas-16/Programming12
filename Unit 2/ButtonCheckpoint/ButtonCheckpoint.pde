@@ -65,6 +65,7 @@ class RectButton {
     } else if(labelText != null && !labelText.equals("")) {
       textSize(textSize);
       textAlign(CENTER, CENTER);
+      fill(textColor);
       text(labelText, x, y);
     }
   }
@@ -92,7 +93,7 @@ class RectButton {
   public  color getButtonColor() { return buttonColor; }
 }
 
-RectButton button1;
+RectButton button1, button2;
 
 PImage clashKingImg;
 
@@ -101,20 +102,24 @@ void setup() {
   
   clashKingImg = loadImage("clash_king.png");
   
-  button1 = new RectButton(200, 200, 100, 80, color(#205dd6), color(#173673), color(#698fdb), color(#192f5c), color(#2457bd), 4, 3, clashKingImg);
+  button1 = new RectButton(200, 200, 200, 180, color(#205dd6), color(#173673), color(#698fdb), color(#192f5c), color(#2457bd), 6, 3, clashKingImg);
+  button2 = new
 }
 
 void draw() {
   background(255);
   
   button1.draw();
+  button2.draw();
 }
 
 void mousePressed() {
   button1.mousePressed();
+  button2.mousePressed();
 }
 void mouseReleased() {
   button1.mouseReleased();
+  button2.mouseReleased();
 }
 
 PImage scaleImage(PImage src, int w, int h) {
