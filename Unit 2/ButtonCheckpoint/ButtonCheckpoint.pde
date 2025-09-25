@@ -13,6 +13,7 @@ class RectButton {
   private String labelText;
   private PImage labelImage;
   private int textSize;
+  private color textColor;
   
   
   private Runnable onClick; // onClick callback
@@ -24,10 +25,11 @@ class RectButton {
     this.labelImage = scaleImage(this.labelImage, w - roundness, h - roundness);
   }
   
-  RectButton(int x, int y, int w, int h, color buttonColor, color outlineColor, color hoveringColor,  color hoveringOutlineColor, color clickingButtonColor, int outlineWidth, int roundness, String labelText, int textSize) {
+  RectButton(int x, int y, int w, int h, color buttonColor, color outlineColor, color hoveringColor,  color hoveringOutlineColor, color clickingButtonColor, int outlineWidth, int roundness, String labelText, int textSize, color textColor) {
     this(x, y, w, h, buttonColor, outlineColor, hoveringColor, hoveringOutlineColor, clickingButtonColor, outlineWidth, roundness);
     this.labelText = labelText;
     this.textSize = textSize;
+    this.textColor = textColor;
   }
   
   RectButton(int x, int y, int w, int h, color buttonColor, color outlineColor, color hoveringColor, color hoveringOutlineColor, color clickingButtonColor, int outlineWidth, int roundness) {
@@ -92,10 +94,14 @@ class RectButton {
 
 RectButton button1;
 
+PImage clashKingImg;
+
 void setup() {
   size(800, 800);
   
-  button1 = new RectButton(200, 200, 100, 80, color(#205dd6), color(#173673), color(#698fdb), color(#192f5c), color(#2457bd), 4, 3);
+  clashKingImg = loadImage("clash_king.png");
+  
+  button1 = new RectButton(200, 200, 100, 80, color(#205dd6), color(#173673), color(#698fdb), color(#192f5c), color(#2457bd), 4, 3, clashKingImg);
 }
 
 void draw() {
