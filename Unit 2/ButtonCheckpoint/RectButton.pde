@@ -13,22 +13,31 @@ class RectButton {
   private PImage labelImage;
   private int textSize;
   private color textColor;
+  private Gif gif;
   
   
   private Runnable onClick; // onClick callback
   private boolean isBeingPressed;
   
+  // Button with image
   RectButton(int x, int y, int w, int h, color buttonColor, color outlineColor, color hoveringColor,  color hoveringOutlineColor, color clickingButtonColor, int outlineWidth, int roundness, PImage labelImage) {
     this(x, y, w, h, buttonColor, outlineColor, hoveringColor, hoveringOutlineColor, clickingButtonColor, outlineWidth, roundness);
     this.labelImage = labelImage;
     this.labelImage = scaleImage(this.labelImage, w - roundness, h - roundness);
   }
   
+  // Button with text
   RectButton(int x, int y, int w, int h, color buttonColor, color outlineColor, color hoveringColor,  color hoveringOutlineColor, color clickingButtonColor, int outlineWidth, int roundness, String labelText, int textSize, color textColor) {
     this(x, y, w, h, buttonColor, outlineColor, hoveringColor, hoveringOutlineColor, clickingButtonColor, outlineWidth, roundness);
     this.labelText = labelText;
     this.textSize = textSize;
     this.textColor = textColor;
+  }
+  
+  // Button with GIF
+  RectButton(int x, int y, int w, int h, color buttonColor, color outlineColor, color hoveringColor,  color hoveringOutlineColor, color clickingButtonColor, int outlineWidth, int roundness, String before, String after, int gifW, int gifH, int numFrames, int framesPerImg) {
+    this(x, y, w, h, buttonColor, outlineColor, hoveringColor, hoveringOutlineColor, clickingButtonColor, outlineWidth, roundness);
+    this.gif = new Gif(before, after, x, y, gifW, gifH, numFrames, framesPerImg);
   }
   
   RectButton(int x, int y, int w, int h, color buttonColor, color outlineColor, color hoveringColor, color hoveringOutlineColor, color clickingButtonColor, int outlineWidth, int roundness) {
@@ -66,6 +75,8 @@ class RectButton {
       textAlign(CENTER, CENTER);
       fill(isHoveredOver() ? buttonColor : textColor);
       text(labelText, x, y);
+    } else if(gif != null) {
+      gif.draw();
     }
   }
   
