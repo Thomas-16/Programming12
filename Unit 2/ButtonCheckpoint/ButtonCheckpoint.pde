@@ -1,5 +1,6 @@
 
 RectButton button1, button2;
+Gif gif1;
 
 PImage clashKingImg;
 
@@ -10,6 +11,8 @@ void setup() {
   
   button1 = new RectButton(200, 200, 200, 180, color(#205dd6), color(#173673), color(#698fdb), color(#192f5c), color(#2457bd), 6, 3, clashKingImg);
   button2 = new RectButton(200, 600, 220, 160, color(#a45ed6), color(#68219c), color(#7d39ad),  color(#7540a1), color(#4e1d75), 6, 3, "TEXT", 80, color(#7d39ad));
+
+  gif1 = new Gif("frame_", "_delay-0.03s.gif", 200, 600, 220, 160, 72, 4);
 }
 
 void draw() {
@@ -17,6 +20,8 @@ void draw() {
   
   button1.draw();
   button2.draw();
+  
+  gif1.draw();
 }
 
 void mousePressed() {
