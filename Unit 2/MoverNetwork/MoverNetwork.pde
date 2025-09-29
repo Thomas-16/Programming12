@@ -7,7 +7,7 @@ void setup() {
   
   movers = new ArrayList<Mover>();
   for(int i = 0; i < numMovers; i++) {
-    movers.add(new Mover());
+    movers.add(new Mover(new PVector(random(width), random(height))));
   }
   
 }
@@ -20,4 +20,8 @@ void draw() {
     //mover.drawBody();
     mover.drawConnector();
   }
+}
+
+void mousePressed() {
+  
 }

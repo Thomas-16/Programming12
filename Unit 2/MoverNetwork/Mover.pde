@@ -5,10 +5,11 @@ class Mover {
   private float d;
   private int maxDist;
   
-  Mover() {
+  Mover(PVector pos) {
     d = 100;
     maxDist = 200;
-    pos = new PVector(random(0, width), random(0, height));
+    
+    this.pos = pos.copy();
     
     // random magnitude and direction
     velocity = new PVector(1, 0);
