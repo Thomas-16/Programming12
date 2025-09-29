@@ -1,13 +1,13 @@
 
-Mover[] movers;
-int numMovers = 80;
+ArrayList<Mover> movers;
+int numMovers = 90;
 
 void setup() {
   size(1000, 800, P2D);
   
-  movers = new Mover[numMovers];
+  movers = new ArrayList<Mover>();
   for(int i = 0; i < numMovers; i++) {
-    movers[i] = new Mover();
+    movers.add(new Mover());
   }
   
 }
