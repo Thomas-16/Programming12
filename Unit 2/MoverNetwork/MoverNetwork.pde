@@ -13,7 +13,9 @@ void setup() {
 }
 
 void draw() {
-  background(0);
+  fill(0, 40);
+  noStroke();
+  rect(0, 0, width, height);
   
   for(Mover mover : movers) {
     mover.update();
