@@ -4,6 +4,7 @@ int numMovers = 80;
 
 void setup() {
   size(1000, 800, P2D);
+  smooth(4);
   frameRate(60);
 
   movers = new ArrayList<Mover>();
