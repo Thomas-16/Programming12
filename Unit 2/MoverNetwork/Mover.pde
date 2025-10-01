@@ -1,6 +1,7 @@
 class Mover {
   public PVector pos;
   public PVector velocity;
+  private float hue;
   
   private float d;
   private int maxDist;
@@ -11,7 +12,8 @@ class Mover {
     maxDist = 200;
     
     this.pos = pos.copy();
-    
+    hue = random(210, 360);
+
     // random magnitude and direction
     velocity = new PVector(1, 0);
     velocity.setMag(random(0.5, 2.5));
@@ -65,11 +67,12 @@ class Mover {
     for(Mover mover : movers) {
       float dist = dist(pos.x, pos.y, mover.pos.x, mover.pos.y);
       if(dist < maxDist) {
-        float a = map(dist, 0, maxDist, 220, 0);
+        float a = map(dist, 0, maxDist, 100, 0);
         
-        stroke(255, a);
+        // Blend the two movers' colors
+        float avgHue = (hue + mover.hue) / 2;
+        stroke(avgHue, 80, 100, a);
         strokeWeight(2);
-        
         line(pos.x, pos.y, mover.pos.x, mover.pos.y);
       }
     }
