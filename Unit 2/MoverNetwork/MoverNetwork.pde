@@ -15,7 +15,7 @@ void setup() {
 }
 
 void draw() {
-  fill(0, 26);
+  fill(0, 18);
   noStroke();
   rect(0, 0, width, height);
 
