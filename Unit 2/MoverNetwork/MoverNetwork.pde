@@ -1,6 +1,6 @@
 
 ArrayList<Mover> movers;
-int numMovers = 80;
+int numMovers = 70;
 
 void setup() {
   size(1000, 800, P2D);
