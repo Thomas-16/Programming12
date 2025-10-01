@@ -29,7 +29,7 @@ class Mover {
   void applyRepulsion() {
     PVector repulsion = new PVector(0, 0);
     int repelDist = 60;
-    float maxRepelStrength = 0.4;
+    float maxRepelStrength = 0.35;
     
     for(Mover other : movers) {
       if(other == this) continue;
