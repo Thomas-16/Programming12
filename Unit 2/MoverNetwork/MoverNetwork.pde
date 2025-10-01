@@ -1,9 +1,9 @@
 
 ArrayList<Mover> movers;
-int numMovers = 70;
+int numMovers = 75;
 
 void setup() {
-  size(1000, 800, P2D);
+  size(1200, 800, P2D);
   smooth(4);
   frameRate(60);
   colorMode(HSB, 360, 100, 100);

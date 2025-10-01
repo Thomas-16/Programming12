@@ -5,7 +5,6 @@ class Mover {
   
   private float d;
   private int maxDist;
-  private float maxRepelStrength = 0.4;
   
   Mover(PVector pos) {
     d = 100;
@@ -29,7 +28,8 @@ class Mover {
   
   void applyRepulsion() {
     PVector repulsion = new PVector(0, 0);
-    int repelDist = 50;
+    int repelDist = 60;
+    float maxRepelStrength = 0.4;
     
     for(Mover other : movers) {
       if(other == this) continue;
@@ -49,7 +49,7 @@ class Mover {
     }
     
     velocity.add(repulsion);
-    velocity.limit(4.5);
+    velocity.limit(4);
   }
   
   void handleCollision() {
@@ -69,9 +69,8 @@ class Mover {
       if(dist < maxDist) {
         float a = map(dist, 0, maxDist, 100, 0);
         
-        // Blend the two movers' colors
         float avgHue = (hue + mover.hue) / 2;
-        stroke(avgHue, 80, 100, a);
+        stroke(avgHue, 120, 255, a);
         strokeWeight(2);
         line(pos.x, pos.y, mover.pos.x, mover.pos.y);
       }
