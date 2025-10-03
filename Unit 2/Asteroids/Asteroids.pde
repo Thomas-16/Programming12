@@ -1,3 +1,5 @@
+// Thomas Fang
+
 
 int scene = 0;
 final int INTRO_SCENE = 0;
@@ -14,6 +16,9 @@ void setup() {
 
 void draw() {
   background(0);
+  //fill(0, 60);
+  //noStroke();
+  //rect(0, 0, width, height);
   
   switch(scene) {
     case INTRO_SCENE:
@@ -40,6 +45,29 @@ void switchScene(int newScene) {
       break;
     case GAME_OVER_SCENE:
       gameOverSetup();
+      break;
+  }
+}
+
+void keyPressed() {
+  switch(scene) {
+    case INTRO_SCENE:
+      break;
+    case GAME_SCENE:
+      gameSceneKeyPressed();
+      break;
+    case GAME_OVER_SCENE:
+      break;
+  }
+}
+void keyReleased() {
+  switch(scene) {
+    case INTRO_SCENE:
+      break;
+    case GAME_SCENE:
+      gameSceneKeyReleased();
+      break;
+    case GAME_OVER_SCENE:
       break;
   }
 }

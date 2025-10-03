@@ -1,16 +1,36 @@
-class Spaceship {
-  public PVector pos;
-  public PVector vel;
+class Spaceship extends GameObject {
   public PVector dir;
   
-  Spaceship() {
-    pos = new PVector(width/2, height/2);
-    vel = new PVector(0,0);
+  private float turnSpeed;
+  private float moveSpeed;
+  
+  Spaceship(float x, float y) {
+    super(x, y, 0, 0);
+    
     dir = new PVector(1, 0);
+    
+    turnSpeed = 3.4;
+    moveSpeed = 0.5;
+    
   }
   
   public void update() {
+    pos.add(vel);
     
+    // decay velocity
+    vel.mult(0.95);
+    
+    dir.setMag(moveSpeed);
+    if(upDown) vel.add(dir);
+    
+    if(leftDown) dir.rotate(-radians(turnSpeed));
+    if(rightDown) dir.rotate(radians(turnSpeed));
+    
+    // edge handling
+    if(pos.x > width) pos.sub(width, 0);
+    if(pos.x < 0) pos.add(width, 0);
+    if(pos.y > height) pos.sub(0, height);
+    if(pos.y < 0) pos.add(0, height);
   }
   
   public void draw() {
@@ -35,10 +55,6 @@ class Spaceship {
     circle(15, 0, 5);
     
     popMatrix();
-  }
-  
-  public void shoot() {
-    
   }
   
 }
