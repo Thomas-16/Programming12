@@ -1,7 +1,7 @@
 // Thomas Fang
 
 
-int scene = 0;
+int scene = 1;
 final int INTRO_SCENE = 0;
 final int GAME_SCENE = 1;
 final int GAME_OVER_SCENE = 2;

@@ -31,7 +31,7 @@ void gameDraw() {
 }
 
 void handleInput() {
-  if(spaceDown && millis() - lastShotTime > 1000)  {
+  if(spaceDown && millis() - lastShotTime > 800)  {
     gameObjects.add(new Bullet(player.pos, player.dir));
     lastShotTime = millis();
   }
