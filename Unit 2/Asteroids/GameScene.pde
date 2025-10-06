@@ -11,6 +11,9 @@ ArrayList<GameObject> gameObjects;
 
 int lastShotTime;
 
+// TODO:
+// starry background?
+// ghosting for certain objects
 
 
 void gameSetup() {
