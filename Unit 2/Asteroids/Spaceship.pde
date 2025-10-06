@@ -20,6 +20,8 @@ class Spaceship extends GameObject {
     // decay velocity
     vel.mult(0.95);
     
+    vel.limit(9.5);
+    
     dir.setMag(moveSpeed);
     if(upDown) vel.add(dir);
     
