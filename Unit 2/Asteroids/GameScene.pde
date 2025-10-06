@@ -16,6 +16,14 @@ int lastShotTime;
 void gameSetup() {
   gameObjects = new ArrayList<GameObject>();
   
+  gameObjects.add(new Asteroid());
+  gameObjects.add(new Asteroid());
+  gameObjects.add(new Asteroid());
+  gameObjects.add(new Asteroid());
+  gameObjects.add(new Asteroid());
+  gameObjects.add(new Asteroid());
+  gameObjects.add(new Asteroid());
+  
   player = new Spaceship(width/2, height/2);
   gameObjects.add(player);
   
