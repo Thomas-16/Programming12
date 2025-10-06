@@ -1,14 +1,17 @@
 
+// input
+boolean leftDown, rightDown, upDown, downDown;
+boolean spaceDown;
+
 // Game objects
 Spaceship player;
 
 ArrayList<GameObject> gameObjects;
 
 
+int lastShotTime;
 
-// input
-boolean leftDown, rightDown, upDown, downDown;
-boolean spaceDown;
+
 
 void gameSetup() {
   gameObjects = new ArrayList<GameObject>();
@@ -28,7 +31,10 @@ void gameDraw() {
 }
 
 void handleInput() {
-  if(spaceDown) gameObjects.add(new Bullet(player.pos, player.dir));
+  if(spaceDown && millis() - lastShotTime > 1000)  {
+    gameObjects.add(new Bullet(player.pos, player.dir));
+    lastShotTime = millis();
+  }
 }
 
 void pruneGameObjects() {
