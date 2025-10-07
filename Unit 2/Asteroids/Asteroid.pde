@@ -3,9 +3,13 @@ class Asteroid extends GameObject {
   
   private PShape shape;
   private int numVertices;
+  private float maxSize = 0;
   
   public Asteroid() {
-    super(random(width), random(height), 0, 0);
+    super(random(width), random(height), 1, 1);
+    vel.setMag(random(1, 3));
+    vel.rotate(random(TWO_PI));
+    
     size = 3;
     
     numVertices = (int) random(10, 18);
@@ -21,6 +25,10 @@ class Asteroid extends GameObject {
       float angle = TWO_PI / (numVertices-1) * (float) i;
       float randomOffset = random(0.7, 1.3);
       
+      if(radius * randomOffset * 2 > maxSize) {
+        maxSize = radius * randomOffset * 2;
+      }
+      
       shape.vertex(cos(angle) * radius * randomOffset, sin(angle) * radius * randomOffset);
     }
     shape.endShape(CLOSE);
@@ -28,6 +36,12 @@ class Asteroid extends GameObject {
   
   public void update() {
     pos.add(vel);
+    
+    // edge handling
+    if(pos.x > width + maxSize/2) pos.sub(width + maxSize, 0);
+    if(pos.x < 0 - maxSize/2) pos.add(width + maxSize, 0);
+    if(pos.y > height + maxSize/2) pos.sub(0, height + maxSize);
+    if(pos.y < 0 - maxSize/2) pos.add(0, height + maxSize);
   }
   
   public void draw() {
