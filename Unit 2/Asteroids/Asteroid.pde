@@ -19,7 +19,7 @@ class Asteroid extends GameObject {
     int radius = size * 30;
     for(int i = 0; i < numVertices; i++) {
       float angle = TWO_PI / (numVertices-1) * (float) i;
-      float randomOffset = random(0.6, 1.4);
+      float randomOffset = random(0.7, 1.3);
       
       shape.vertex(cos(angle) * radius * randomOffset, sin(angle) * radius * randomOffset);
     }
