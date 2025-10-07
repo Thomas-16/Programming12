@@ -1,5 +1,11 @@
 // Thomas Fang
+// Asteroids Game
 
+// References:
+// Jeffrey Thompson's collision detection guide
+// https://github.com/jeffThompson/CollisionDetection
+// https://www.jeffreythompson.org/collision-detection/poly-point.php
+// https://www.jeffreythompson.org/collision-detection/poly-poly.php
 
 int scene = 1;
 final int INTRO_SCENE = 0;

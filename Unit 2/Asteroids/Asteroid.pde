@@ -2,6 +2,7 @@ class Asteroid extends GameObject {
   private int size; // 1, 2, or 3
   
   private PShape shape;
+  private PVector[] verticies;
   private int numVertices;
   private float maxSize = 0;
   
@@ -13,6 +14,7 @@ class Asteroid extends GameObject {
     size = 3;
     
     numVertices = (int) random(10, 18);
+    verticies = new PVector[numVertices];
     
     shape = createShape();
     shape.beginShape();
@@ -24,12 +26,14 @@ class Asteroid extends GameObject {
     for(int i = 0; i < numVertices; i++) {
       float angle = TWO_PI / (numVertices-1) * (float) i;
       float randomOffset = random(0.7, 1.3);
+      float randomRadius = radius * randomOffset;
       
-      if(radius * randomOffset * 2 > maxSize) {
-        maxSize = radius * randomOffset * 2;
+      if(randomRadius * 2 > maxSize) {
+        maxSize = randomRadius * 2;
       }
       
-      shape.vertex(cos(angle) * radius * randomOffset, sin(angle) * radius * randomOffset);
+      verticies[i] = new PVector(cos(angle) * randomRadius, sin(angle) * randomRadius);
+      shape.vertex(cos(angle) * randomRadius, sin(angle) * randomRadius);
     }
     shape.endShape(CLOSE);
   }
@@ -42,6 +46,12 @@ class Asteroid extends GameObject {
     if(pos.x < 0 - maxSize/2) pos.add(width + maxSize, 0);
     if(pos.y > height + maxSize/2) pos.sub(0, height + maxSize);
     if(pos.y < 0 - maxSize/2) pos.add(0, height + maxSize);
+    
+    handleCollisions();
+  }
+  
+  private void handleCollisions() {
+    
   }
   
   public void draw() {

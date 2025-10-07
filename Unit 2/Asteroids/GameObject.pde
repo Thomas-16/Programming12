@@ -29,4 +29,8 @@ class GameObject {
   public void draw() {
     
   }
+  
+  public void delete() {
+    shouldBeDeleted = true;
+  }
 }
