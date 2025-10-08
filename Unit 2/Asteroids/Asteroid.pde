@@ -1,21 +1,21 @@
 class Asteroid extends GameObject {
   private int size; // 1, 2, or 3
   
-  public PVector[] verticies;
+  public PVector[] vertices;
   
   private PShape shape;
   private int numVertices;
   private float maxSize = 0;
   
-  public Asteroid() {
+  public Asteroid(int size) {
     super(random(width), random(height), 1, 1);
     vel.setMag(random(1, 3));
     vel.rotate(random(TWO_PI));
     
-    size = 3;
+    this.size = size;
     
     numVertices = (int) random(10, 18);
-    verticies = new PVector[numVertices];
+    vertices = new PVector[numVertices];
     
     shape = createShape();
     shape.beginShape();
@@ -23,7 +23,7 @@ class Asteroid extends GameObject {
     shape.stroke(255);
     shape.strokeWeight(4);
     
-    int radius = size * 30;
+    int radius = this.size * 30;
     for(int i = 0; i < numVertices; i++) {
       float angle = TWO_PI / numVertices * (float) i;
       float randomOffset = random(0.7, 1.3);
@@ -33,7 +33,7 @@ class Asteroid extends GameObject {
         maxSize = randomRadius * 2;
       }
       
-      verticies[i] = new PVector(cos(angle) * randomRadius, sin(angle) * randomRadius);
+      vertices[i] = new PVector(cos(angle) * randomRadius, sin(angle) * randomRadius);
       shape.vertex(cos(angle) * randomRadius, sin(angle) * randomRadius);
     }
     shape.endShape(CLOSE);
@@ -52,12 +52,27 @@ class Asteroid extends GameObject {
   }
   
   private void handleCollisions() {
+    // bullet collision
     for(GameObject bullet : gameObjects) {
       if(!(bullet instanceof Bullet)) continue;
       
-      if(polyPointCollision(this.pos, this.verticies, bullet.pos.x, bullet.pos.y)) {
+      if(polyPointCollision(this.pos, this.vertices, bullet.pos.x, bullet.pos.y)) {
         this.delete();
         bullet.delete();
+        break;
+      }
+    }
+    
+    // asteroids collision
+    for(GameObject obj : gameObjects) {
+      if(!(obj instanceof Asteroid) || obj == this) continue;
+      
+      Asteroid other = (Asteroid) obj;
+      
+      if(polyPolyCollision(this.pos, this.vertices, other.pos, other.vertices)) {
+        this.delete();
+        other.delete();
+        break;
       }
     }
   }

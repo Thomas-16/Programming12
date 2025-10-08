@@ -43,8 +43,9 @@ class Spaceship extends GameObject {
       
       Asteroid asteroid = (Asteroid) obj;
       
-      if(polyPointCollision(asteroid.pos, asteroid.verticies, this.pos.x, this.pos.y)) {
+      if(polyPointCollision(asteroid.pos, asteroid.vertices, this.pos.x, this.pos.y)) {
         println("player died");
+        break;
       }
     }
   }
