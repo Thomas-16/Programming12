@@ -1,8 +1,9 @@
 class Asteroid extends GameObject {
   private int size; // 1, 2, or 3
   
+  public PVector[] verticies;
+  
   private PShape shape;
-  private PVector[] verticies;
   private int numVertices;
   private float maxSize = 0;
   

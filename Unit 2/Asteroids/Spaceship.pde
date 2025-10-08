@@ -33,6 +33,20 @@ class Spaceship extends GameObject {
     if(pos.x < 0) pos.add(width, 0);
     if(pos.y > height) pos.sub(0, height);
     if(pos.y < 0) pos.add(0, height);
+    
+    handleCollisions();
+  }
+  
+  private void handleCollisions() {
+    for(GameObject obj : gameObjects) {
+      if(!(obj instanceof Asteroid)) continue;
+      
+      Asteroid asteroid = (Asteroid) obj;
+      
+      if(polyPointCollision(asteroid.pos, asteroid.verticies, this.pos.x, this.pos.y)) {
+        println("player died");
+      }
+    }
   }
   
   public void draw() {
