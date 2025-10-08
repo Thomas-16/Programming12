@@ -24,7 +24,7 @@ class Asteroid extends GameObject {
     
     int radius = size * 30;
     for(int i = 0; i < numVertices; i++) {
-      float angle = TWO_PI / (numVertices-1) * (float) i;
+      float angle = TWO_PI / numVertices * (float) i;
       float randomOffset = random(0.7, 1.3);
       float randomRadius = radius * randomOffset;
       
@@ -51,7 +51,14 @@ class Asteroid extends GameObject {
   }
   
   private void handleCollisions() {
-    
+    for(GameObject bullet : gameObjects) {
+      if(!(bullet instanceof Bullet)) continue;
+      
+      if(polyPointCollision(this.pos, this.verticies, bullet.pos.x, bullet.pos.y)) {
+        this.delete();
+        bullet.delete();
+      }
+    }
   }
   
   public void draw() {
