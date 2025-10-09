@@ -1,8 +1,8 @@
 class Asteroid extends GameObject {
   private int size; // 1, 2, or 3
 
-  public PVector[] baseVertices; // original unrotated shape
-  public PVector[] vertices;
+  public PVector[] baseVertices; // original unrotated vertices
+  public PVector[] vertices; // rotated vertices used for collision detection
   
   private PShape shape; // not rotated shape, we're rotating when drawing it
   private int numVertices;
