@@ -14,6 +14,7 @@ final int GAME_OVER_SCENE = 2;
 
 void setup() {
   size(1200, 900, P2D);
+  frameRate(60);
   smooth(4);
   
   gameOverSetup();
