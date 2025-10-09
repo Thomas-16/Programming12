@@ -2,10 +2,9 @@
 // Asteroids Game
 
 // References:
-// Jeffrey Thompson's collision detection guide
-// https://github.com/jeffThompson/CollisionDetection
 // https://www.jeffreythompson.org/collision-detection/poly-point.php
 // https://www.jeffreythompson.org/collision-detection/poly-poly.php
+// https://gafferongames.com/post/collision_response_and_coulomb_friction/
 
 int scene = 1;
 final int INTRO_SCENE = 0;

@@ -85,19 +85,6 @@ class Asteroid extends GameObject {
         break;
       }
     }
-    
-    // asteroids collision
-    for(GameObject obj : gameObjects) {
-      if(!(obj instanceof Asteroid) || obj == this) continue;
-      
-      Asteroid other = (Asteroid) obj;
-      
-      if(polyPolyCollision(this.pos, this.vertices, other.pos, other.vertices)) {
-        this.delete();
-        other.delete();
-        break;
-      }
-    }
   }
   
   public void draw() {
