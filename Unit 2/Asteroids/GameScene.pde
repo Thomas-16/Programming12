@@ -14,6 +14,7 @@ int lastShotTime;
 // TODO:
 // starry background?
 // ghosting for certain objects
+// PARTICLE EFFECTS
 
 
 void gameSetup() {
