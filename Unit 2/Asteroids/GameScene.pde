@@ -77,31 +77,24 @@ void drawGameObjects() {
 
 // https://gafferongames.com/post/collision_response_and_coulomb_friction/
 void resolveAsteroidCollisions() {
-  ArrayList<Asteroid> asts = new ArrayList<Asteroid>();
+  ArrayList<Asteroid> asteroids = new ArrayList<Asteroid>();
   for (GameObject go : gameObjects) {
-    if (go instanceof Asteroid) asts.add((Asteroid) go);
+    if (go instanceof Asteroid) asteroids.add((Asteroid) go);
   }
 
-  float restitution = 1.0; // perfectly elastic
+  for (int i = 0; i < asteroids.size(); i++) {
+    Asteroid a = asteroids.get(i);
+    for (int k = i + 1; k < asteroids.size(); k++) {
+      Asteroid b = asteroids.get(k);
 
-  for (int i = 0; i < asts.size(); i++) {
-    Asteroid a = asts.get(i);
-    for (int k = i + 1; k < asts.size(); k++) {
-      Asteroid b = asts.get(k);
-
-      // circle check
-      float ra = a.maxSize * 0.5f;
-      float rb = b.maxSize * 0.5f;
-
+      // simple circle check
       PVector n = PVector.sub(b.pos, a.pos);
-      float distSq = n.magSq();
-      float r = ra + rb;
-      if (distSq > r * r) continue;  // too far apart
+      float dist = n.mag();
+      if (dist > a.maxSize * 0.5f + b.maxSize * 0.5f) continue;
 
-      // Not colliding
+      // proper collision check
       if (!polyPolyCollision(a.pos, a.vertices, b.pos, b.vertices)) continue;
 
-      float dist = sqrt(distSq);
       n.div(dist); // normalize
 
       // Relative velocity
@@ -110,11 +103,12 @@ void resolveAsteroidCollisions() {
       if (velAlongNormal > 0) continue; // moving apart already
 
       // assume masses are 1
+      float restitution = 1.0; // perfectly elastic collisions
       float j = -(1 + restitution) * velAlongNormal / 2.0f;
 
       PVector impulse = PVector.mult(n, j);
-      a.vel.sub(impulse); // v1 -= j * n
-      b.vel.add(impulse); // v2 += j * n
+      a.vel.sub(impulse);
+      b.vel.add(impulse);
     }
   }
 }
