@@ -13,7 +13,6 @@ PGraphics backgroundPG;
 int lastShotTime;
 
 // TODO:
-// starry background?
 // PARTICLE EFFECTS
 // ghosting for certain objects
 
@@ -21,17 +20,9 @@ int lastShotTime;
 void gameSetup() {
   gameObjects = new ArrayList<GameObject>();
   
-  gameObjects.add(new Asteroid(3));
-  gameObjects.add(new Asteroid(3));
-  gameObjects.add(new Asteroid(3));
-  gameObjects.add(new Asteroid(3));
-  gameObjects.add(new Asteroid(3));
-  gameObjects.add(new Asteroid(3));
-  gameObjects.add(new Asteroid(3));
-  gameObjects.add(new Asteroid(3));
-  gameObjects.add(new Asteroid(3));
-  gameObjects.add(new Asteroid(3));
-  gameObjects.add(new Asteroid(3));
+  for(int i = 0; i < 12; i++) {
+    gameObjects.add(new Asteroid(3));
+  }
   
   player = new Spaceship(width/2, height/2);
   gameObjects.add(player);
