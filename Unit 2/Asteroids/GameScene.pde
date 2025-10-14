@@ -20,7 +20,7 @@ int lastShotTime;
 void gameSetup() {
   gameObjects = new ArrayList<GameObject>();
   
-  for(int i = 0; i < 12; i++) {
+  for(int i = 0; i < 10; i++) {
     gameObjects.add(new Asteroid(3));
   }
   
@@ -83,13 +83,15 @@ void pruneGameObjects() {
   }
 }
 void updateGameObjects() {
-  for(GameObject gameObj : gameObjects) {
-    gameObj.update();
+  for (int i = 0; i < gameObjects.size(); i++) {
+    if(gameObjects.get(i).shouldBeDeleted) continue;
+    gameObjects.get(i).update();
   }
 }
 void drawGameObjects() {
-  for(GameObject gameObj : gameObjects) {
-    gameObj.draw();
+  for (int i = 0; i < gameObjects.size(); i++) {
+    if(gameObjects.get(i).shouldBeDeleted) continue;
+    gameObjects.get(i).draw();
   }
 }
 

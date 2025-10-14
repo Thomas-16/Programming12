@@ -10,10 +10,12 @@ class Asteroid extends GameObject {
   private float rotation;
   private float rotateVel;
 
-  public Asteroid(int size) {
-    super(random(width), random(height), 1, 1);
+  public Asteroid(int x, int y, int size, PVector dir) {
+    super(x, y, 1, 1);
+    
+    dir.normalize();
+    vel = dir.copy();
     vel.setMag(random(1, 3));
-    vel.rotate(random(TWO_PI));
     
     this.size = size;
     this.rotation = 0;
@@ -27,27 +29,38 @@ class Asteroid extends GameObject {
     shape.beginShape();
     shape.fill(0);
     shape.stroke(255);
-    shape.strokeWeight(4);
+    if(size >= 2)
+      shape.strokeWeight(4);
+    else
+      shape.strokeWeight(3);
     
     int radius = this.size * 30;
     for(int i = 0; i < numVertices; i++) {
       float angle = TWO_PI / numVertices * (float) i;
-      float randomOffset = random(0.7, 1.3);
+      float randomOffset;
+      if(size >= 2)
+        randomOffset = random(0.7, 1.3);
+      else
+        randomOffset = random(0.8, 1.2);
       float randomRadius = radius * randomOffset;
       
       if(randomRadius * 2 > maxSize) {
         maxSize = randomRadius * 2;
       }
 
-      float x = cos(angle) * randomRadius;
-      float y = sin(angle) * randomRadius;
+      float px = cos(angle) * randomRadius;
+      float py = sin(angle) * randomRadius;
 
-      baseVertices[i] = new PVector(x, y);
-      vertices[i] = new PVector(x, y);
+      baseVertices[i] = new PVector(px, py);
+      vertices[i] = new PVector(px, py);
 
-      shape.vertex(x, y);
+      shape.vertex(px, py);
     }
     shape.endShape(CLOSE);
+  }
+  
+  public Asteroid(int size) {
+    this((int)random(width), (int)random(height), size, PVector.random2D());
   }
   
   public void update() {
@@ -79,9 +92,15 @@ class Asteroid extends GameObject {
     for(GameObject bullet : gameObjects) {
       if(!(bullet instanceof Bullet)) continue;
       
-      if(polyPointCollision(this.pos, this.vertices, bullet.pos.x, bullet.pos.y)) {
+      if(polyPointCollision(this.pos, this.vertices, bullet.pos.x, bullet.pos.y) && !bullet.shouldBeDeleted) {
         this.delete();
         bullet.delete();
+        
+        if(this.size > 1) {
+          gameObjects.add(new Asteroid((int)pos.x, (int)pos.y, size-1, PVector.random2D()));
+          gameObjects.add(new Asteroid((int)pos.x, (int)pos.y, size-1, PVector.random2D()));
+        }
+        
         break;
       }
     }
