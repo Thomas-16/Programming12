@@ -9,13 +9,23 @@ class Asteroid extends GameObject {
   private float maxSize = 0;
   private float rotation;
   private float rotateVel;
-
-  public Asteroid(int x, int y, int size, PVector dir) {
+  
+  private PVector targetVel;
+  
+  public Asteroid(int x, int y, int size, PVector dir, boolean isSplit) {
     super(x, y, 1, 1);
     
     dir.normalize();
-    vel = dir.copy();
-    vel.setMag(random(1, 3));
+    
+    targetVel = dir.copy();
+    targetVel.setMag(random(1, 3));
+    
+    if(isSplit) {
+      vel = dir.copy();
+      vel.setMag(random(6, 9)); // Start fast when splitting
+    } else {
+      vel = targetVel.copy();
+    }
     
     this.size = size;
     this.rotation = 0;
@@ -60,10 +70,19 @@ class Asteroid extends GameObject {
   }
   
   public Asteroid(int size) {
-    this((int)random(width), (int)random(height), size, PVector.random2D());
+    this((int)random(width), (int)random(height), size, PVector.random2D(), false);
   }
   
   public void update() {
+    // slow down to target velocity
+    if(vel.mag() > targetVel.mag()) {
+      vel.mult(0.96);
+      
+      if(vel.mag() <= targetVel.mag()) {
+        vel = targetVel.copy();
+      }
+    }
+    
     pos.add(vel);
 
     rotation += rotateVel;
@@ -100,8 +119,8 @@ class Asteroid extends GameObject {
           PVector dir1 = bullet.vel.copy().rotate(radians(90));
           PVector dir2 = dir1.copy().rotate(PI);
           
-          gameObjects.add(new Asteroid((int)pos.x, (int)pos.y, size-1, dir1));
-          gameObjects.add(new Asteroid((int)pos.x, (int)pos.y, size-1, dir2));
+          gameObjects.add(new Asteroid((int)pos.x, (int)pos.y, size-1, dir1, true));
+          gameObjects.add(new Asteroid((int)pos.x, (int)pos.y, size-1, dir2, true));
         }
         
         break;
