@@ -25,7 +25,7 @@ class UFO extends GameObject {
     translate(pos.x, pos.y);
     
     fill(0);
-    stroke(255);
+    stroke(255, 0, 0);
     strokeWeight(3);
     
     ellipse(0, 5, 50, 15);
