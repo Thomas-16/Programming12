@@ -23,6 +23,7 @@ void gameSetup() {
   for(int i = 0; i < 10; i++) {
     gameObjects.add(new Asteroid(3));
   }
+  gameObjects.add(new UFO());
   
   player = new Spaceship(width/2, height/2);
   gameObjects.add(player);
