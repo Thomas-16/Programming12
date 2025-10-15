@@ -97,8 +97,11 @@ class Asteroid extends GameObject {
         bullet.delete();
         
         if(this.size > 1) {
-          gameObjects.add(new Asteroid((int)pos.x, (int)pos.y, size-1, PVector.random2D()));
-          gameObjects.add(new Asteroid((int)pos.x, (int)pos.y, size-1, PVector.random2D()));
+          PVector dir1 = bullet.vel.copy().rotate(radians(90));
+          PVector dir2 = dir1.copy().rotate(PI);
+          
+          gameObjects.add(new Asteroid((int)pos.x, (int)pos.y, size-1, dir1));
+          gameObjects.add(new Asteroid((int)pos.x, (int)pos.y, size-1, dir2));
         }
         
         break;
