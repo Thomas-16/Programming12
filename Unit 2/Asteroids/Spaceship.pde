@@ -10,7 +10,7 @@ class Spaceship extends GameObject {
     dir = new PVector(1, 0);
     
     turnSpeed = 3.8;
-    moveAccel = 1.6;
+    moveAccel = 1.3;
     
   }
   
@@ -20,7 +20,7 @@ class Spaceship extends GameObject {
     // decay velocity
     vel.mult(0.95);
     
-    vel.limit(9);
+    vel.limit(8.5);
     
     dir.setMag(moveAccel);
     if(upDown) vel.add(dir);
