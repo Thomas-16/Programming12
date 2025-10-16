@@ -2,7 +2,7 @@ class Spaceship extends GameObject {
   public PVector dir;
   
   private float turnSpeed;
-  private float moveSpeed;
+  private float moveAccel;
   
   Spaceship(float x, float y) {
     super(x, y, 0, 0);
@@ -10,7 +10,7 @@ class Spaceship extends GameObject {
     dir = new PVector(1, 0);
     
     turnSpeed = 3.8;
-    moveSpeed = 0.5;
+    moveAccel = 2;
     
   }
   
@@ -20,9 +20,9 @@ class Spaceship extends GameObject {
     // decay velocity
     vel.mult(0.95);
     
-    vel.limit(9.5);
+    vel.limit(9);
     
-    dir.setMag(moveSpeed);
+    dir.setMag(moveAccel);
     if(upDown) vel.add(dir);
     
     if(leftDown) dir.rotate(-radians(turnSpeed));

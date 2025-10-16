@@ -1,9 +1,11 @@
 class Bullet extends GameObject {
   private float speed;
   private int lifeTime;
+  private boolean isPlayers;
   
-  public Bullet(PVector pos, PVector dir) {
+  public Bullet(PVector pos, PVector dir, boolean isPlayers) {
     super(pos, dir);
+    this.isPlayers = isPlayers;
     
     speed = 16;
     vel.setMag(speed);
@@ -28,7 +30,10 @@ class Bullet extends GameObject {
   }
   
   public void draw() {
-    fill(255);
+    if(isPlayers)
+      fill(255);
+    else
+      fill(255,0,0);
     noStroke();
     circle(pos.x, pos.y, 7);
   }

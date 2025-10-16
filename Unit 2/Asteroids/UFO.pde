@@ -1,4 +1,5 @@
 class UFO extends GameObject {
+  private float lastShotTime;
   
   public UFO() {
     super(random(width), random(height), random(1.5, 2.5) * (random(1) < 0.5 ? -1 : 1), random(1.5, 2.5) * (random(1) < 0.5 ? -1 : 1));
@@ -16,6 +17,11 @@ class UFO extends GameObject {
     if(pos.x < 0) pos.add(width, 0);
     if(pos.y > height) pos.sub(0, height);
     if(pos.y < 0) pos.add(0, height);
+    
+    if(millis() - 2000 > lastShotTime) {
+      gameObjects.add(new Bullet(this.pos, PVector.sub(player.pos, this.pos), false));
+      lastShotTime = millis();
+    }
   }
   
   public void draw() {
