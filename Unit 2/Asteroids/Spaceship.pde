@@ -10,7 +10,7 @@ class Spaceship extends GameObject {
     dir = new PVector(1, 0);
     
     turnSpeed = 3.8;
-    moveAccel = 2;
+    moveAccel = 1.6;
     
   }
   
