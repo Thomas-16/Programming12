@@ -18,7 +18,7 @@ class UFO extends GameObject {
     if(pos.y > height) pos.sub(0, height);
     if(pos.y < 0) pos.add(0, height);
     
-    if(millis() - 2000 > lastShotTime) {
+    if(millis() - 4000 > lastShotTime) {
       gameObjects.add(new Bullet(this.pos, PVector.sub(player.pos, this.pos), false));
       lastShotTime = millis();
     }

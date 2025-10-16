@@ -108,10 +108,12 @@ class Asteroid extends GameObject {
   
   private void handleCollisions() {
     // bullet collision
-    for(GameObject bullet : gameObjects) {
-      if(!(bullet instanceof Bullet)) continue;
+    for(GameObject go : gameObjects) {
+      if(!(go instanceof Bullet)) continue;
       
-      if(polyPointCollision(this.pos, this.vertices, bullet.pos.x, bullet.pos.y) && !bullet.shouldBeDeleted) {
+      Bullet bullet = (Bullet) go;
+      
+      if(!bullet.shouldBeDeleted && bullet.isPlayers && polyPointCollision(this.pos, this.vertices, bullet.pos.x, bullet.pos.y)) {
         this.delete();
         bullet.delete();
         

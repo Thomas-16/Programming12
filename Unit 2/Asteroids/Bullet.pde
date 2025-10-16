@@ -1,7 +1,7 @@
 class Bullet extends GameObject {
   private float speed;
   private int lifeTime;
-  private boolean isPlayers;
+  public boolean isPlayers;
   
   public Bullet(PVector pos, PVector dir, boolean isPlayers) {
     super(pos, dir);
