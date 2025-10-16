@@ -20,7 +20,7 @@ int lastShotTime;
 void gameSetup() {
   gameObjects = new ArrayList<GameObject>();
   
-  for(int i = 0; i < 10; i++) {
+  for(int i = 0; i < 6; i++) {
     gameObjects.add(new Asteroid(3));
   }
   gameObjects.add(new UFO());

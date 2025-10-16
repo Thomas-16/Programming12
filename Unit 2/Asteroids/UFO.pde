@@ -7,11 +7,9 @@ class UFO extends GameObject {
   public void update() {
     pos.add(vel);
     
-    vel.x = (sin(millis() / 2000.0 - 74382) - 0.5) * 6;
-    vel.y = (sin(millis() / 2000.0 + 4894) - 0.5) * 6;
-    vel.limit(4.5);
-    
-    println((sin(millis() / 2000.0 - 74382) - 0.5) * 7);
+    vel.x = (sin(millis() / 2000.0 - 74382) - 0.5) * 5;
+    vel.y = (sin(millis() / 2000.0 + 4894) - 0.5) * 5;
+    vel.limit(4);
     
     // edge handling
     if(pos.x > width) pos.sub(width, 0);
@@ -28,10 +26,10 @@ class UFO extends GameObject {
     stroke(255, 0, 0);
     strokeWeight(3);
     
-    ellipse(0, 5, 50, 15);
+    ellipse(0, 5, 100, 30);
     
-    arc(0, 0, 25, 20, PI, TWO_PI);
-    line(-12.5, 0, 12.5, 0);
+    arc(0, 0, 50, 40, PI, TWO_PI);
+    line(-25, 0, 25, 0);
     
     popMatrix();
   }
