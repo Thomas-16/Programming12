@@ -11,12 +11,9 @@ ArrayList<GameObject> gameObjects;
 PGraphics backgroundPG;
 
 int lastShotTime;
+int lastUfoSpawnTime;
 
 // TODO LIST:
-// Spawn UFO every 10 seconds if no UFO exists
-// UFO bullet and player collision
-// Player bullet and UFO collision
-// Player ship and UFO collision
 // 3 lives
 // Invulnerability after losing life
 //   Visualize invulnerability with a shield
@@ -38,12 +35,13 @@ int lastShotTime;
 
 void gameSetup() {
   gameObjects = new ArrayList<GameObject>();
-  
+
   for(int i = 0; i < 6; i++) {
     gameObjects.add(new Asteroid(3));
   }
   gameObjects.add(new UFO());
-  
+  lastUfoSpawnTime = millis() - 10000;
+
   player = new Spaceship(width/2, height/2);
   gameObjects.add(player);
   
@@ -76,14 +74,15 @@ void gameSetup() {
 
 void gameDraw() {
   image(backgroundPG, 0, 0);
-  
+
   handleInput();
-  
+  spawnUfo();
+
   pruneGameObjects();
   updateGameObjects();
-  
+
   resolveAsteroidCollisions();
-  
+
   drawGameObjects();
 }
 
@@ -91,6 +90,24 @@ void handleInput() {
   if(spaceDown && millis() - lastShotTime > 500)  {
     gameObjects.add(new Bullet(player.pos, player.dir, true));
     lastShotTime = millis();
+  }
+}
+
+void spawnUfo() {
+  if(millis() - lastUfoSpawnTime < 10000) return;
+
+  boolean ufoExists = false;
+  for(GameObject obj : gameObjects) {
+    if(obj instanceof UFO) {
+      ufoExists = true;
+      break;
+    }
+  }
+
+  // Spawn UFO if none exists
+  if(!ufoExists) {
+    gameObjects.add(new UFO());
+    lastUfoSpawnTime = millis();
   }
 }
 

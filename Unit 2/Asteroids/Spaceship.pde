@@ -39,13 +39,45 @@ class Spaceship extends GameObject {
   
   private void handleCollisions() {
     for(GameObject obj : gameObjects) {
-      if(!(obj instanceof Asteroid)) continue;
-      
-      Asteroid asteroid = (Asteroid) obj;
-      
-      if(polyPointCollision(asteroid.pos, asteroid.vertices, this.pos.x, this.pos.y)) {
-        println("player died");
-        break;
+      // Check asteroid collision
+      if(obj instanceof Asteroid) {
+        Asteroid asteroid = (Asteroid) obj;
+
+        if(polyPointCollision(asteroid.pos, asteroid.vertices, this.pos.x, this.pos.y)) {
+          println("player died");
+          break;
+        }
+      }
+
+      // Check UFO bullet collision
+      if(obj instanceof Bullet) {
+        Bullet bullet = (Bullet) obj;
+
+        if(!bullet.isPlayers && !bullet.shouldBeDeleted) {
+          float distance = PVector.dist(this.pos, bullet.pos);
+          if(distance < 20) {
+            println("player hit by UFO bullet");
+            bullet.delete();
+            // TODO: Handle player death/damage
+            break;
+          }
+        }
+      }
+
+      // Check UFO collision
+      if(obj instanceof UFO) {
+        UFO ufo = (UFO) obj;
+
+        if(!ufo.shouldBeDeleted) {
+          float distance = PVector.dist(this.pos, ufo.pos);
+          if(distance < 55) {
+            println("player collided with UFO");
+            ufo.delete();
+            lastUfoSpawnTime = millis();
+            // TODO: Handle player death/damage
+            break;
+          }
+        }
       }
     }
   }
