@@ -13,7 +13,7 @@ PGraphics backgroundPG;
 int lastShotTime;
 
 // TODO:
-// PARTICLE EFFECTS
+// Particle class and ParticleSystem class
 // ghosting for certain objects
 
 
