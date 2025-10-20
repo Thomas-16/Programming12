@@ -8,7 +8,7 @@ class Bullet extends GameObject {
     this.isPlayers = isPlayers;
     
     if(isPlayers)
-      speed = 17;
+      speed = 18;
     else
       speed = 12;
     vel.setMag(speed);
