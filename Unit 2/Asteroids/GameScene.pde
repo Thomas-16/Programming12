@@ -12,9 +12,27 @@ PGraphics backgroundPG;
 
 int lastShotTime;
 
-// TODO:
+// TODO LIST:
+// Spawn UFO every 10 seconds if no UFO exists
+// UFO bullet and player collision
+// Player bullet and UFO collision
+// Player ship and UFO collision
+// 3 lives
+// Invulnerability after losing life
+//   Visualize invulnerability with a shield
+// Intro scene
+// Game over scene with win or lose
+//   GIF
+//   Font
+// Pausing
 // Particle class and ParticleSystem class
-// ghosting for certain objects
+//   Collision particles
+//   Thruster particles
+// Teleporting to safe space
+//   Teleport cooldown bar
+//   Invulnerability after teleport
+// Ghosting for certain objects
+// Other polish effects
 
 
 void gameSetup() {
