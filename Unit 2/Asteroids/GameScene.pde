@@ -27,6 +27,7 @@ int lastShotTime;
 // Pausing
 // Particle class and ParticleSystem class
 //   Collision particles
+//   Expplosion particles
 //   Thruster particles
 // Teleporting to safe space
 //   Teleport cooldown bar
