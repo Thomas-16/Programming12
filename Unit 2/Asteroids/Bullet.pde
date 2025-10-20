@@ -7,7 +7,10 @@ class Bullet extends GameObject {
     super(pos, dir);
     this.isPlayers = isPlayers;
     
-    speed = 16;
+    if(isPlayers)
+      speed = 17;
+    else
+      speed = 12;
     vel.setMag(speed);
     
     lifeTime = 80;
