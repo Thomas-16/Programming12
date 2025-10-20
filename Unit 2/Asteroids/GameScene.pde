@@ -13,9 +13,10 @@ PGraphics backgroundPG;
 int lastShotTime;
 int lastUfoSpawnTime;
 
+int lives;
+final int MAX_LIVES = 3;
+
 // TODO LIST:
-// 3 lives
-// Invulnerability after losing life
 //   Visualize invulnerability with a shield
 // Intro scene
 // Game over scene with win or lose
@@ -44,6 +45,8 @@ void gameSetup() {
 
   player = new Spaceship(width/2, height/2);
   gameObjects.add(player);
+
+  lives = MAX_LIVES;
   
   backgroundPG = createGraphics(width, height);
   backgroundPG.beginDraw();
@@ -84,6 +87,28 @@ void gameDraw() {
   resolveAsteroidCollisions();
 
   drawGameObjects();
+  drawUI();
+}
+
+void drawUI() {
+  // Draw lives
+  pushMatrix();
+  translate(30, 40);
+
+  for(int i = 0; i < lives; i++) {
+    pushMatrix();
+    translate(i * 40, 0);
+
+    fill(0);
+    stroke(255);
+    strokeWeight(2);
+    triangle(-10, 0, 10, 0, 0, -25);
+    strokeWeight(1);
+
+    popMatrix();
+  }
+
+  popMatrix();
 }
 
 void handleInput() {

@@ -1,50 +1,73 @@
 class Spaceship extends GameObject {
   public PVector dir;
-  
+
   private float turnSpeed;
   private float moveAccel;
-  
+
+  private boolean isInvulnerable;
+  private int invulnStartTime;
+  private final int INVULN_DURATION = 3000;
+
   Spaceship(float x, float y) {
     super(x, y, 0, 0);
-    
+
     dir = new PVector(1, 0);
-    
+
     turnSpeed = 4;
     moveAccel = 1.3;
-    
+
+    isInvulnerable = false;
+    invulnStartTime = 0;
   }
   
   public void update() {
     pos.add(vel);
-    
+
     // decay velocity
     vel.mult(0.95);
-    
+
     vel.limit(8.5);
-    
+
     dir.setMag(moveAccel);
     if(upDown) vel.add(dir);
-    
+
     if(leftDown) dir.rotate(-radians(turnSpeed));
     if(rightDown) dir.rotate(radians(turnSpeed));
-    
+
     // edge handling
     if(pos.x > width) pos.sub(width, 0);
     if(pos.x < 0) pos.add(width, 0);
     if(pos.y > height) pos.sub(0, height);
     if(pos.y < 0) pos.add(0, height);
-    
+
+    // Update invulnerability
+    if(isInvulnerable && millis() - invulnStartTime > INVULN_DURATION) {
+      isInvulnerable = false;
+    }
+
     handleCollisions();
+  }
+
+  public void makeInvulnerable() {
+    isInvulnerable = true;
+    invulnStartTime = millis();
+  }
+
+  public void loseLife() {
+    lives--;
+    makeInvulnerable();
   }
   
   private void handleCollisions() {
+    if(isInvulnerable) return;
+
     for(GameObject obj : gameObjects) {
       // Check asteroid collision
       if(obj instanceof Asteroid) {
         Asteroid asteroid = (Asteroid) obj;
 
         if(polyPointCollision(asteroid.pos, asteroid.vertices, this.pos.x, this.pos.y)) {
-          println("player died");
+          loseLife();
           break;
         }
       }
@@ -56,9 +79,8 @@ class Spaceship extends GameObject {
         if(!bullet.isPlayers && !bullet.shouldBeDeleted) {
           float distance = PVector.dist(this.pos, bullet.pos);
           if(distance < 20) {
-            println("player hit by UFO bullet");
             bullet.delete();
-            // TODO: Handle player death/damage
+            loseLife();
             break;
           }
         }
@@ -71,10 +93,9 @@ class Spaceship extends GameObject {
         if(!ufo.shouldBeDeleted) {
           float distance = PVector.dist(this.pos, ufo.pos);
           if(distance < 55) {
-            println("player collided with UFO");
             ufo.delete();
             lastUfoSpawnTime = millis();
-            // TODO: Handle player death/damage
+            loseLife();
             break;
           }
         }
