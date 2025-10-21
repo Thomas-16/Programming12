@@ -7,6 +7,8 @@ class Spaceship extends GameObject {
   private boolean isInvulnerable;
   private int invulnStartTime;
   private final int INVULN_DURATION = 3000;
+  
+  private float shieldRot;
 
   Spaceship(float x, float y) {
     super(x, y, 0, 0);
@@ -18,6 +20,8 @@ class Spaceship extends GameObject {
 
     isInvulnerable = false;
     invulnStartTime = 0;
+    
+    shieldRot = 0;
   }
   
   public void update() {
@@ -44,6 +48,9 @@ class Spaceship extends GameObject {
     if(isInvulnerable && millis() - invulnStartTime > INVULN_DURATION) {
       isInvulnerable = false;
     }
+    
+    if(isInvulnerable)
+      shieldRot += 0.02;
 
     handleCollisions();
   }
@@ -51,6 +58,7 @@ class Spaceship extends GameObject {
   public void makeInvulnerable() {
     isInvulnerable = true;
     invulnStartTime = millis();
+    shieldRot = 0;
   }
 
   public void loseLife() {
@@ -107,7 +115,25 @@ class Spaceship extends GameObject {
     pushMatrix();
     translate(pos.x, pos.y);
     rotate(dir.heading());
+    drawShip();
+    popMatrix();
     
+    if(isInvulnerable) {
+      pushMatrix();
+      
+      PVector offset = new PVector(10, 0);
+      offset.rotate(dir.heading());
+      PVector shieldPos = PVector.add(pos, offset);
+      
+      translate(shieldPos.x, shieldPos.y);
+      rotate(shieldRot);
+      drawShield();
+      
+      popMatrix();
+    }
+  }
+  
+  private void drawShip() {
     fill(0);
     stroke(255);
     strokeWeight(2);
@@ -123,8 +149,41 @@ class Spaceship extends GameObject {
     line(-6, 0, 30, 0);
     strokeWeight(2);
     circle(15, 0, 5);
+  }
+  private void drawShield() {
+    int timeRemaining = INVULN_DURATION - (millis() - invulnStartTime);
+
+    // Flicker effect
+    if(timeRemaining < 800) {
+      if((millis() / 100) % 2 == 0) {
+        return;
+      }
+    }
+
+    fill(100, 150, 255, 100);
+    stroke(255);
+    strokeWeight(1.5);
+
+    // Outer hexagon shape
+    beginShape();
+    for(int i = 0; i < 6; i++) {
+      float angle = TWO_PI / 6 * i;
+      float x = cos(angle) * 45;
+      float y = sin(angle) * 45;
+      vertex(x, y);
+    }
+    endShape(CLOSE);
     
-    popMatrix();
+    // Inner triangle
+    noFill();
+    beginShape();
+    for(int i = 0; i < 3; i++) {
+      float angle = TWO_PI / 3 * i;
+      float x = cos(angle) * 45;
+      float y = sin(angle) * 45;
+      vertex(x, y);
+    }
+    endShape(CLOSE);
   }
   
 }
