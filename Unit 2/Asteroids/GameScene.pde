@@ -94,7 +94,7 @@ void gameDraw() {
 void drawUI() {
   // Draw lives
   pushMatrix();
-  translate(35, 55);
+  translate(40, 60);
 
   for(int i = 0; i < lives; i++) {
     pushMatrix();
