@@ -94,16 +94,16 @@ void gameDraw() {
 void drawUI() {
   // Draw lives
   pushMatrix();
-  translate(30, 40);
+  translate(35, 55);
 
   for(int i = 0; i < lives; i++) {
     pushMatrix();
-    translate(i * 40, 0);
+    translate(i * 45, 0);
 
     fill(0);
     stroke(255);
     strokeWeight(2);
-    triangle(-10, 0, 10, 0, 0, -25);
+    triangle(-15, 0, 15, 0, 0, -35);
     strokeWeight(1);
 
     popMatrix();
