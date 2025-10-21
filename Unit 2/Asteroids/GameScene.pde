@@ -152,9 +152,11 @@ void updateGameObjects() {
 }
 void drawGameObjects() {
   for (int i = 0; i < gameObjects.size(); i++) {
-    if(gameObjects.get(i).shouldBeDeleted) continue;
+    if(gameObjects.get(i).shouldBeDeleted || gameObjects.get(i) instanceof Spaceship) continue;
     gameObjects.get(i).draw();
   }
+  
+  player.draw();
 }
 
 // https://gafferongames.com/post/collision_response_and_coulomb_friction/
