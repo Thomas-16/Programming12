@@ -44,7 +44,7 @@ class Asteroid extends GameObject {
     else
       shape.strokeWeight(3);
     
-    int radius = this.size * 30;
+    int radius = this.size * 35;
     for(int i = 0; i < numVertices; i++) {
       float angle = TWO_PI / numVertices * (float) i;
       float randomOffset;
