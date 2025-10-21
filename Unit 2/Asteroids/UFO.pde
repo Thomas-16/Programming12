@@ -1,8 +1,9 @@
 class UFO extends GameObject {
-  private float lastShotTime = 4000;
+  private float lastShotTime;
   
   public UFO() {
     super(random(width), random(height), random(1.5, 2.5) * (random(1) < 0.5 ? -1 : 1), random(1.5, 2.5) * (random(1) < 0.5 ? -1 : 1));
+    lastShotTime = millis();
   }
   
   public void update() {
