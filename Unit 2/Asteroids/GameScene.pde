@@ -32,6 +32,7 @@ final int MAX_LIVES = 3;
 //   Invulnerability after teleport
 // Ghosting for certain objects
 // Other polish effects
+// Sound effects
 
 
 void gameSetup() {
