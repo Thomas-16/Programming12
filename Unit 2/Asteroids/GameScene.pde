@@ -6,7 +6,6 @@ boolean spaceDown;
 // Game objects
 Spaceship player;
 
-
 int lastShotTime;
 int lastUfoSpawnTime;
 
