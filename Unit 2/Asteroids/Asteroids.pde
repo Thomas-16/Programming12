@@ -6,15 +6,20 @@
 // https://www.jeffreythompson.org/collision-detection/poly-poly.php
 // https://gafferongames.com/post/collision_response_and_coulomb_friction/
 
-int scene = 1;
+int scene = 0;
 final int INTRO_SCENE = 0;
 final int GAME_SCENE = 1;
 final int GAME_OVER_SCENE = 2;
+
+PFont font;
 
 void setup() {
   size(1200, 900, P2D);
   frameRate(60);
   smooth(4);
+  
+  font = createFont("8-bit-pusab.ttf", 30);
+  textFont(font);
   
   gameOverSetup();
   gameSetup();
@@ -73,6 +78,28 @@ void keyReleased() {
       break;
     case GAME_SCENE:
       gameSceneKeyReleased();
+      break;
+    case GAME_OVER_SCENE:
+      break;
+  }
+}
+void mousePressed() {
+  switch(scene) {
+    case INTRO_SCENE:
+      introSceneMousePressed();
+      break;
+    case GAME_SCENE:
+      break;
+    case GAME_OVER_SCENE:
+      break;
+  }
+}
+void mouseReleased() {
+  switch(scene) {
+    case INTRO_SCENE:
+      introSceneMouseReleased();
+      break;
+    case GAME_SCENE:
       break;
     case GAME_OVER_SCENE:
       break;
