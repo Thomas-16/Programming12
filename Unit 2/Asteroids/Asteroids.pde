@@ -13,6 +13,8 @@ final int GAME_OVER_SCENE = 2;
 
 PFont font;
 
+ArrayList<GameObject> gameObjects;
+
 void setup() {
   size(1200, 900, P2D);
   frameRate(60);
@@ -21,8 +23,6 @@ void setup() {
   font = createFont("8-bit-pusab.ttf", 30);
   textFont(font);
   
-  gameOverSetup();
-  gameSetup();
   introSetup();
 }
 

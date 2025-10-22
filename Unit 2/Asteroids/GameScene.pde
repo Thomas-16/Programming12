@@ -6,7 +6,6 @@ boolean spaceDown;
 // Game objects
 Spaceship player;
 
-ArrayList<GameObject> gameObjects;
 
 int lastShotTime;
 int lastUfoSpawnTime;
@@ -33,11 +32,6 @@ final int MAX_LIVES = 3;
 
 
 void gameSetup() {
-  gameObjects = new ArrayList<GameObject>();
-
-  for(int i = 0; i < 6; i++) {
-    gameObjects.add(new Asteroid(3));
-  }
   gameObjects.add(new UFO());
   lastUfoSpawnTime = millis() - 10000;
 
@@ -129,7 +123,8 @@ void drawGameObjects() {
     gameObjects.get(i).draw();
   }
   
-  player.draw();
+  if(player != null)
+    player.draw();
 }
 
 // https://gafferongames.com/post/collision_response_and_coulomb_friction/

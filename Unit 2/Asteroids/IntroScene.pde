@@ -4,7 +4,16 @@ PGraphics backgroundPG;
 RectButton playButton;
 
 void introSetup() {
+  gameObjects = new ArrayList<GameObject>();
+
+  for(int i = 0; i < 6; i++) {
+    gameObjects.add(new Asteroid(3));
+  }
+  
   playButton = new RectButton(width/2, 600, 380, 100, color(0), color(0), color(255), color(100, 100), 4, 2);
+  playButton.setOnClick(() -> {
+    switchScene(GAME_SCENE);
+  });
   
   backgroundPG = createGraphics(width, height);
   backgroundPG.beginDraw();
@@ -34,6 +43,15 @@ void introSetup() {
 
 void introDraw() {
   image(backgroundPG, 0, 0);
+  
+  // call functions from the game scene to update and draw the asteroids
+  // probably not the cleanest way of doing it
+  pruneGameObjects();
+  updateGameObjects();
+
+  resolveAsteroidCollisions();
+
+  drawGameObjects();
   
   // title text PG
   //fill(0);
