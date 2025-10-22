@@ -48,16 +48,8 @@ void introDraw() {
   // probably not the cleanest way of doing it
   pruneGameObjects();
   updateGameObjects();
-
   resolveAsteroidCollisions();
-
   drawGameObjects();
-  
-  // title text PG
-  //fill(0);
-  //noStroke();
-  //rectMode(CENTER);
-  //rect(width/2, 300, 1000, 180);
   
   // title text
   fill(255);
