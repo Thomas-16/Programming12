@@ -52,7 +52,7 @@ void gameSetup() {
   backgroundPG.beginDraw();
   backgroundPG.background(0, 0, 0);
   
-  // star dust
+  // stars
   for (int i = 0; i < 3000; i++) {
     float x = random(width);
     float y = random(height);
@@ -93,16 +93,16 @@ void gameDraw() {
 void drawUI() {
   // Draw lives
   pushMatrix();
-  translate(40, 60);
+  translate(40, 65);
 
   for(int i = 0; i < lives; i++) {
     pushMatrix();
-    translate(i * 45, 0);
+    translate(i * 55, 0);
 
     fill(0);
     stroke(255);
-    strokeWeight(2);
-    triangle(-15, 0, 15, 0, 0, -35);
+    strokeWeight(3);
+    triangle(-20, 0, 20, 0, 0, -45);
     strokeWeight(1);
 
     popMatrix();
