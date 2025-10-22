@@ -30,7 +30,15 @@ class RectButton {
   public void draw() {
     color currentOutlineColor = isHoveredOver() ? hoveringOutlineColor : outlineColor;
     color currentButtonColor = isBeingPressed ? lerpColor(clickingButtonColor, buttonColor, 0.4) : buttonColor;
-    
+
+    float tintAlpha = 255;
+    if(g.tint) {
+      tintAlpha = alpha(g.tintColor);
+    }
+
+    currentOutlineColor = color(red(currentOutlineColor), green(currentOutlineColor), blue(currentOutlineColor), alpha(currentOutlineColor) * tintAlpha / 255);
+    currentButtonColor = color(red(currentButtonColor), green(currentButtonColor), blue(currentButtonColor), alpha(currentButtonColor) * tintAlpha / 255);
+
     stroke(currentOutlineColor);
     strokeWeight(outlineWidth);
     if(alpha(currentButtonColor) == 0)

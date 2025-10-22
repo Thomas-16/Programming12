@@ -3,16 +3,26 @@ PGraphics backgroundPG;
 
 RectButton playButton;
 
+boolean isFadingOut = false;
+int fadeStartTime = 0;
+final int FADE_DURATION = 800;
+
 void introSetup() {
   gameObjects = new ArrayList<GameObject>();
 
   for(int i = 0; i < 6; i++) {
     gameObjects.add(new Asteroid(3));
   }
-  
+
+  isFadingOut = false;
+  fadeStartTime = 0;
+
   playButton = new RectButton(width/2, 600, 380, 100, color(0), color(0), color(255), color(100, 100), 4, 2);
   playButton.setOnClick(() -> {
-    switchScene(GAME_SCENE);
+    if(!isFadingOut) {
+      isFadingOut = true;
+      fadeStartTime = millis();
+    }
   });
   
   backgroundPG = createGraphics(width, height);
@@ -43,24 +53,41 @@ void introSetup() {
 
 void introDraw() {
   image(backgroundPG, 0, 0);
-  
+
   // call functions from the game scene to update and draw the asteroids
   // probably not the cleanest way of doing it
   pruneGameObjects();
   updateGameObjects();
   resolveAsteroidCollisions();
   drawGameObjects();
-  
+
+  // Calculate fade alpha
+  float alpha = 255;
+  if(isFadingOut) {
+    int elapsed = millis() - fadeStartTime;
+    alpha = map(elapsed, 0, FADE_DURATION, 255, 0);
+    alpha = constrain(alpha, 0, 255);
+
+    if(elapsed >= FADE_DURATION) {
+      switchScene(GAME_SCENE);
+      return;
+    }
+  }
+
   // title text
-  fill(255);
+  fill(255, alpha);
   textSize(85);
   textAlign(CENTER, CENTER);
   text("ASTEROIDS", width/2, 300);
-  
-  // button and button text
+
+  // button
+  pushStyle();
+  tint(255, alpha);
   playButton.draw();
-  
-  fill(255);
+  popStyle();
+
+  // button text
+  fill(255, alpha);
   textSize(36);
   textAlign(CENTER, CENTER);
   text("PLAY", width/2, 600);
