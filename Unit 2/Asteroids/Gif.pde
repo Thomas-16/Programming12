@@ -35,6 +35,11 @@ class Gif {
     frames++;
   }
   
+  public void restart() {
+    index = 0;
+    frames = 0;
+  }
+  
 }
 
 PImage scaleImage(PImage src, int w, int h) {

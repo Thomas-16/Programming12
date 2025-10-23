@@ -27,6 +27,7 @@ final int MAX_LIVES = 3;
 // Ghosting for certain objects
 // Other polish effects
 // Sound effects
+// Shake effect
 
 
 void gameSetup() {
@@ -53,6 +54,7 @@ void gameDraw() {
 
   drawGameObjects();
   drawUI();
+  
 }
 
 void drawUI() {

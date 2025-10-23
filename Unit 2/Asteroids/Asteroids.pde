@@ -13,6 +13,8 @@ final int GAME_OVER_SCENE = 2;
 
 PFont font;
 
+Gif glitchGif;
+
 ArrayList<GameObject> gameObjects;
 
 void setup() {
@@ -22,6 +24,8 @@ void setup() {
   
   font = createFont("8-bit-pusab.ttf", 30);
   textFont(font);
+  
+  glitchGif = new Gif("frame", ".gif", 0, 0, width, height, 244, 1);
   
   introSetup();
 }
@@ -61,6 +65,11 @@ void switchScene(int newScene) {
   }
 }
 
+void gameOver(boolean won) {
+  this.won = won;
+  switchScene(GAME_OVER_SCENE);
+}
+
 void keyPressed() {
   switch(scene) {
     case INTRO_SCENE:
@@ -91,6 +100,7 @@ void mousePressed() {
     case GAME_SCENE:
       break;
     case GAME_OVER_SCENE:
+      gameOverSceneMousePressed();
       break;
   }
 }
@@ -102,6 +112,7 @@ void mouseReleased() {
     case GAME_SCENE:
       break;
     case GAME_OVER_SCENE:
+      gameOverSceneMouseReleased();
       break;
   }
 }

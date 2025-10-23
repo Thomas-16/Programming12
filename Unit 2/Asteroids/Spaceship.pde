@@ -64,6 +64,9 @@ class Spaceship extends GameObject {
   public void loseLife() {
     lives--;
     makeInvulnerable();
+    
+    if(lives == 0)
+      gameOver(false);
   }
   
   private void handleCollisions() {
