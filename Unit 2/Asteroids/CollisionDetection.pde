@@ -67,8 +67,6 @@ boolean polyLineCollision(PVector pos, PVector[] vertices, float x1, float y1, f
     float y4 = PVector.add(vertices[next], pos).y;
 
     // do a Line/Line comparison
-    // if true, return 'true' immediately and
-    // stop testing (faster)
     boolean hit = lineLineCollision(x1, y1, x2, y2, x3, y3, x4, y4);
     if (hit) {
       return true;
