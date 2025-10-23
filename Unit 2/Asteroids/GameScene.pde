@@ -13,6 +13,7 @@ int lives;
 final int MAX_LIVES = 3;
 
 // TODO LIST:
+// Triggering win after destroying all asteroids
 // Game over scene with win or lose
 //   GIF
 //   Font
