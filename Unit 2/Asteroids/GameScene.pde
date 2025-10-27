@@ -14,8 +14,6 @@ int lives;
 final int MAX_LIVES = 3;
 
 // TODO LIST:
-// Game over scene with win or lose
-//   GIF
 // Pausing
 // Particle class and ParticleSystem class
 //   Collision particles

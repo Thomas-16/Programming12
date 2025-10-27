@@ -18,8 +18,7 @@ class Spaceship extends GameObject {
     turnSpeed = 4;
     moveAccel = 1.3;
 
-    isInvulnerable = true;
-    invulnStartTime = millis();
+    makeInvulnerable();
     
     shieldRot = 0;
   }
