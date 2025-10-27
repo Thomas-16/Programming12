@@ -25,7 +25,7 @@ class Gif {
   }
   
   public void draw() {
-    imageMode(CORNER);
+    imageMode(CENTER);
     if(frames % framesPerImg == 0) {
       index++;
       if(index == numFrames) index = 0;

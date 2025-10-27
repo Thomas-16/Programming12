@@ -13,8 +13,6 @@ final int GAME_OVER_SCENE = 2;
 
 PFont font;
 
-Gif glitchGif;
-
 ArrayList<GameObject> gameObjects;
 
 void setup() {
@@ -24,8 +22,6 @@ void setup() {
   
   font = createFont("8-bit-pusab.ttf", 30);
   textFont(font);
-  
-  glitchGif = new Gif("frame", ".gif", 0, 0, width, height, 244, 1);
   
   introSetup();
 }
