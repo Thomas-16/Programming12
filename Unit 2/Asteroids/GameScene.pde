@@ -25,6 +25,8 @@ final int MAX_LIVES = 3;
 // Ghosting for certain objects
 // Other polish effects
 // Sound effects
+// Music
+// Volume sliders in pause screen
 // Shake effect
 
 
