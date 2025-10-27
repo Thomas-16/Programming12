@@ -9,6 +9,7 @@ final int FADE_DURATION = 800;
 
 void introSetup() {
   gameObjects = new ArrayList<GameObject>();
+  player = null;
 
   for(int i = 0; i < 5; i++) {
     gameObjects.add(new Asteroid(3));

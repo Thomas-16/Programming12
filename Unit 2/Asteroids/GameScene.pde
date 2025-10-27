@@ -8,6 +8,7 @@ Spaceship player;
 
 int lastShotTime;
 int lastUfoSpawnTime;
+final int ufoSpawnRate = 12000;
 
 int lives;
 final int MAX_LIVES = 3;
@@ -33,7 +34,7 @@ final int MAX_LIVES = 3;
 
 void gameSetup() {
   gameObjects.add(new UFO());
-  lastUfoSpawnTime = millis() - 10000;
+  lastUfoSpawnTime = millis() - ufoSpawnRate;
 
   player = new Spaceship(width/2, height/2);
   gameObjects.add(player);
@@ -50,6 +51,17 @@ void gameDraw() {
 
   pruneGameObjects();
   updateGameObjects();
+  
+  int asteroidCount = 0;
+  for(GameObject go : gameObjects) {
+    if(go instanceof Asteroid) asteroidCount++;
+  }
+  
+  // no more asteroids
+  if(asteroidCount == 0) {
+    gameOver(false);
+    return;
+  }
 
   resolveAsteroidCollisions();
 
@@ -87,7 +99,7 @@ void handleInput() {
 }
 
 void spawnUfo() {
-  if(millis() - lastUfoSpawnTime < 10000) return;
+  if(millis() - lastUfoSpawnTime < ufoSpawnRate) return;
 
   boolean ufoExists = false;
   for(GameObject obj : gameObjects) {
@@ -127,6 +139,7 @@ void drawGameObjects() {
   if(player != null)
     player.draw();
 }
+
 
 // https://gafferongames.com/post/collision_response_and_coulomb_friction/
 void resolveAsteroidCollisions() {
