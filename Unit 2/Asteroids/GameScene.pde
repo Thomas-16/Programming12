@@ -42,6 +42,7 @@ void gameSetup() {
 }
 
 void gameDraw() {
+  imageMode(CORNER);
   image(backgroundPG, 0, 0);
 
   handleInput();
@@ -57,7 +58,7 @@ void gameDraw() {
   
   // no more asteroids
   if(asteroidCount == 0) {
-    gameOver(false);
+    gameOver(true);
     return;
   }
 

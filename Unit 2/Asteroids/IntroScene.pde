@@ -53,6 +53,7 @@ void introSetup() {
 }
 
 void introDraw() {
+  imageMode(CORNER);
   image(backgroundPG, 0, 0);
 
   // call functions from the game scene to update and draw the asteroids
