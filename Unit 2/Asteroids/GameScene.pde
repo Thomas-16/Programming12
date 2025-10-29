@@ -165,15 +165,15 @@ void spawnThrusterParticles(PVector pos, PVector dir, int count) {
   for(int i = 0; i < count; i++) {
     PVector offset = dir.copy();
     offset.setMag(-15);
-    offset.add(random(-3, 3), random(-3, 3));
+    offset.add(random(-6, 6), random(-6, 6));
     PVector particlePos = PVector.add(pos, offset);
   
     // velocity opposite to ship direction with some randomness
     PVector particleVel = dir.copy();
-    particleVel.rotate(radians(random(-50, 50)));
+    particleVel.rotate(radians(random(-60, 60)));
     particleVel.setMag(random(-4, -1));
-  
-    Particle p = new Particle(particlePos, particleVel, color(255, 150, 30), random(6, 12), random(12, 25));
+    
+    Particle p = new Particle(particlePos, particleVel, color(255, 150, 30), random(12, 20), random(18, 30));
     p.setDrag(0.92);
     gameObjects.add(p);
   }

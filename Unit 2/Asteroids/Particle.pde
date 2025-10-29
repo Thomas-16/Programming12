@@ -6,6 +6,7 @@ class Particle extends GameObject {
   private color col;
   private float drag;
   private float gravity;
+  private int sides;
 
   public Particle(float x, float y, float vx, float vy, color col, float size, float lifetime) {
     super(x, y, vx, vy);
@@ -15,6 +16,7 @@ class Particle extends GameObject {
     this.maxLifetime = lifetime;
     this.drag = 0.98;
     this.gravity = 0;
+    this.sides = (int) random(3, 6);
   }
 
   public Particle(PVector pos, PVector vel, color col, float size, float lifetime) {
@@ -52,6 +54,17 @@ class Particle extends GameObject {
 
     fill(col, alpha);
     noStroke();
-    circle(pos.x, pos.y, size * lifeRatio);
+    polygon(pos.x, pos.y, size * lifeRatio, sides);
   }
+}
+
+void polygon(float x, float y, float radius, int npoints) {
+  float angle = TWO_PI / npoints;
+  beginShape();
+  for (float a = 0; a < TWO_PI; a += angle) {
+    float sx = x + cos(a) * radius;
+    float sy = y + sin(a) * radius;
+    vertex(sx, sy);
+  }
+  endShape(CLOSE);
 }

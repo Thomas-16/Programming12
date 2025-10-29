@@ -36,7 +36,7 @@ class Spaceship extends GameObject {
       vel.add(dir);
       
       // thruster particles
-      spawnThrusterParticles(pos, dir, 12);
+      spawnThrusterParticles(pos, dir, 1);
     }
 
     if(leftDown) dir.rotate(-radians(turnSpeed));
