@@ -10,7 +10,18 @@ class Particle extends GameObject {
 
   public Particle(float x, float y, float vx, float vy, color col, float size, float lifetime) {
     super(x, y, vx, vy);
-    this.col = col;
+
+    colorMode(HSB, 360, 100, 100);
+    float h = hue(col) + random(-16, 16);
+    float s = saturation(col);
+    float b = brightness(col) + random(-12, 12);
+
+    h = (h + 360) % 360;
+    b = constrain(b, 0, 100);
+
+    this.col = color(h, s, b);
+    colorMode(RGB, 255, 255, 255);
+
     this.size = size;
     this.lifetime = lifetime;
     this.maxLifetime = lifetime;
