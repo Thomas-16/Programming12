@@ -20,6 +20,7 @@ float shakeMagnitude = 0;
 float shakeDecay = 0.9;
 
 // TODO LIST:
+// TRY 120 FPS AND HALFING ALL SPEED VALUES
 // Pausing
 // Teleporting to safe space
 //   Teleport cooldown bar

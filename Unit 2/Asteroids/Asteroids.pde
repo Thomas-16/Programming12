@@ -16,7 +16,7 @@ PFont font;
 ArrayList<GameObject> gameObjects;
 
 void setup() {
-  size(1200, 900, P2D);
+  size(1200, 900);
   frameRate(60);
   smooth(4);
   
