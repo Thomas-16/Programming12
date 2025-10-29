@@ -78,6 +78,7 @@ void gameDraw() {
 
 void updateScreenShake() {
   if(shakeMagnitude > 0) {
+    // randomize shake direction every frame
     shake.set(random(-shakeMagnitude, shakeMagnitude), random(-shakeMagnitude, shakeMagnitude));
     shakeMagnitude *= shakeDecay;
 
