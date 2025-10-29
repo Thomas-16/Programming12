@@ -173,7 +173,7 @@ void spawnThrusterParticles(PVector pos, PVector dir, int count) {
     particleVel.rotate(radians(random(-60, 60)));
     particleVel.setMag(random(-4, -1));
     
-    Particle p = new Particle(particlePos, particleVel, color(255, 150, 30), random(12, 20), random(18, 30));
+    Particle p = new Particle(particlePos, particleVel, color(255, 150, 30), random(10, 16), random(18, 30));
     p.setDrag(0.92);
     gameObjects.add(p);
   }
