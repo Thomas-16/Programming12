@@ -37,6 +37,9 @@ class UFO extends GameObject {
         float distance = PVector.dist(this.pos, bullet.pos);
         if(distance < 50) {
           println("UFO destroyed by player bullet");
+          spawnCollisionParticles(bullet.pos, bullet.vel, color(255, 0, 0), 30);
+          spawnExplosionParticles(pos, color(255, 50, 50), 50);
+
           this.delete();
           bullet.delete();
           lastUfoSpawnTime = millis();

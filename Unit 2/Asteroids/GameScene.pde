@@ -15,10 +15,6 @@ final int MAX_LIVES = 3;
 
 // TODO LIST:
 // Pausing
-// Particle class and ParticleSystem class
-//   Collision particles
-//   Explosion particles
-//   Thruster particles
 // Teleporting to safe space
 //   Teleport cooldown bar
 //   Invulnerability after teleport
@@ -137,6 +133,50 @@ void drawGameObjects() {
   
   if(player != null)
     player.draw();
+}
+
+void spawnExplosionParticles(PVector pos, color col, int count) {
+  for(int i = 0; i < count; i++) {
+    // spray in random direction
+    float angle = random(TWO_PI);
+    float speed = random(2, 8);
+    PVector vel = new PVector(cos(angle) * speed, sin(angle) * speed);
+
+    Particle p = new Particle(pos, vel, col, random(8, 12), random(40, 80));
+    p.setDrag(0.96);
+    gameObjects.add(p);
+  }
+}
+
+void spawnCollisionParticles(PVector pos, PVector dir, color col, int count) {
+  for(int i = 0; i < count; i++) {
+    // cone shaped spray of particles
+    PVector particleDir = dir.copy();
+    particleDir.rotate(radians(random(-60, 60)));
+    particleDir.setMag(random(3, 10));
+
+    Particle p = new Particle(pos, particleDir, col, random(6, 12), random(40, 80));
+    p.setDrag(0.94);
+    gameObjects.add(p);
+  }
+}
+
+void spawnThrusterParticles(PVector pos, PVector dir, int count) {
+  for(int i = 0; i < count; i++) {
+    PVector offset = dir.copy();
+    offset.setMag(-15);
+    offset.add(random(-3, 3), random(-3, 3));
+    PVector particlePos = PVector.add(pos, offset);
+  
+    // velocity opposite to ship direction with some randomness
+    PVector particleVel = dir.copy();
+    particleVel.rotate(radians(random(-50, 50)));
+    particleVel.setMag(random(-4, -1));
+  
+    Particle p = new Particle(particlePos, particleVel, color(255, 150, 30), random(6, 12), random(12, 25));
+    p.setDrag(0.92);
+    gameObjects.add(p);
+  }
 }
 
 

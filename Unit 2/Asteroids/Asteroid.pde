@@ -114,15 +114,21 @@ class Asteroid extends GameObject {
       Bullet bullet = (Bullet) go;
       
       if(!bullet.shouldBeDeleted && bullet.isPlayers && polyPointCollision(this.pos, this.vertices, bullet.pos.x, bullet.pos.y)) {
+        spawnCollisionParticles(bullet.pos, bullet.vel, color(255, 200, 100), 30);
+
         this.delete();
         bullet.delete();
-        
+
         if(this.size > 1) {
+          spawnExplosionParticles(pos, color(150, 150, 150), 60);
+
           PVector dir1 = bullet.vel.copy().rotate(radians(90));
           PVector dir2 = dir1.copy().rotate(PI);
-          
+
           gameObjects.add(new Asteroid((int)pos.x, (int)pos.y, size-1, dir1, true));
           gameObjects.add(new Asteroid((int)pos.x, (int)pos.y, size-1, dir2, true));
+        } else {
+          spawnExplosionParticles(pos, color(200, 200, 200), 85);
         }
         
         break;

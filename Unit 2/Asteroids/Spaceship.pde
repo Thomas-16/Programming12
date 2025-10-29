@@ -32,7 +32,12 @@ class Spaceship extends GameObject {
     vel.limit(8.5);
 
     dir.setMag(moveAccel);
-    if(upDown) vel.add(dir);
+    if(upDown) {
+      vel.add(dir);
+      
+      // thruster particles
+      spawnThrusterParticles(pos, dir, 12);
+    }
 
     if(leftDown) dir.rotate(-radians(turnSpeed));
     if(rightDown) dir.rotate(radians(turnSpeed));
@@ -61,9 +66,12 @@ class Spaceship extends GameObject {
   }
 
   public void loseLife() {
+    // Spawn explosion particles
+    spawnExplosionParticles(pos, color(255, 100, 50), 25);
+
     lives--;
     makeInvulnerable();
-    
+
     if(lives == 0)
       gameOver(false);
   }
