@@ -7,11 +7,17 @@ boolean spaceDown;
 Spaceship player;
 
 int lastShotTime;
+
 int lastUfoSpawnTime;
 final int ufoSpawnRate = 12000;
 
 int lives;
 final int MAX_LIVES = 3;
+
+// Screen shake
+PVector shake = new PVector(0, 0);
+float shakeMagnitude = 0;
+float shakeDecay = 0.9;
 
 // TODO LIST:
 // Pausing
@@ -23,7 +29,6 @@ final int MAX_LIVES = 3;
 // Sound effects
 // Music
 // Volume sliders in pause screen
-// Shake effect
 
 
 void gameSetup() {
@@ -40,6 +45,11 @@ void gameSetup() {
 void gameDraw() {
   imageMode(CORNER);
   image(backgroundPG, 0, 0);
+
+  updateScreenShake();
+
+  pushMatrix();
+  translate(shake.x, shake.y);
 
   handleInput();
   spawnUfo();
@@ -62,7 +72,24 @@ void gameDraw() {
 
   drawGameObjects();
   drawUI();
-  
+
+  popMatrix();
+}
+
+void updateScreenShake() {
+  if(shakeMagnitude > 0) {
+    shake.set(random(-shakeMagnitude, shakeMagnitude), random(-shakeMagnitude, shakeMagnitude));
+    shakeMagnitude *= shakeDecay;
+
+    if(shakeMagnitude < 0.1) {
+      shakeMagnitude = 0;
+      shake.set(0, 0);
+    }
+  }
+}
+
+void addScreenShake(float magnitude) {
+  shakeMagnitude += magnitude;
 }
 
 void drawUI() {
@@ -146,6 +173,9 @@ void spawnExplosionParticles(PVector pos, color col, int count) {
     p.setDrag(0.96);
     gameObjects.add(p);
   }
+
+  // shake screen
+  addScreenShake(2.5);
 }
 
 void spawnCollisionParticles(PVector pos, PVector dir, color col, int count) {
@@ -159,6 +189,9 @@ void spawnCollisionParticles(PVector pos, PVector dir, color col, int count) {
     p.setDrag(0.94);
     gameObjects.add(p);
   }
+
+  // shake screen
+  addScreenShake(2.5);
 }
 
 void spawnThrusterParticles(PVector pos, PVector dir, int count) {

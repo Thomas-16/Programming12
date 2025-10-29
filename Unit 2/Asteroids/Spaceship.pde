@@ -71,6 +71,8 @@ class Spaceship extends GameObject {
 
     lives--;
     makeInvulnerable();
+    
+    addScreenShake(4);
 
     if(lives == 0)
       gameOver(false);
