@@ -198,4 +198,8 @@ class Spaceship extends GameObject {
     endShape(CLOSE);
   }
   
+  public void teleport(PVector newPos) {
+    this.pos = newPos;
+  }
+  
 }

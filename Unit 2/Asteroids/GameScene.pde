@@ -2,6 +2,7 @@
 // input
 boolean leftDown, rightDown, upDown, downDown;
 boolean spaceDown;
+boolean zDown;
 
 // Game objects
 Spaceship player;
@@ -18,6 +19,9 @@ final int MAX_LIVES = 3;
 PVector shake = new PVector(0, 0);
 float shakeMagnitude = 0;
 float shakeDecay = 0.96;
+
+int lastTpTime;
+int TP_COOLDOWN = 8000;
 
 // TODO LIST:
 // Pausing
@@ -39,6 +43,8 @@ void gameSetup() {
   gameObjects.add(player);
 
   lives = MAX_LIVES;
+  
+  lastTpTime = millis() - TP_COOLDOWN;
   
 }
 
@@ -118,6 +124,18 @@ void handleInput() {
   if(spaceDown && millis() - lastShotTime > 500)  {
     gameObjects.add(new Bullet(player.pos, player.dir, true));
     lastShotTime = millis();
+  }
+  
+  if(zDown && millis() - lastTpTime > TP_COOLDOWN) {
+    PVector tpPos = new PVector(random(width), random(height));
+    for(int i = 0; i < 100; i++) {
+      if(closestAsteroidDistance(tpPos) > 350) break;
+      
+      tpPos = new PVector(random(width), random(height));
+    }
+    
+    player.teleport(tpPos);
+    lastTpTime = millis();
   }
 }
 
@@ -259,6 +277,7 @@ void gameSceneKeyPressed() {
   if(keyCode == UP) upDown = true;
   if(keyCode == DOWN) downDown = true;
   if(key == ' ') spaceDown = true;
+  if(key == 'z') zDown = true;
 }
 
 void gameSceneKeyReleased() {
@@ -267,4 +286,19 @@ void gameSceneKeyReleased() {
   if(keyCode == UP) upDown = false;
   if(keyCode == DOWN) downDown = false;
   if(key == ' ') spaceDown = false;
+  if(key == 'z') zDown = false;
+}
+
+float closestAsteroidDistance(PVector pos) {
+  float minDist = 99999;
+  for(GameObject obj : gameObjects) {
+    if(!(obj instanceof Asteroid)) continue;
+    
+    float dist = dist(obj.pos.x, obj.pos.y, pos.x, pos.y);
+    if(dist < minDist) {
+      minDist = dist;
+    }
+  }
+  
+  return minDist;
 }
