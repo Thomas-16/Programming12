@@ -121,12 +121,14 @@ class Asteroid extends GameObject {
 
         spawnExplosionParticles(pos, color(150, 150, 150), 45);
         
-        // split asteroids
-        PVector dir1 = bullet.vel.copy().rotate(radians(90));
-        PVector dir2 = dir1.copy().rotate(PI);
-
-        gameObjects.add(new Asteroid((int)pos.x, (int)pos.y, size-1, dir1, true));
-        gameObjects.add(new Asteroid((int)pos.x, (int)pos.y, size-1, dir2, true));
+        if(size > 1) {
+          // split asteroids
+          PVector dir1 = bullet.vel.copy().rotate(radians(90));
+          PVector dir2 = dir1.copy().rotate(PI);
+  
+          gameObjects.add(new Asteroid((int)pos.x, (int)pos.y, size-1, dir1, true));
+          gameObjects.add(new Asteroid((int)pos.x, (int)pos.y, size-1, dir2, true));
+        }
         
         break;
       }
