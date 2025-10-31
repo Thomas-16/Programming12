@@ -25,7 +25,7 @@ class Particle extends GameObject {
     this.size = size;
     this.lifetime = lifetime;
     this.maxLifetime = lifetime;
-    this.drag = 0.98;
+    this.drag = 0.99;
     this.gravity = 0;
     this.sides = (int) random(3, 6);
   }

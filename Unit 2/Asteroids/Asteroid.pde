@@ -18,18 +18,18 @@ class Asteroid extends GameObject {
     dir.normalize();
     
     targetVel = dir.copy();
-    targetVel.setMag(random(1, 3));
-    
+    targetVel.setMag(random(0.5, 1.5));
+
     if(isSplit) {
       vel = dir.copy();
-      vel.setMag(random(6, 9)); // Start fast when splitting
+      vel.setMag(random(3, 4.5)); // Start fast when splitting
     } else {
       vel = targetVel.copy();
     }
     
     this.size = size;
     this.rotation = 0;
-    this.rotateVel = random(0.001, 0.006) * (random(1) < 0.5 ? -1 : 1);
+    this.rotateVel = random(0.0005, 0.003) * (random(1) < 0.5 ? -1 : 1);
 
     numVertices = (int) random(10, 18);
     baseVertices = new PVector[numVertices];
@@ -76,7 +76,7 @@ class Asteroid extends GameObject {
   public void update() {
     // slow down to target velocity
     if(vel.mag() > targetVel.mag()) {
-      vel.mult(0.96);
+      vel.mult(0.98);
       
       if(vel.mag() <= targetVel.mag()) {
         vel = targetVel.copy();

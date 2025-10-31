@@ -15,8 +15,8 @@ class Spaceship extends GameObject {
 
     dir = new PVector(1, 0);
 
-    turnSpeed = 4;
-    moveAccel = 1.3;
+    turnSpeed = 2;
+    moveAccel = 0.65;
 
     makeInvulnerable();
     
@@ -27,9 +27,9 @@ class Spaceship extends GameObject {
     pos.add(vel);
 
     // decay velocity
-    vel.mult(0.95);
+    vel.mult(0.975);
 
-    vel.limit(8.5);
+    vel.limit(4.25);
 
     dir.setMag(moveAccel);
     if(upDown) {
@@ -54,7 +54,7 @@ class Spaceship extends GameObject {
     }
     
     if(isInvulnerable)
-      shieldRot += 0.02;
+      shieldRot += 0.01;
 
     handleCollisions();
   }

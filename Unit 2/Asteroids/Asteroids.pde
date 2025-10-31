@@ -17,7 +17,7 @@ ArrayList<GameObject> gameObjects;
 
 void setup() {
   size(1200, 900);
-  frameRate(60);
+  frameRate(120);
   smooth(4);
   
   font = createFont("8-bit-pusab.ttf", 30);

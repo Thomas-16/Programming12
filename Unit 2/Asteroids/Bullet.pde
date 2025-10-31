@@ -8,12 +8,12 @@ class Bullet extends GameObject {
     this.isPlayers = isPlayers;
     
     if(isPlayers)
-      speed = 18;
+      speed = 9;
     else
-      speed = 12;
+      speed = 6;
     vel.setMag(speed);
-    
-    lifeTime = 80;
+
+    lifeTime = 160;
   }
   
   public void update() {

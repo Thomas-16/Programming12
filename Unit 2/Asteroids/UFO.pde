@@ -2,16 +2,16 @@ class UFO extends GameObject {
   private float lastShotTime;
   
   public UFO() {
-    super(random(width), random(height), random(1.5, 2.5) * (random(1) < 0.5 ? -1 : 1), random(1.5, 2.5) * (random(1) < 0.5 ? -1 : 1));
+    super(random(width), random(height), random(0.75, 1.25) * (random(1) < 0.5 ? -1 : 1), random(0.75, 1.25) * (random(1) < 0.5 ? -1 : 1));
     lastShotTime = millis();
   }
   
   public void update() {
     pos.add(vel);
 
-    vel.x = (sin(millis() / 2000.0 - 74382) - 0.5) * 5;
-    vel.y = (sin(millis() / 2000.0 + 4894) - 0.5) * 5;
-    vel.limit(4);
+    vel.x = (sin(millis() / 2000.0 - 74382) - 0.5) * 2.5;
+    vel.y = (sin(millis() / 2000.0 + 4894) - 0.5) * 2.5;
+    vel.limit(2);
 
     // edge handling
     if(pos.x > width) pos.sub(width, 0);

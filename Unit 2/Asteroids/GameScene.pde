@@ -17,10 +17,9 @@ final int MAX_LIVES = 3;
 // Screen shake
 PVector shake = new PVector(0, 0);
 float shakeMagnitude = 0;
-float shakeDecay = 0.9;
+float shakeDecay = 0.95;
 
 // TODO LIST:
-// TRY 120 FPS AND HALFING ALL SPEED VALUES
 // Pausing
 // Teleporting to safe space
 //   Teleport cooldown bar
@@ -168,11 +167,11 @@ void spawnExplosionParticles(PVector pos, color col, int count) {
   for(int i = 0; i < count; i++) {
     // spray in random direction
     float angle = random(TWO_PI);
-    float speed = random(2, 8);
+    float speed = random(1, 4);
     PVector vel = new PVector(cos(angle) * speed, sin(angle) * speed);
 
-    Particle p = new Particle(pos, vel, col, random(8, 12), random(40, 80));
-    p.setDrag(0.96);
+    Particle p = new Particle(pos, vel, col, random(8, 12), random(80, 160));
+    p.setDrag(0.98);
     gameObjects.add(p);
   }
 
@@ -185,10 +184,10 @@ void spawnCollisionParticles(PVector pos, PVector dir, color col, int count) {
     // cone shaped spray of particles
     PVector particleDir = dir.copy();
     particleDir.rotate(radians(random(-60, 60)));
-    particleDir.setMag(random(3, 10));
+    particleDir.setMag(random(1.5, 5));
 
-    Particle p = new Particle(pos, particleDir, col, random(6, 12), random(40, 80));
-    p.setDrag(0.94);
+    Particle p = new Particle(pos, particleDir, col, random(6, 12), random(80, 160));
+    p.setDrag(0.97);
     gameObjects.add(p);
   }
 
@@ -202,14 +201,14 @@ void spawnThrusterParticles(PVector pos, PVector dir, int count) {
     offset.setMag(-15);
     offset.add(random(-6, 6), random(-6, 6));
     PVector particlePos = PVector.add(pos, offset);
-  
+
     // velocity opposite to ship direction with some randomness
     PVector particleVel = dir.copy();
     particleVel.rotate(radians(random(-60, 60)));
-    particleVel.setMag(random(-4, -1));
-    
-    Particle p = new Particle(particlePos, particleVel, color(255, 150, 30), random(10, 16), random(18, 30));
-    p.setDrag(0.92);
+    particleVel.setMag(random(-2, -0.5));
+
+    Particle p = new Particle(particlePos, particleVel, color(255, 150, 30), random(10, 16), random(36, 60));
+    p.setDrag(0.96);
     gameObjects.add(p);
   }
 }
