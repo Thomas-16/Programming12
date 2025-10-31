@@ -200,6 +200,7 @@ class Spaceship extends GameObject {
   
   public void teleport(PVector newPos) {
     this.pos = newPos;
+    makeInvulnerable();
   }
   
 }

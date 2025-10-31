@@ -25,9 +25,6 @@ int TP_COOLDOWN = 8000;
 
 // TODO LIST:
 // Pausing
-// Teleporting to safe space
-//   Teleport cooldown bar
-//   Invulnerability after teleport
 // Ghosting for certain objects
 // Other polish effects
 // Sound effects
@@ -116,6 +113,24 @@ void drawUI() {
 
     popMatrix();
   }
+  
+  // Draw tp cooldown bar
+  translate(-20, 16);
+  
+  // progress
+  float progress = constrain(map(millis(), lastTpTime, lastTpTime + TP_COOLDOWN, 0, 1), 0, 1);
+  float progressWidth = progress * 150;
+  
+  fill(255);
+  noStroke();
+  rect(0, 0, progressWidth, 40);
+  
+  // outline
+  fill(0, 0);
+  stroke(255);
+  strokeWeight(3);
+  rectMode(CORNER);
+  rect(0, 0, 150, 40);
 
   popMatrix();
 }
@@ -129,7 +144,7 @@ void handleInput() {
   if(zDown && millis() - lastTpTime > TP_COOLDOWN) {
     PVector tpPos = new PVector(random(width), random(height));
     for(int i = 0; i < 100; i++) {
-      if(closestAsteroidDistance(tpPos) > 350) break;
+      if(closestAsteroidDistance(tpPos) > 400) break;
       
       tpPos = new PVector(random(width), random(height));
     }
