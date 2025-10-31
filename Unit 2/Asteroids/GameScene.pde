@@ -17,7 +17,7 @@ final int MAX_LIVES = 3;
 // Screen shake
 PVector shake = new PVector(0, 0);
 float shakeMagnitude = 0;
-float shakeDecay = 0.95;
+float shakeDecay = 0.96;
 
 // TODO LIST:
 // Pausing
@@ -176,7 +176,7 @@ void spawnExplosionParticles(PVector pos, color col, int count) {
   }
 
   // shake screen
-  addScreenShake(2.5);
+  addScreenShake(3);
 }
 
 void spawnCollisionParticles(PVector pos, PVector dir, color col, int count) {
@@ -192,7 +192,7 @@ void spawnCollisionParticles(PVector pos, PVector dir, color col, int count) {
   }
 
   // shake screen
-  addScreenShake(2.5);
+  addScreenShake(3);
 }
 
 void spawnThrusterParticles(PVector pos, PVector dir, int count) {
