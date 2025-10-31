@@ -16,8 +16,8 @@ int lives;
 final int MAX_LIVES = 3;
 
 // Screen shake
-PVector shake = new PVector(0, 0);
-float shakeMagnitude = 0;
+PVector shake;
+float shakeMagnitude;
 float shakeDecay = 0.96;
 
 int lastTpTime;
@@ -42,6 +42,9 @@ void gameSetup() {
   lives = MAX_LIVES;
   
   lastTpTime = millis() - TP_COOLDOWN;
+  
+  shake = new PVector(0, 0);
+  shakeMagnitude = 0;
   
 }
 
