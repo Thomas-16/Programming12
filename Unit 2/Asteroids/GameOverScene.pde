@@ -11,8 +11,8 @@ void gameOverSetup() {
     switchScene(INTRO_SCENE);
   });
   
-  winGif = new Gif("frame_", "_delay-0.1s.gif", width/2, height/2, 400, 300, 20, 1);
-  loseGif = new Gif("frame_", "_delay-0.07s.gif", width/2, height/2, 400, 300, 27, 3);
+  winGif = new Gif("frame_", "_delay-0.1s.gif", width/2, height/2, 400, 300, 20, 2);
+  loseGif = new Gif("frame_", "_delay-0.07s.gif", width/2, height/2, 400, 300, 27, 6);
   
 }
 
