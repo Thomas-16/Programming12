@@ -94,6 +94,7 @@ void mousePressed() {
       introSceneMousePressed();
       break;
     case GAME_SCENE:
+      gameSceneMousePressed();
       break;
     case GAME_OVER_SCENE:
       gameOverSceneMousePressed();
@@ -106,6 +107,7 @@ void mouseReleased() {
       introSceneMouseReleased();
       break;
     case GAME_SCENE:
+      gameSceneMouseReleased();
       break;
     case GAME_OVER_SCENE:
       gameOverSceneMouseReleased();

@@ -15,6 +15,11 @@ final int ufoSpawnRate = 12000;
 int lives;
 final int MAX_LIVES = 3;
 
+// Pause
+boolean isPaused = false;
+RectButton resumeButton;
+RectButton mainMenuButton;
+
 // Screen shake
 PVector shake;
 float shakeMagnitude;
@@ -24,7 +29,6 @@ int lastTpTime;
 int TP_COOLDOWN = 8000;
 
 // TODO LIST:
-// Pausing
 // Ghosting for certain objects
 // Other polish effects
 // Sound effects
@@ -45,41 +49,61 @@ void gameSetup() {
   
   shake = new PVector(0, 0);
   shakeMagnitude = 0;
-  
+
+  isPaused = false;
+
+  resumeButton = new RectButton(width/2, height/2 - 80, 350, 70, color(0, 0), color(255), color(100, 200, 255), color(255), 4, 10);
+  resumeButton.setOnClick(() -> {
+    isPaused = false;
+  });
+
+  mainMenuButton = new RectButton(width/2, height/2 + 80, 350, 70, color(0, 0), color(255), color(255, 100, 100), color(255), 4, 10);
+  mainMenuButton.setOnClick(() -> {
+    switchScene(INTRO_SCENE);
+  });
 }
 
 void gameDraw() {
   imageMode(CORNER);
   image(backgroundPG, 0, 0);
 
-  updateScreenShake();
+  if(!isPaused) {
+    updateScreenShake();
 
-  pushMatrix();
-  translate(shake.x, shake.y);
+    pushMatrix();
+    translate(shake.x, shake.y);
 
-  handleInput();
-  spawnUfo();
+    handleInput();
+    spawnUfo();
 
-  pruneGameObjects();
-  updateGameObjects();
-  
-  int asteroidCount = 0;
-  for(GameObject go : gameObjects) {
-    if(go instanceof Asteroid) asteroidCount++;
+    pruneGameObjects();
+    updateGameObjects();
+
+    int asteroidCount = 0;
+    for(GameObject go : gameObjects) {
+      if(go instanceof Asteroid) asteroidCount++;
+    }
+
+    // no more asteroids
+    if(asteroidCount == 0) {
+      gameOver(true);
+      return;
+    }
+
+    resolveAsteroidCollisions();
+
+    drawGameObjects();
+    drawUI();
+
+    popMatrix();
+  } else {
+    // is paused
+    // draw game in background
+    drawGameObjects();
+    drawUI();
+
+    drawPauseOverlay();
   }
-  
-  // no more asteroids
-  if(asteroidCount == 0) {
-    gameOver(true);
-    return;
-  }
-
-  resolveAsteroidCollisions();
-
-  drawGameObjects();
-  drawUI();
-
-  popMatrix();
 }
 
 void updateScreenShake() {
@@ -126,6 +150,7 @@ void drawUI() {
   
   fill(255);
   noStroke();
+  rectMode(CORNER);
   rect(0, 0, progressWidth, 40);
   
   // outline
@@ -136,6 +161,31 @@ void drawUI() {
   rect(0, 0, 150, 40);
 
   popMatrix();
+}
+
+void drawPauseOverlay() {
+  fill(0, 180);
+  noStroke();
+  rect(0, 0, width, height);
+
+  // Title
+  fill(255);
+  textAlign(CENTER, CENTER);
+  textSize(60);
+  text("PAUSED", width/2, height/2 - 200);
+
+  resumeButton.draw();
+  mainMenuButton.draw();
+
+  // Button labels
+  textSize(30);
+  fill(255);
+  text("RESUME", width/2, height/2 - 80);
+  text("MAIN MENU", width/2, height/2 + 80);
+
+  textSize(20);
+  fill(200);
+  text("Press ESC to resume", width/2, height/2 + 200);
 }
 
 void handleInput() {
@@ -290,6 +340,13 @@ void resolveAsteroidCollisions() {
 
 
 void gameSceneKeyPressed() {
+  // Toggle pause with ESC
+  if(keyCode == ESC) {
+    key = 0; // Prevent default ESC behavior
+    isPaused = !isPaused;
+    return;
+  }
+
   if(keyCode == LEFT) leftDown = true;
   if(keyCode == RIGHT) rightDown = true;
   if(keyCode == UP) upDown = true;
@@ -305,6 +362,20 @@ void gameSceneKeyReleased() {
   if(keyCode == DOWN) downDown = false;
   if(key == ' ') spaceDown = false;
   if(key == 'z') zDown = false;
+}
+
+void gameSceneMousePressed() {
+  if(isPaused) {
+    resumeButton.mousePressed();
+    mainMenuButton.mousePressed();
+  }
+}
+
+void gameSceneMouseReleased() {
+  if(isPaused) {
+    resumeButton.mouseReleased();
+    mainMenuButton.mouseReleased();
+  }
 }
 
 float closestAsteroidDistance(PVector pos) {
