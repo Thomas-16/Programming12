@@ -340,9 +340,8 @@ void resolveAsteroidCollisions() {
 
 
 void gameSceneKeyPressed() {
-  // Toggle pause with ESC
   if(keyCode == ESC) {
-    key = 0; // Prevent default ESC behavior
+    key = 0;
     isPaused = !isPaused;
     return;
   }
