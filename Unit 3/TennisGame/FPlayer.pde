@@ -19,7 +19,7 @@ class FPlayer extends FBox {
     this.setDensity(1);
     this.setRotatable(false);
     this.setDamping(0);
-    this.setRestitution(0.2);
+    this.setRestitution(0);
     this.setFriction(1);
 
     racket = new FBox(20, 90);
