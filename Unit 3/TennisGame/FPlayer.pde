@@ -1,12 +1,15 @@
 
+int jumpImpulseForce = 6000;
+
 class FPlayer extends FBox {
 
-  FBox racket;
-  boolean onGround;
-  boolean swinging;
-  int swingTimer;
-  float racketAngle;
-  boolean facingLeft;
+  private FBox racket;
+  private boolean onGround;
+  private boolean swinging;
+  private int swingTimer;
+  private float racketAngle;
+  private boolean facingLeft;
+  
 
   public FPlayer(int x, int y, int w, int h) {
     super(w, h);
@@ -43,7 +46,7 @@ class FPlayer extends FBox {
 
   void jump() {
     if (onGround) {
-      this.addImpulse(0, -10000);
+      this.addImpulse(0, -jumpImpulseForce);
       onGround = false;
     }
   }
@@ -71,7 +74,7 @@ class FPlayer extends FBox {
       racketAngle = lerp(racketAngle, 0, 0.2);
     }
 
-    float racketHandleY = this.getY() - 50;
+    float racketHandleY = this.getY() - 55;
     float racketCenterOffsetY = 35;
 
     float racketX = this.getX() + sin(racketAngle) * racketCenterOffsetY;

@@ -1,11 +1,17 @@
 import fisica.*;
 
+// TODOs:
+// Borders
+// Collisions - net collision, double bounce, ball player collision
+// 
+
+
 FWorld world;
 
 FPlayer player1, player2;
 FCircle ball;
 
-int playerMovingVel = 350;
+int playerMovingVel = 375;
 
 boolean wPressed, aPressed, dPressed;
 boolean upPressed, leftPressed, rightPressed;
@@ -61,7 +67,7 @@ void spawnBall() {
   ball.setFill(255, 255, 0);
   ball.setRestitution(1);
   ball.setDensity(0.8);
-  ball.setVelocity(-100, 0);
+  ball.setVelocity(-200, 0);
   world.add(ball);
 }
 
@@ -105,8 +111,8 @@ void checkBallHit(FPlayer player) {
     if (player.racket.isTouchingBody(ball)) {
       float direction = player.facingLeft ? -1 : 1;
 
-      float velocityX = direction * 500 + random(-50, 50);
-      float velocityY = -700 + random(-50, 50);
+      float velocityX = direction * 500 + random(-50, 50) + (player.getVelocityX() / 3f);
+      float velocityY = -700 + random(-50, 50) + (player.getVelocityY() / 3f);
 
       ball.setVelocity(velocityX, velocityY);
 
