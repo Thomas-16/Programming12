@@ -15,7 +15,7 @@ FBox floor;
 
 PImage ballImg, heartImg;
 
-int playerMovingVel = 375;
+int playerMovingVel = 345;
 
 boolean wPressed, aPressed, dPressed;
 boolean upPressed, leftPressed, rightPressed;
@@ -25,6 +25,7 @@ FPlayer lastTouchedBallPlayer;
 int lives1, lives2;
 
 void setup() {
+  frameRate(80);
   size(1200, 800);
   
   lives1 = 3;

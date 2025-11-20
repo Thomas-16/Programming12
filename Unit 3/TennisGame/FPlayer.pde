@@ -16,7 +16,7 @@ class FPlayer extends FBox {
 
     this.setPosition(x, y);
     this.setFill(100, 150, 255);
-    this.setDensity(1);
+    this.setDensity(4);
     this.setRotatable(false);
     this.setDamping(0);
     this.setRestitution(0);
