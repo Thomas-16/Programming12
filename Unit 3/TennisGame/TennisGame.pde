@@ -1,8 +1,8 @@
 import fisica.*;
 
 // TODOs:
-// Collisions - double bounce
 // A racket
+// Mode framework
 
 
 FWorld world;
