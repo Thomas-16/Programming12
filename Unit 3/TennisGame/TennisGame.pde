@@ -1,7 +1,6 @@
 import fisica.*;
 
 // TODOs:
-// Borders
 // Collisions - double bounce
 // A racket
 
