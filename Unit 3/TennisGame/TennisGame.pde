@@ -22,6 +22,7 @@ boolean upPressed, leftPressed, rightPressed;
 FPlayer lastTouchedBallPlayer;
 
 int lives1, lives2;
+int bounces;
 
 void setup() {
   frameRate(80);
@@ -29,6 +30,7 @@ void setup() {
   
   lives1 = 3;
   lives2 = 3;
+  bounces = 0;
   
   ballImg = loadImage("ball.png");
   ballImg.resize(35, 35);
@@ -191,6 +193,7 @@ void checkBallHit(FPlayer player) {
       float velocityY = -700 + random(-50, 50) + (player.getVelocityY() / 3f);
 
       ball.setVelocity(velocityX, velocityY);
+      bounces = 0;
 
       player.swinging = false;
     }
@@ -207,6 +210,13 @@ void checkCollisions() {
   }
   if(ball.isTouchingBody(player2)) {
     loseLife(2);
+  }
+  
+  if(ball.isTouchingBody(floor)) {
+    bounces++;
+    if(bounces == 2) {
+      loseLife(ball.getX() < width/2 ? 1 : 2);
+    }
   }
 }
 
@@ -251,11 +261,6 @@ void keyPressed() {
   }
   if (keyCode == RIGHT) {
     rightPressed = true;
-  }
-
-  // Respawn ball with R
-  if (key == 'r' || key == 'R') {
-    spawnBall();
   }
 }
 
