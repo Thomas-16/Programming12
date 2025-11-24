@@ -11,11 +11,15 @@ class FPlayer extends FBox {
   private boolean facingLeft;
   
 
-  public FPlayer(int x, int y, int w, int h) {
+  public FPlayer(int x, int y, int w, int h, boolean isBlue) {
     super(w, h);
 
     this.setPosition(x, y);
-    this.setFill(100, 150, 255);
+    if(isBlue) {
+      this.setFill(100, 150, 255);
+    } else {
+      this.setFill(255, 113, 102);
+    }
     this.setDensity(4);
     this.setRotatable(false);
     this.setDamping(0);

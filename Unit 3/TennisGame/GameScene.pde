@@ -55,12 +55,12 @@ void setupWorld() {
   world.add(net);
 
   // Player 1 (left side)
-  player1 = new FPlayer(200, 600, 60, 80);
+  player1 = new FPlayer(200, 600, 60, 80, true);
   world.add(player1);
   world.add(player1.racket);
 
   // Player 2 (right side)
-  player2 = new FPlayer(1000, 600, 60, 80);
+  player2 = new FPlayer(1000, 600, 60, 80, false);
   player2.facingLeft = true;
   world.add(player2);
   world.add(player2.racket);
