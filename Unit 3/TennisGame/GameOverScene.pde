@@ -2,7 +2,7 @@
 RectButton backButton;
 
 void gameOverSetup() {
-  backButton = new RectButton(width/2, 550, 140, 80, color(255, 140, 0), color(255, 100, 0), color(255, 200, 100), color(200, 100, 0), 3, 8);
+  backButton = new RectButton(width/2, 550, 160, 90, color(255, 140, 0), color(255, 100, 0), color(255, 200, 100), color(200, 100, 0), 3, 8);
   backButton.setOnClick(() -> {
     switchScene(INTRO_SCENE);
   });
