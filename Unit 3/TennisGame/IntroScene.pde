@@ -18,6 +18,9 @@ void introDraw() {
   textSize(50);
   textAlign(CENTER, CENTER);
   text("PLAY", width/2, 550);
+  
+  textSize(80);
+  text("DERPY TENNIS GAME", width/2, 250);
 }
 
 

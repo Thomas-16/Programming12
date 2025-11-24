@@ -9,11 +9,16 @@ final int INTRO_SCENE = 0;
 final int GAME_SCENE = 1;
 final int GAME_OVER_SCENE = 2;
 
-boolean won = false;
+PFont font;
+
+boolean player1Won;
 
 void setup() {
   frameRate(80);
   size(1200, 800);
+  
+  font = createFont("Spicy Sale.ttf", 30);
+  textFont(font);
 
   introSetup();
 }
@@ -47,8 +52,8 @@ void switchScene(int newScene) {
       break;
   }
 }
-void gameOver(boolean won) {
-  this.won = won;
+void gameOver(boolean player1Won) {
+  this.player1Won = player1Won;
   switchScene(GAME_OVER_SCENE);
 }
 

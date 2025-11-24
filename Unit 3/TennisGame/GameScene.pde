@@ -220,8 +220,12 @@ void loseLife(int player) {
     lives2--;
   }
 
-  if (lives1 == 0 || lives2 == 0) {
-    // gameOver();
+  if (lives1 == 0) {
+    gameOver(false);
+    return;
+  }
+  if (lives2 == 0) {
+    gameOver(true);
     return;
   }
   spawnBall();
