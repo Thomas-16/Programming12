@@ -2,7 +2,6 @@ import fisica.*;
 
 // TODOs:
 // A racket
-// Mode framework
 
 int scene = 0;
 final int INTRO_SCENE = 0;
