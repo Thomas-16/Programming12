@@ -80,6 +80,7 @@ void spawnBall() {
   ball.setFill(255, 255, 0);
   ball.setRestitution(1);
   ball.setDensity(0.8);
+  ball.setGrabbable(false);
 
   float random = random(1);
 
