@@ -27,14 +27,14 @@ int bounces;
 void setup() {
   frameRate(80);
   size(1200, 800);
-  
+
   lives1 = 3;
   lives2 = 3;
   bounces = 0;
-  
+
   ballImg = loadImage("ball.png");
   ballImg.resize(35, 35);
-  
+
   heartImg = loadImage("heart.png");
   heartImg.resize(40, 40);
 
@@ -46,7 +46,7 @@ void setup() {
 void setupWorld() {
   world = new FWorld();
   world.setGravity(0, 900);
-  world.setEdges(color(0,0,0,0));
+  world.setEdges(color(0, 0, 0, 0));
 
   // Floor
   floor = new FBox(width, 80);
@@ -87,17 +87,17 @@ void spawnBall() {
   ball.setFill(255, 255, 0);
   ball.setRestitution(1);
   ball.setDensity(0.8);
-  
+
   float random = random(1);
-  
-  if(random > 0.5) {
+
+  if (random > 0.5) {
     ball.setVelocity(200, 0);
     lastTouchedBallPlayer = player1;
   } else {
     ball.setVelocity(-200, 0);
     lastTouchedBallPlayer = player2;
   }
-  
+
   ball.attachImage(ballImg);
   world.add(ball);
 }
@@ -127,7 +127,7 @@ void draw() {
 
   checkBallHit(player1);
   checkBallHit(player2);
-  
+
   checkCollisions();
 
   // Respawn ball if it falls off screen
@@ -137,19 +137,19 @@ void draw() {
 
   world.step();
   world.draw();
-  
+
   drawUI();
   imageMode(CORNER);
 }
 
 void drawUI() {
   imageMode(CENTER);
-  
+
   // player 1 lives
   pushMatrix();
   translate(35, 35);
 
-  for(int i = 0; i < lives1; i++) {
+  for (int i = 0; i < lives1; i++) {
     pushMatrix();
     translate(i * 55, 0);
 
@@ -161,14 +161,14 @@ void drawUI() {
 
     popMatrix();
   }
-  
+
   popMatrix();
-  
+
   // player 2 lives
   pushMatrix();
   translate(width-35, 35);
 
-  for(int i = lives2-1; i >= 0 ; i--) {
+  for (int i = lives2-1; i >= 0; i--) {
     pushMatrix();
     translate(-i * 55, 0);
 
@@ -180,7 +180,7 @@ void drawUI() {
 
     popMatrix();
   }
-  
+
   popMatrix();
 }
 
@@ -201,27 +201,27 @@ void checkBallHit(FPlayer player) {
 }
 
 void checkCollisions() {
-  if(ball.isTouchingBody(net)) {
+  if (ball.isTouchingBody(net)) {
     loseLife(lastTouchedBallPlayer == player1 ? 1 : 2);
   }
-  
-  if(ball.isTouchingBody(player1)) {
+
+  if (ball.isTouchingBody(player1)) {
     loseLife(1);
   }
-  if(ball.isTouchingBody(player2)) {
+  if (ball.isTouchingBody(player2)) {
     loseLife(2);
   }
-  
-  if(ball.isTouchingBody(floor)) {
+
+  if (ball.isTouchingBody(floor)) {
     bounces++;
-    if(bounces == 2) {
+    if (bounces == 2) {
       loseLife(ball.getX() < width/2 ? 1 : 2);
     }
   }
 }
 
 void loseLife(int player) {
-  if(player == 1) {
+  if (player == 1) {
     lives1--;
   } else {
     lives2--;
