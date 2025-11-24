@@ -81,6 +81,8 @@ void spawnBall() {
   if (ball != null) {
     world.remove(ball);
   }
+  
+  bounces = 0;
 
   ball = new FCircle(35);
   ball.setPosition(width/2, 200);
