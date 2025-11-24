@@ -26,7 +26,7 @@ class FPlayer extends FBox {
     this.setRestitution(0);
     this.setFriction(1);
 
-    racket = new FBox(20, 90);
+    racket = new FBox(20, 100);
     racket.setFill(255, 200, 100);
     racket.setSensor(true);
     racket.setGrabbable(false);
