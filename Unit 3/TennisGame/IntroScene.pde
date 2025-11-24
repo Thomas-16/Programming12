@@ -14,11 +14,12 @@ void introDraw() {
   
   playButton.draw();
   
-  fill(0);
+  fill(#7d4305);
   textSize(50);
   textAlign(CENTER, CENTER);
   text("PLAY", width/2, 550);
   
+  fill(#7d4305);
   textSize(80);
   text("DERPY TENNIS GAME", width/2, 250);
 }

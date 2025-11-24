@@ -13,7 +13,7 @@ void gameOverDraw() {
   
   backButton.draw();
   
-  fill(0);
+  fill(#7d4305);
   textSize(50);
   textAlign(CENTER, CENTER);
   text("BACK", width/2, 550);
