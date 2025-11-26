@@ -53,7 +53,13 @@ void draw() {
     background(255);
 
     world.step();
+
+    pushMatrix();
+    translate(-player1.getX()+width/2, -player1.getY()+height/2);
+
     world.draw();
+
+    popMatrix();
 
     int vx1 = 0;
     if (aDown) vx1 = -100;
