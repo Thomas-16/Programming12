@@ -11,14 +11,14 @@ FBomb bomb = null;
 
 int gridSize = 10;
 
-float cameraZoom = 2;
+float cameraZoom = 3;
 
 boolean wDown, aDown, sDown, dDown;
 boolean upDown, leftDown, downDown, rightDown;
 boolean spaceDown;
 
 void setup() {
-    size(1200, 800);
+    size(1300, 900);
     frameRate(60);
 
     worldBoxes = new ArrayList<FBox>();
