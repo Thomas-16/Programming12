@@ -4,7 +4,10 @@ FWorld world;
 
 PImage map;
 
+ArrayList<FBox> worldBoxes;
+
 FBox player1, player2;
+FBomb bomb = null;
 
 int gridSize = 10;
 
@@ -12,9 +15,13 @@ float cameraZoom = 2;
 
 boolean wDown, aDown, sDown, dDown;
 boolean upDown, leftDown, downDown, rightDown;
+boolean spaceDown;
 
 void setup() {
     size(1200, 800);
+    frameRate(60);
+
+    worldBoxes = new ArrayList<FBox>();
 
     Fisica.init(this);
     world = new FWorld();
@@ -33,6 +40,8 @@ void setup() {
                 box.setPosition(x*gridSize, y*gridSize);
                 box.setGrabbable(false);
                 world.add(box);
+                
+                worldBoxes.add(box);
             }
         }
     }
@@ -79,6 +88,12 @@ void draw() {
 
     int contactCount2 = player2.getContacts().size();
     if(contactCount2 > 0 && upDown) player2.setVelocity(player2.getVelocityX(), -150);
+
+    if(spaceDown && bomb == null) {
+        bomb = new FBomb();
+    }
+
+    if (bomb != null) bomb.act();
 }
 
 void keyPressed() {
@@ -86,6 +101,7 @@ void keyPressed() {
     if (key == 'A' || key =='a') aDown = true;
     if (key == 'S' || key =='s') sDown = true;
     if (key == 'D' || key =='d') dDown = true;
+    if (key == ' ') spaceDown = true;
     if (keyCode == UP) upDown = true;
     if (keyCode == LEFT) leftDown = true;
     if (keyCode == RIGHT) rightDown = true;
@@ -97,6 +113,7 @@ void keyReleased() {
     if (key == 'A' || key =='a') aDown = false;
     if (key == 'S' || key =='s') sDown = false;
     if (key == 'D' || key =='d') dDown = false;
+    if (key == ' ') spaceDown = false;
     if (keyCode == UP) upDown = false;
     if (keyCode == LEFT) leftDown = false;
     if (keyCode == RIGHT) rightDown = false;
