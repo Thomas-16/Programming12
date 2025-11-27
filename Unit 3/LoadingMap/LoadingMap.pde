@@ -8,6 +8,8 @@ FBox player1, player2;
 
 int gridSize = 10;
 
+float cameraZoom = 2;
+
 boolean wDown, aDown, sDown, dDown;
 boolean upDown, leftDown, downDown, rightDown;
 
@@ -55,7 +57,8 @@ void draw() {
     world.step();
 
     pushMatrix();
-    translate(-player1.getX()+width/2, -player1.getY()+height/2);
+    scale(cameraZoom);
+    translate(-player1.getX() + (width/2 / cameraZoom), -player1.getY() + (height/2 / cameraZoom));
 
     world.draw();
 
