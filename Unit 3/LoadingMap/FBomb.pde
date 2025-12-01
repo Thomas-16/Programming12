@@ -6,7 +6,7 @@ class FBomb extends FBox {
         timer = 60;
 
         this.setFillColor(#fcba03);
-        this.setPosition(player1.getX(), player1.getY());
+        this.setPosition(player.getX(), player.getY());
         world.add(this);
     }
 
@@ -31,17 +31,11 @@ class FBomb extends FBox {
             }
         }
 
-        if (dist(player1.getX(), player1.getY(), this.getX(), this.getY()) < 80) {
-            PVector explosionVec = new PVector(player1.getX() - this.getX(), player1.getY() - this.getY());
+        if (dist(player.getX(), player.getY(), this.getX(), this.getY()) < 80) {
+            PVector explosionVec = new PVector(player.getX() - this.getX(), player.getY() - this.getY());
             explosionVec.mult(1.5);
 
-            player1.addImpulse(explosionVec.x, explosionVec.y);
-        }
-        if (dist(player2.getX(), player2.getY(), this.getX(), this.getY()) < 80) {
-            PVector explosionVec = new PVector(player2.getX() - this.getX(), player2.getY() - this.getY());
-            explosionVec.mult(1.5);
-
-            player2.addImpulse(explosionVec.x, explosionVec.y);
+            player.addImpulse(explosionVec.x, explosionVec.y);
         }
     }
 }
