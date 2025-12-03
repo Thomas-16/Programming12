@@ -36,7 +36,6 @@ void setup() {
 
             if (c == GROUND_COLOR) {
                 box = new FBox(gridSize, gridSize);
-                // box.setFillColor(color(0));
                 box.setNoStroke();
                 box.attachImage(DIRT_IMG);
             }
