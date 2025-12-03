@@ -1,5 +1,7 @@
 import fisica.*;
 
+color TRANSPARENT = color(0,0,0,0);
+
 color GROUND_COLOR = #22b14c;
 
 PImage DIRT_IMG;
@@ -10,15 +12,16 @@ FWorld world;
 
 FPlayer player;
 
-int gridSize = 10;
+int gridSize = 32;
 
-float cameraZoom = 5.5;
+float cameraZoom = 2;
 
 boolean wDown, aDown, sDown, dDown;
 
 void setup() {
+    pixelDensity(1);
     size(1300, 900, P2D);
-    frameRate(60);
+    frameRate(120);
 
     mapImg = loadImage("map.png");
 
@@ -31,17 +34,19 @@ void setup() {
     for (int y = 0; y < mapImg.height; y++) {
         for (int x = 0; x < mapImg.width; x++) {
             color c = mapImg.get(x, y);
+            if (c == TRANSPARENT) continue;
 
             FBox box = null;
 
             if (c == GROUND_COLOR) {
                 box = new FBox(gridSize, gridSize);
-                box.setNoStroke();
-                box.attachImage(DIRT_IMG);
+                box.setFill(0, 0, 0);
+                // box.attachImage(DIRT_IMG);
             }
 
             if(box == null) continue;
             box.setStatic(true);
+            box.setStroke(0, 0, 0, 0);
             box.setPosition(x*gridSize, y*gridSize);
             box.setGrabbable(false);
             world.add(box);
@@ -54,6 +59,7 @@ void setup() {
 }
 
 void draw() {
+    println(frameRate);
     background(255);
 
     player.update();
