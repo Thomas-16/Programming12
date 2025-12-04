@@ -38,7 +38,6 @@ void setup() {
   Fisica.init(this);
   world = new FWorld();
 
-
   for (int y = 0; y < mapImg.height; y++) {
     for (int x = 0; x < mapImg.width; x++) {
       color c = mapImg.get(x, y);
