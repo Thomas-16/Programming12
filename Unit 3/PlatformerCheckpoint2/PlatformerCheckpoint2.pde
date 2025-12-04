@@ -3,8 +3,10 @@ import fisica.*;
 color TRANSPARENT = color(0, 0, 0, 0);
 
 color GROUND_COLOR = #22b14c;
+color SLIME_COLOR = #a8e61d;
 
 PImage DIRT_CENTER, DIRT_N, DIRT_S, DIRT_E, DIRT_W, DIRT_NE, DIRT_NW, DIRT_SE, DIRT_SW;
+PImage SLIME;
 
 PImage mapImg;
 
@@ -12,9 +14,7 @@ FWorld world;
 
 FPlayer player;
 
-int gridSize = 32;
-
-float cameraZoom = 2;
+int gridSize = 64;
 
 boolean wDown, aDown, sDown, dDown;
 
@@ -34,13 +34,17 @@ void setup() {
   DIRT_NW = scaleImage(loadImage("dirt_nw.png"), gridSize, gridSize);
   DIRT_SE = scaleImage(loadImage("dirt_se.png"), gridSize, gridSize);
   DIRT_SW = scaleImage(loadImage("dirt_sw.png"), gridSize, gridSize);
+  SLIME = scaleImage(loadImage("slime_block.png"), gridSize, gridSize);
 
   Fisica.init(this);
-  world = new FWorld();
+  world = new FWorld(Integer.MIN_VALUE, Integer.MIN_VALUE, Integer.MAX_VALUE, Integer.MAX_VALUE);
+  world.setGravity(0, 400);
 
   for (int y = 0; y < mapImg.height; y++) {
     for (int x = 0; x < mapImg.width; x++) {
       color c = mapImg.get(x, y);
+
+      FBox box = null;
 
       if (c == GROUND_COLOR) {
         boolean n = isTileType(x, y - 1, GROUND_COLOR);
@@ -57,15 +61,23 @@ void setup() {
         else if (!s) texture = DIRT_S;
         else if (!e) texture = DIRT_E;
         else if (!w) texture = DIRT_W;
-
-        FBox box = new FBox(gridSize, gridSize);
-        box.setStatic(true);
-        box.setStroke(0, 0, 0, 0);
-        box.setPosition(x*gridSize, y*gridSize);
-        box.setGrabbable(false);
+        
+        box = new FBox(gridSize, gridSize);
         box.attachImage(texture);
-        world.add(box);
       }
+      if (c == SLIME_COLOR) {
+        box = new FBox(gridSize, gridSize);
+        box.attachImage(SLIME);
+        box.setRestitution(2);
+      }
+
+      if(box == null) continue;
+      box.setStatic(true);
+      box.setStroke(0, 0, 0, 0);
+      box.setPosition(x*gridSize, y*gridSize);
+      box.setGrabbable(false);
+      world.add(box);
+
     }
   }
 
@@ -82,8 +94,7 @@ void draw() {
   world.step();
 
   pushMatrix();
-  scale(cameraZoom);
-  translate(-player.getX() + (width/2 / cameraZoom), -player.getY() + (height/2 / cameraZoom));
+  translate(-player.getX() + (width/2), -player.getY() + (height/2));
 
   world.draw();
 
