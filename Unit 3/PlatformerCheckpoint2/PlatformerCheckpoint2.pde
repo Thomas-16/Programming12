@@ -114,11 +114,10 @@ PImage scaleImage(PImage src, int w, int h) {
   PImage out = createImage(w, h, ARGB);
   out.loadPixels();
   src.loadPixels();
-
   for (int y = 0; y < h; y++) {
-    int sy = int(y * src.height / (float) h);
+    int sy = (y * src.height) / h;
     for (int x = 0; x < w; x++) {
-      int sx = int(x * src.width / (float) w);
+      int sx = (x * src.width) / w;
       out.pixels[y * w + x] = src.pixels[sy * src.width + sx];
     }
   }
