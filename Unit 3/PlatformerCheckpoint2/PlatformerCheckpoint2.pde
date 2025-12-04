@@ -40,8 +40,7 @@ void setup() {
 
             if (c == GROUND_COLOR) {
                 box = new FBox(gridSize, gridSize);
-                box.setFill(0, 0, 0);
-                // box.attachImage(DIRT_IMG);
+                box.attachImage(DIRT_IMG);
             }
 
             if(box == null) continue;
@@ -59,7 +58,7 @@ void setup() {
 }
 
 void draw() {
-    println(frameRate);
+    // println(frameRate);
     background(255);
 
     player.update();
