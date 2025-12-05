@@ -6,8 +6,8 @@ class FPlayer extends FBox {
         this.setFillColor(#2159ff);
         this.setGrabbable(false);
         this.setNoStroke();
-        
-        this.setDensity(10);
+        this.setFriction(0);
+        this.setDensity(1);
     }
 
     public void update() {
