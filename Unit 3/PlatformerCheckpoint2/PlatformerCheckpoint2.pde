@@ -5,10 +5,12 @@ color TRANSPARENT = color(0, 0, 0, 0);
 color GROUND_COLOR = #22b14c;
 color SLIME_COLOR = #a8e61d;
 color ICE_COLOR = #00b7ef;
+color SPIKE_COLOR = #464646;
 
 PImage DIRT_CENTER, DIRT_N, DIRT_S, DIRT_E, DIRT_W, DIRT_NE, DIRT_NW, DIRT_SE, DIRT_SW;
 PImage SLIME;
 PImage ICE;
+PImage SPIKE;
 
 PImage mapImg;
 
@@ -38,6 +40,7 @@ void setup() {
   DIRT_SW = scaleImage(loadImage("dirt_sw.png"), gridSize, gridSize);
   SLIME = scaleImage(loadImage("slime_block.png"), gridSize, gridSize);
   ICE = scaleImage(loadImage("blueBlock.png"), gridSize, gridSize);
+  SPIKE = scaleImage(loadImage("spike.png"), gridSize, gridSize);
 
   Fisica.init(this);
   world = new FWorld(Integer.MIN_VALUE, Integer.MIN_VALUE, Integer.MAX_VALUE, Integer.MAX_VALUE);
@@ -80,6 +83,11 @@ void setup() {
         box.attachImage(ICE);
         box.setFriction(0);
         box.setName("ice");
+      }
+      else if (c == SPIKE_COLOR) {
+        box = new FBox(gridSize, gridSize);
+        box.attachImage(SPIKE);
+        box.setName("spike");
       }
       
 
