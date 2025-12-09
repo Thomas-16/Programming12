@@ -67,16 +67,19 @@ void setup() {
         
         box = new FBox(gridSize, gridSize);
         box.attachImage(texture);
+        box.setName("ground");
       }
       else if (c == SLIME_COLOR) {
         box = new FBox(gridSize, gridSize);
         box.attachImage(SLIME);
         box.setRestitution(2);
+        box.setName("slime");
       }
       else if (c == ICE_COLOR) {
         box = new FBox(gridSize, gridSize);
         box.attachImage(ICE);
         box.setFriction(0);
+        box.setName("ice");
       }
       
 
