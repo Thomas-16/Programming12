@@ -6,11 +6,14 @@ color GROUND_COLOR = #22b14c;
 color SLIME_COLOR = #a8e61d;
 color ICE_COLOR = #00b7ef;
 color SPIKE_COLOR = #464646;
+color TRUNK_COLOR = #9c5a3c;
+color LEAF_COLOR = #d3f9bc;
 
 PImage DIRT_CENTER, DIRT_N, DIRT_S, DIRT_E, DIRT_W, DIRT_NE, DIRT_NW, DIRT_SE, DIRT_SW;
 PImage SLIME;
 PImage ICE;
 PImage SPIKE;
+PImage TRUNK, TREE_INTERSECT, LEAF_CENTER, LEAF_W, LEAF_E;
 
 PImage mapImg;
 
@@ -41,6 +44,11 @@ void setup() {
   SLIME = scaleImage(loadImage("slime_block.png"), gridSize, gridSize);
   ICE = scaleImage(loadImage("blueBlock.png"), gridSize, gridSize);
   SPIKE = scaleImage(loadImage("spike.png"), gridSize, gridSize);
+  TRUNK = scaleImage(loadImage("tree_trunk.png"), gridSize, gridSize);
+  TREE_INTERSECT = scaleImage(loadImage("tree_intersect.png"), gridSize, gridSize);
+  LEAF_CENTER = scaleImage(loadImage("treetop_center.png"), gridSize, gridSize);
+  LEAF_W = scaleImage(loadImage("treetop_w.png"), gridSize, gridSize);
+  LEAF_E = scaleImage(loadImage("treetop_e.png"), gridSize, gridSize);
 
   Fisica.init(this);
   world = new FWorld(Integer.MIN_VALUE, Integer.MIN_VALUE, Integer.MAX_VALUE, Integer.MAX_VALUE);
@@ -88,6 +96,26 @@ void setup() {
         box = new FBox(gridSize, gridSize);
         box.attachImage(SPIKE);
         box.setName("spike");
+      }
+      else if (c == TRUNK_COLOR) {
+        box = new FBox(gridSize, gridSize);
+        box.attachImage(TRUNK);
+        box.setSensor(true);
+      }
+      else if (c == LEAF_COLOR) {
+        boolean s = isTileType(x, y + 1, TRUNK_COLOR);
+        boolean e = isTileType(x + 1, y, LEAF_COLOR);
+        boolean w = isTileType(x - 1, y, LEAF_COLOR);
+
+        PImage texture = LEAF_CENTER;
+        if (s) texture = TREE_INTERSECT;
+        else if (!w && e) texture = LEAF_W;
+        else if (w && !e) texture = LEAF_E;
+        else if (w && e) texture = LEAF_CENTER;
+        
+        box = new FBox(gridSize, gridSize);
+        box.setSensor(true);
+        box.attachImage(texture);
       }
       
 
