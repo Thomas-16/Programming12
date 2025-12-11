@@ -60,7 +60,7 @@ void setup() {
   world = new FWorld(Integer.MIN_VALUE, Integer.MIN_VALUE, Integer.MAX_VALUE, Integer.MAX_VALUE);
   world.setGravity(0, 400);
 
-  FCompound ground;
+  FCompound ground = new FCompound();
 
   for (int y = 0; y < mapImg.height; y++) {
     for (int x = 0; x < mapImg.width; x++) {
@@ -100,45 +100,69 @@ void setup() {
         box.setFriction(0);
         box.setName("ice");
       }
-      else if (c == SPIKE_COLOR) {
-        box = new FBox(gridSize, gridSize);
-        box.attachImage(SPIKE);
-        box.setName("spike");
-      }
-      else if (c == TRUNK_COLOR) {
-        box = new FBox(gridSize, gridSize);
-        box.attachImage(TRUNK);
-        box.setSensor(true);
-      }
-      else if (c == LEAF_COLOR) {
-        boolean s = isTileType(x, y + 1, TRUNK_COLOR);
-        boolean e = isTileType(x + 1, y, LEAF_COLOR);
-        boolean w = isTileType(x - 1, y, LEAF_COLOR);
-
-        PImage texture = LEAF_CENTER;
-        if (s) texture = TREE_INTERSECT;
-        else if (!w && e) texture = LEAF_W;
-        else if (w && !e) texture = LEAF_E;
-        else if (w && e) texture = LEAF_CENTER;
-        
-        box = new FBox(gridSize, gridSize);
-        box.setSensor(true);
-        box.attachImage(texture);
-      }
-      else if (c == BRIDGE_COLOR) {
-        box = new FBridge();
-      }
       
+      // not ground terrain
+      if(box == null) {
+        if (c == SPIKE_COLOR) {
+          box = new FBox(gridSize, gridSize);
+          box.attachImage(SPIKE);
+          box.setName("spike");
+          box.setStatic(true);
+          box.setStroke(0, 0, 0, 0);
+          box.setPosition(x*gridSize, y*gridSize);
+          box.setGrabbable(false);
+          world.add(box);
+        }
+        else if (c == TRUNK_COLOR) {
+          box = new FBox(gridSize, gridSize);
+          box.attachImage(TRUNK);
+          box.setSensor(true);
+          box.setStatic(true);
+          box.setStroke(0, 0, 0, 0);
+          box.setPosition(x*gridSize, y*gridSize);
+          box.setGrabbable(false);
+          world.add(box);
+        }
+        else if (c == LEAF_COLOR) {
+          boolean s = isTileType(x, y + 1, TRUNK_COLOR);
+          boolean e = isTileType(x + 1, y, LEAF_COLOR);
+          boolean w = isTileType(x - 1, y, LEAF_COLOR);
 
-      if(box == null) continue;
+          PImage texture = LEAF_CENTER;
+          if (s) texture = TREE_INTERSECT;
+          else if (!w && e) texture = LEAF_W;
+          else if (w && !e) texture = LEAF_E;
+          else if (w && e) texture = LEAF_CENTER;
+          
+          box = new FBox(gridSize, gridSize);
+          box.setSensor(true);
+          box.attachImage(texture);
+          box.setStatic(true);
+          box.setStroke(0, 0, 0, 0);
+          box.setPosition(x*gridSize, y*gridSize);
+          box.setGrabbable(false);
+          world.add(box);
+        }
+        else if (c == BRIDGE_COLOR) {
+          box = new FBridge();
+          box.setStatic(true);
+          box.setStroke(0,0,0,0);
+          box.setPosition(x*gridSize, y*gridSize);
+          box.setGrabbable(false);
+          world.add(box);
+        }
+        continue;
+      }
       box.setStatic(true);
       box.setStroke(0, 0, 0, 0);
       box.setPosition(x*gridSize, y*gridSize);
       box.setGrabbable(false);
-      world.add(box);
+      ground.addBody(box);
 
     }
   }
+  ground.setStatic(true);
+  world.add(ground);
 
   // spawn player
   player = new FPlayer();
