@@ -1,7 +1,13 @@
-class FBridge extends FBox {
+class FBridge extends FGameObject {
     public FBridge() {
-        super(gridSize, gridSize);
+        super();
         
         this.attachImage(BRIDGE);
+    }
+
+    public void update() {
+        if (isTouching("player")) {
+            this.setStatic(false);
+        }
     }
 }

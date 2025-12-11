@@ -1,27 +1,20 @@
 
-class FPlayer extends FBox {
+class FPlayer extends FGameObject {
     public FPlayer() {
-        super(gridSize, gridSize);
+        super();
 
         this.setFillColor(#2159ff);
         this.setGrabbable(false);
         this.setNoStroke();
         this.setFriction(0);
         this.setDensity(1);
+        this.setName("player");
     }
 
     public void update() {
         handleInput();
-        handleCollisions();
-    }
-
-    private void handleCollisions() {
-        ArrayList<FContact> contacts = this.getContacts();
-        for (FContact contact : contacts) {
-            if(contact.contains("spike")) {
-                this.setPosition(0, 0);
-            }
-        }
+        if (isTouching("spike"))
+            this.setPosition(0, 0);
     }
 
     private void handleInput() {

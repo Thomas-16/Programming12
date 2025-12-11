@@ -22,6 +22,7 @@ PImage mapImg;
 FWorld world;
 
 FPlayer player;
+ArrayList<FGameObject> gameObjects;
 
 int gridSize = 64;
 
@@ -31,6 +32,8 @@ void setup() {
   pixelDensity(1);
   size(1300, 900, P2D);
   frameRate(120);
+
+  gameObjects = new ArrayList<FGameObject>();
 
   mapImg = loadImage("map.png");
 
@@ -56,6 +59,8 @@ void setup() {
   Fisica.init(this);
   world = new FWorld(Integer.MIN_VALUE, Integer.MIN_VALUE, Integer.MAX_VALUE, Integer.MAX_VALUE);
   world.setGravity(0, 400);
+
+  FCompound ground;
 
   for (int y = 0; y < mapImg.height; y++) {
     for (int x = 0; x < mapImg.width; x++) {
@@ -144,7 +149,10 @@ void draw() {
   // println(frameRate);
   background(255);
 
-  player.update();
+  for (FGameObject gameObject : gameObjects) {
+    gameObject.update();
+  }
+  
   world.step();
 
   pushMatrix();
