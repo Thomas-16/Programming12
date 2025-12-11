@@ -16,7 +16,9 @@ class FPlayer extends FBox {
         if (dDown) vx = 200;
         this.setVelocity(vx, this.getVelocityY());
 
-        int contactCount = this.getContacts().size();
-        if(contactCount > 0 && wDown) this.setVelocity(this.getVelocityX(), -350);
+        ArrayList<FContact> contacts = this.getContacts();
+        int contactCount = contacts.size();
+        if(contactCount > 0 && wDown && !contacts.get(0).getBody1().isSensor() && !contacts.get(0).getBody2().isSensor())
+            this.setVelocity(this.getVelocityX(), -350);
     }
 }
