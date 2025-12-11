@@ -8,12 +8,14 @@ color ICE_COLOR = #00b7ef;
 color SPIKE_COLOR = #464646;
 color TRUNK_COLOR = #9c5a3c;
 color LEAF_COLOR = #d3f9bc;
+color BRIDGE_COLOR = #e5aa7a;
 
 PImage DIRT_CENTER, DIRT_N, DIRT_S, DIRT_E, DIRT_W, DIRT_NE, DIRT_NW, DIRT_SE, DIRT_SW;
 PImage SLIME;
 PImage ICE;
 PImage SPIKE;
 PImage TRUNK, TREE_INTERSECT, LEAF_CENTER, LEAF_W, LEAF_E;
+PImage BRIDGE;
 
 PImage mapImg;
 
@@ -49,6 +51,7 @@ void setup() {
   LEAF_CENTER = scaleImage(loadImage("treetop_center.png"), gridSize, gridSize);
   LEAF_W = scaleImage(loadImage("treetop_w.png"), gridSize, gridSize);
   LEAF_E = scaleImage(loadImage("treetop_e.png"), gridSize, gridSize);
+  BRIDGE = scaleImage(loadImage("bridge_center.png"), gridSize, gridSize);
 
   Fisica.init(this);
   world = new FWorld(Integer.MIN_VALUE, Integer.MIN_VALUE, Integer.MAX_VALUE, Integer.MAX_VALUE);
@@ -116,6 +119,9 @@ void setup() {
         box = new FBox(gridSize, gridSize);
         box.setSensor(true);
         box.attachImage(texture);
+      }
+      else if (c == BRIDGE_COLOR) {
+        box = new FBridge();
       }
       
 

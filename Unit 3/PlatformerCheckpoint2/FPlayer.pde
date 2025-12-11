@@ -11,6 +11,20 @@ class FPlayer extends FBox {
     }
 
     public void update() {
+        handleInput();
+        handleCollisions();
+    }
+
+    private void handleCollisions() {
+        ArrayList<FContact> contacts = this.getContacts();
+        for (FContact contact : contacts) {
+            if(contact.contains("spike")) {
+                this.setPosition(0, 0);
+            }
+        }
+    }
+
+    private void handleInput() {
         int vx = 0;
         if (aDown) vx = -200;
         if (dDown) vx = 200;
@@ -19,6 +33,6 @@ class FPlayer extends FBox {
         ArrayList<FContact> contacts = this.getContacts();
         int contactCount = contacts.size();
         if(contactCount > 0 && wDown && !contacts.get(0).getBody1().isSensor() && !contacts.get(0).getBody2().isSensor())
-            this.setVelocity(this.getVelocityX(), -350);
+            this.setVelocity(this.getVelocityX(), -400);
     }
 }
