@@ -9,6 +9,7 @@ color SPIKE_COLOR = #464646;
 color TRUNK_COLOR = #9c5a3c;
 color LEAF_COLOR = #d3f9bc;
 color BRIDGE_COLOR = #e5aa7a;
+color LAVA_COLOR = #ed1c24;
 
 PImage DIRT_CENTER, DIRT_N, DIRT_S, DIRT_E, DIRT_W, DIRT_NE, DIRT_NW, DIRT_SE, DIRT_SW;
 PImage SLIME;
@@ -16,6 +17,7 @@ PImage ICE;
 PImage SPIKE;
 PImage TRUNK, TREE_INTERSECT, LEAF_CENTER, LEAF_W, LEAF_E;
 PImage BRIDGE;
+PImage[] LAVA_IMGS;
 
 PImage mapImg;
 
@@ -55,6 +57,11 @@ void setup() {
   LEAF_W = scaleImage(loadImage("treetop_w.png"), gridSize, gridSize);
   LEAF_E = scaleImage(loadImage("treetop_e.png"), gridSize, gridSize);
   BRIDGE = scaleImage(loadImage("bridge_center.png"), gridSize, gridSize);
+
+  LAVA_IMGS = new PImage[6];
+  for (int i = 0; i < 6; i++) {
+    LAVA_IMGS[i] = scaleImage(loadImage("lava" + i + ".png"), gridSize, gridSize);
+  }
 
   Fisica.init(this);
   world = new FWorld(Integer.MIN_VALUE, Integer.MIN_VALUE, Integer.MAX_VALUE, Integer.MAX_VALUE);
@@ -145,6 +152,14 @@ void setup() {
         }
         else if (c == BRIDGE_COLOR) {
           box = new FBridge();
+          box.setStatic(true);
+          box.setStroke(0,0,0,0);
+          box.setPosition(x*gridSize, y*gridSize);
+          box.setGrabbable(false);
+          world.add(box);
+        }
+        else if (c == LAVA_COLOR) {
+          box = new FLava();
           box.setStatic(true);
           box.setStroke(0,0,0,0);
           box.setPosition(x*gridSize, y*gridSize);

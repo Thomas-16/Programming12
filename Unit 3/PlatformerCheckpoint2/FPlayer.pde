@@ -11,10 +11,14 @@ class FPlayer extends FGameObject {
         this.setName("player");
     }
 
+    public void die() {
+        this.setPosition(0, 0);
+    }
+
     public void update() {
         handleInput();
         if (isTouching("spike"))
-            this.setPosition(0, 0);
+            die();
     }
 
     private void handleInput() {
