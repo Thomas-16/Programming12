@@ -6,7 +6,7 @@ class FPlayer extends FGameObject {
         this.setFillColor(#2159ff);
         this.setGrabbable(false);
         this.setNoStroke();
-        this.setFriction(0);
+        this.setFriction(2.2);
         this.setDensity(1);
         this.setName("player");
     }
@@ -18,7 +18,7 @@ class FPlayer extends FGameObject {
     }
 
     private void handleInput() {
-        int vx = 0;
+        float vx = this.getVelocityX();
         if (aDown) vx = -200;
         if (dDown) vx = 200;
         this.setVelocity(vx, this.getVelocityY());
