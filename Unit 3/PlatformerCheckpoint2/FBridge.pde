@@ -8,6 +8,7 @@ class FBridge extends FGameObject {
     public void update() {
         if (isTouching("player")) {
             this.setStatic(false);
+            this.setSensor(true);
         }
     }
 }
