@@ -8,6 +8,7 @@ class FPlayer extends FGameObject {
         this.setNoStroke();
         this.setFriction(2.2);
         this.setDensity(1);
+        this.setRotatable(false);
         this.setName("player");
     }
 
