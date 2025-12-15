@@ -208,6 +208,8 @@ void keyPressed() {
   if (key == 'A' || key =='a') aDown = true;
   if (key == 'S' || key =='s') sDown = true;
   if (key == 'D' || key =='d') dDown = true;
+
+  if (key == 'R' || key == 'r') player.die();
 }
 
 void keyReleased() {
