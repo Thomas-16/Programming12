@@ -2,8 +2,6 @@ class FGameObject extends FBox {
 
     public FGameObject() {
         super(gridSize, gridSize);
-
-        gameObjects.add(this);
     }
 
     public void update() {

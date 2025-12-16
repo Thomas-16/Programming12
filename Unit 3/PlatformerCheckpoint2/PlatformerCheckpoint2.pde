@@ -33,7 +33,7 @@ PImage[] currentImgs;
 FWorld world;
 
 FPlayer player;
-ArrayList<FGameObject> gameObjects;
+ArrayList<FGameObject> terrain;
 
 int gridSize = 64;
 
@@ -44,7 +44,7 @@ void setup() {
   size(1300, 900, P2D);
   frameRate(120);
 
-  gameObjects = new ArrayList<FGameObject>();
+  terrain = new ArrayList<FGameObject>();
 
   idleRightImgs = new PImage[] { loadImage("idle0.png"), loadImage("idle1.png") };
   int scaleFactor = 2;
@@ -194,6 +194,7 @@ void setup() {
           box.setPosition(x*gridSize, y*gridSize);
           box.setGrabbable(false);
           world.add(box);
+          terrain.add((FGameObject)box);
         }
         else if (c == LAVA_COLOR) {
           box = new FLava();
@@ -202,6 +203,7 @@ void setup() {
           box.setPosition(x*gridSize, y*gridSize);
           box.setGrabbable(false);
           world.add(box);
+          terrain.add((FGameObject)box);
         }
         continue;
       }
@@ -225,9 +227,10 @@ void draw() {
   // println(frameRate);
   background(255);
 
-  for (FGameObject gameObject : gameObjects) {
+  for (FGameObject gameObject : terrain) {
     gameObject.update();
   }
+  player.update();
   
   world.step();
 
