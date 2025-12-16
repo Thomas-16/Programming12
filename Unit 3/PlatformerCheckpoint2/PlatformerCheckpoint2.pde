@@ -21,6 +21,15 @@ PImage[] LAVA_IMGS;
 
 PImage mapImg;
 
+PImage[] idleRightImgs;
+PImage[] idleLeftImgs;
+PImage[] jumpLeftImgs;
+PImage[] jumpRightImgs;
+PImage[] runLeftImgs;
+PImage[] runRightImgs;
+PImage[] currentImgs;
+
+
 FWorld world;
 
 FPlayer player;
@@ -36,6 +45,15 @@ void setup() {
   frameRate(120);
 
   gameObjects = new ArrayList<FGameObject>();
+
+  idleRightImgs = new PImage[] { scaleImage(loadImage("idle0.png"), gridSize, gridSize), scaleImage(loadImage("idle1.png"), gridSize, gridSize) };
+  idleLeftImgs = new PImage[] { scaleImage(reverseImage(loadImage("idle0.png")), gridSize, gridSize), scaleImage(reverseImage(loadImage("idle1.png")), gridSize, gridSize) };
+  jumpRightImgs = new PImage[] { scaleImage(loadImage("jump0.png"), gridSize, gridSize) };
+  jumpLeftImgs = new PImage[] { scaleImage(loadImage("jump1.png"), gridSize, gridSize) };
+  runRightImgs = new PImage[] { scaleImage(loadImage("runright0.png"), gridSize, gridSize), scaleImage(loadImage("runright1.png"), gridSize, gridSize), scaleImage(loadImage("runright2.png"), gridSize, gridSize) };
+  runLeftImgs = new PImage[] { scaleImage(loadImage("runleft0.png"), gridSize, gridSize), scaleImage(loadImage("runleft1.png"), gridSize, gridSize), scaleImage(loadImage("runleft2.png"), gridSize, gridSize) };
+
+  currentImgs = idleRightImgs;
 
   mapImg = loadImage("map.png");
 
