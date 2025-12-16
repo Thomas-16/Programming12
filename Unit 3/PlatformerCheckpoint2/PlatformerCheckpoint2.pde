@@ -46,12 +46,31 @@ void setup() {
 
   gameObjects = new ArrayList<FGameObject>();
 
-  idleRightImgs = new PImage[] { scaleImage(loadImage("idle0.png"), gridSize, gridSize), scaleImage(loadImage("idle1.png"), gridSize, gridSize) };
-  idleLeftImgs = new PImage[] { scaleImage(reverseImage(loadImage("idle0.png")), gridSize, gridSize), scaleImage(reverseImage(loadImage("idle1.png")), gridSize, gridSize) };
-  jumpRightImgs = new PImage[] { scaleImage(loadImage("jump0.png"), gridSize, gridSize) };
-  jumpLeftImgs = new PImage[] { scaleImage(loadImage("jump1.png"), gridSize, gridSize) };
-  runRightImgs = new PImage[] { scaleImage(loadImage("runright0.png"), gridSize, gridSize), scaleImage(loadImage("runright1.png"), gridSize, gridSize), scaleImage(loadImage("runright2.png"), gridSize, gridSize) };
-  runLeftImgs = new PImage[] { scaleImage(loadImage("runleft0.png"), gridSize, gridSize), scaleImage(loadImage("runleft1.png"), gridSize, gridSize), scaleImage(loadImage("runleft2.png"), gridSize, gridSize) };
+  idleRightImgs = new PImage[] { loadImage("idle0.png"), loadImage("idle1.png") };
+  int scaleFactor = 2;
+  for (int i = 0; i < idleRightImgs.length; i++) {
+    idleRightImgs[i] = scaleImage(idleRightImgs[i], idleRightImgs[i].width * scaleFactor, idleRightImgs[i].height * scaleFactor);
+  }
+  idleLeftImgs = new PImage[] { reverseImage(loadImage("idle0.png")), reverseImage(loadImage("idle1.png")) };
+  for (int i = 0; i < idleLeftImgs.length; i++) {
+    idleLeftImgs[i] = scaleImage(idleLeftImgs[i], idleLeftImgs[i].width * scaleFactor, idleLeftImgs[i].height * scaleFactor);
+  }
+  jumpRightImgs = new PImage[] { loadImage("jump0.png") };
+  for (int i = 0; i < jumpRightImgs.length; i++) {
+    jumpRightImgs[i] = scaleImage(jumpRightImgs[i], jumpRightImgs[i].width * scaleFactor, jumpRightImgs[i].height * scaleFactor);
+  }
+  jumpLeftImgs = new PImage[] { loadImage("jump1.png") };
+  for (int i = 0; i < jumpLeftImgs.length; i++) {
+    jumpLeftImgs[i] = scaleImage(jumpLeftImgs[i], jumpLeftImgs[i].width * scaleFactor, jumpLeftImgs[i].height * scaleFactor);
+  }
+  runRightImgs = new PImage[] { loadImage("runright0.png"), loadImage("runright1.png"), loadImage("runright2.png") };
+  for (int i = 0; i < runRightImgs.length; i++) {
+    runRightImgs[i] = scaleImage(runRightImgs[i], runRightImgs[i].width * scaleFactor, runRightImgs[i].height * scaleFactor);
+  }
+  runLeftImgs = new PImage[] { loadImage("runleft0.png"), loadImage("runleft1.png"), loadImage("runleft2.png") };
+  for (int i = 0; i < runLeftImgs.length; i++) {
+    runLeftImgs[i] = scaleImage(runLeftImgs[i], runLeftImgs[i].width * scaleFactor, runLeftImgs[i].height * scaleFactor);
+  }
 
   currentImgs = idleRightImgs;
 
