@@ -1,6 +1,6 @@
 class FBridge extends FGameObject {
-    public FBridge() {
-        super();
+    public FBridge(int x, int y) {
+        super(x, y);
         
         this.attachImage(BRIDGE);
     }

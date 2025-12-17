@@ -11,6 +11,8 @@ color LEAF_COLOR = #d3f9bc;
 color BRIDGE_COLOR = #e5aa7a;
 color LAVA_COLOR = #ed1c24;
 
+color GOOMBA_COLOR = #fff200;
+
 PImage DIRT_CENTER, DIRT_N, DIRT_S, DIRT_E, DIRT_W, DIRT_NE, DIRT_NW, DIRT_SE, DIRT_SW;
 PImage SLIME;
 PImage ICE;
@@ -29,11 +31,14 @@ PImage[] runLeftImgs;
 PImage[] runRightImgs;
 PImage[] currentImgs;
 
+PImage[] goombaImgs;
+
 
 FWorld world;
 
 FPlayer player;
 ArrayList<FGameObject> terrain;
+ArrayList<FGameObject> enemies;
 
 int gridSize = 64;
 
@@ -45,6 +50,7 @@ void setup() {
   frameRate(120);
 
   terrain = new ArrayList<FGameObject>();
+  enemies = new ArrayList<FGameObject>();
 
   idleRightImgs = new PImage[] { loadImage("idle0.png"), loadImage("idle1.png") };
   int scaleFactor = 2;
@@ -71,6 +77,8 @@ void setup() {
   for (int i = 0; i < runLeftImgs.length; i++) {
     runLeftImgs[i] = scaleImage(runLeftImgs[i], runLeftImgs[i].width * scaleFactor, runLeftImgs[i].height * scaleFactor);
   }
+
+  goombaImgs = new PImage[] { scaleImage(loadImage("goomba0.png"), gridSize, gridSize), scaleImage(loadImage("goomba1.png"), gridSize, gridSize) };
 
   currentImgs = idleRightImgs;
 
@@ -188,22 +196,63 @@ void setup() {
           world.add(box);
         }
         else if (c == BRIDGE_COLOR) {
-          box = new FBridge();
-          box.setStatic(true);
-          box.setStroke(0,0,0,0);
-          box.setPosition(x*gridSize, y*gridSize);
-          box.setGrabbable(false);
-          world.add(box);
-          terrain.add((FGameObject)box);
+          FBridge bridge = new FBridge(x*gridSize, y*gridSize);
+          bridge.setStatic(true);
+          bridge.setStroke(0,0,0,0);
+          bridge.setGrabbable(false);
+          world.add(bridge);
+          terrain.add(bridge);
         }
         else if (c == LAVA_COLOR) {
-          box = new FLava();
-          box.setStatic(true);
-          box.setStroke(0,0,0,0);
-          box.setPosition(x*gridSize, y*gridSize);
-          box.setGrabbable(false);
-          world.add(box);
-          terrain.add((FGameObject)box);
+          FLava lava = new FLava(x*gridSize, y*gridSize);
+          lava.setStatic(true);
+          lava.setStroke(0,0,0,0);
+          lava.setGrabbable(false);
+          world.add(lava);
+          terrain.add(lava);
+        }
+        else if (c == GOOMBA_COLOR) {
+          FGoomba goomba = new FGoomba(x*gridSize, y*gridSize);
+          goomba.setStroke(0,0,0,0);
+          goomba.setGrabbable(false);
+          world.add(goomba);
+          enemies.add(goomba);
+
+          int leftWall = x - 1;
+          while (leftWall >= 0) {
+            color pixelColor = mapImg.get(leftWall, y);
+            if (pixelColor == GROUND_COLOR || pixelColor == SLIME_COLOR || pixelColor == ICE_COLOR || pixelColor == BRIDGE_COLOR) {
+              break;
+            }
+            leftWall--;
+          }
+
+          int rightWall = x + 1;
+          while (rightWall < mapImg.width) {
+            color pixelColor = mapImg.get(rightWall, y);
+            if (pixelColor == GROUND_COLOR || pixelColor == SLIME_COLOR || pixelColor == ICE_COLOR || pixelColor == BRIDGE_COLOR) {
+              break;
+            }
+            rightWall++;
+          }
+
+          FBox leftSensor = new FBox(gridSize/4, gridSize);
+          leftSensor.setPosition(leftWall*gridSize + gridSize/2, y*gridSize);
+          leftSensor.setStatic(true);
+          leftSensor.setSensor(true);
+          leftSensor.setName("goombaWall");
+          leftSensor.setNoStroke();
+          leftSensor.setNoFill();
+          world.add(leftSensor);
+
+          FBox rightSensor = new FBox(gridSize/4, gridSize);
+          rightSensor.setPosition(rightWall*gridSize - gridSize/2, y*gridSize);
+          rightSensor.setStatic(true);
+          rightSensor.setSensor(true);
+          rightSensor.setName("goombaWall");
+          rightSensor.setNoStroke();
+          rightSensor.setNoFill();
+          world.add(rightSensor);
         }
         continue;
       }
@@ -216,6 +265,7 @@ void setup() {
     }
   }
   ground.setStatic(true);
+  ground.setName("ground");
   world.add(ground);
 
   // spawn player
@@ -228,6 +278,9 @@ void draw() {
   background(255);
 
   for (FGameObject gameObject : terrain) {
+    gameObject.update();
+  }
+  for (FGameObject gameObject : enemies) {
     gameObject.update();
   }
   player.update();

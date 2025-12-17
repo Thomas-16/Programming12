@@ -1,7 +1,8 @@
 class FGameObject extends FBox {
 
-    public FGameObject() {
+    public FGameObject(int x, int y) {
         super(gridSize, gridSize);
+        this.setPosition(x,y);
     }
 
     public void update() {
