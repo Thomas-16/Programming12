@@ -27,8 +27,35 @@ class FPlayer extends FGameObject {
     public void update() {
         handleInput();
         handleAnimation();
+        handleGoombaCollision();
         if (isTouching("spike"))
             die();
+    }
+
+    private void handleGoombaCollision() {
+        ArrayList<FContact> contacts = this.getContacts();
+        for (FContact contact : contacts) {
+            if (contact.contains("goomba")) {
+                FBody goomba = null;
+                if (contact.getBody1().getName().equals("goomba")) {
+                    goomba = contact.getBody1();
+                } else if (contact.getBody2().getName().equals("goomba")) {
+                    goomba = contact.getBody2();
+                }
+
+                if (goomba == null) continue;
+
+                world.remove(goomba);
+                enemies.remove(goomba);
+
+                if (this.getY() < goomba.getY() - gridSize/2) {
+                    this.setVelocity(this.getVelocityX(), -350);
+                } else {
+                    die();
+                }
+                break;
+            }
+        }
     }
 
     private void handleInput() {
