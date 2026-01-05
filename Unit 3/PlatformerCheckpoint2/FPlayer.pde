@@ -40,7 +40,7 @@ class FPlayer extends FGameObject {
         ArrayList<FContact> contacts = this.getContacts();
         int contactCount = contacts.size();
         if(contactCount > 0 && wDown && !contacts.get(0).getBody1().isSensor() && !contacts.get(0).getBody2().isSensor())
-            this.setVelocity(this.getVelocityX(), -400);
+            this.setVelocity(this.getVelocityX(), -450);
     }
 
     private void handleAnimation() {
