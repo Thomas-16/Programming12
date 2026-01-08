@@ -12,7 +12,6 @@ class FThwomp extends FGameObject {
         this.setRotatable(false);
         this.setNoFill();
         this.setNoStroke();
-        this.setDensity(1);
         this.setName("thwomp");
         this.setStatic(true);
         this.attachImage(THWOMP_IMG_0);
@@ -27,19 +26,21 @@ class FThwomp extends FGameObject {
                 }
                 break;
             case 1: // Falling
-                // Check if thwomp has landed (touching ground and velocity near zero)
                 if (isTouching("ground") && abs(getVelocityY()) < 1) {
                     state = 2;
                     setStatic(true);
                 }
+
+                // collision with player
+                if (isTouching("player") && player.getY() > this.getY() + gridSize) {
+                    player.die();
+                }
                 break;
             case 2: // Returning
-                // Linearly move back to starting position
                 float currentY = getY();
                 if (currentY > startY) {
                     setPosition(getX(), currentY - returnSpeed);
                 } else {
-                    // Reached starting position, reset to stationary state
                     setPosition(getX(), startY);
                     state = 0;
                 }
