@@ -12,6 +12,9 @@ color BRIDGE_COLOR = #e5aa7a;
 color LAVA_COLOR = #ed1c24;
 
 color GOOMBA_COLOR = #fff200;
+color THWOMP_COLOR = #546d8e;
+
+PImage BG_IMG;
 
 PImage DIRT_CENTER, DIRT_N, DIRT_S, DIRT_E, DIRT_W, DIRT_NE, DIRT_NW, DIRT_SE, DIRT_SW;
 PImage SLIME;
@@ -20,6 +23,8 @@ PImage SPIKE;
 PImage TRUNK, TREE_INTERSECT, LEAF_CENTER, LEAF_W, LEAF_E;
 PImage BRIDGE;
 PImage[] LAVA_IMGS;
+PImage THWOMP_IMG_0;
+PImage THWOMP_IMG_1;
 
 PImage mapImg;
 
@@ -84,6 +89,8 @@ void setup() {
 
   mapImg = loadImage("map.png");
 
+  BG_IMG = scaleImage(loadImage("background.png"), width, height);
+
   DIRT_CENTER = scaleImage(loadImage("dirt_center.png"), gridSize, gridSize);
   DIRT_N = scaleImage(loadImage("dirt_n.png"), gridSize, gridSize);
   DIRT_S = scaleImage(loadImage("dirt_s.png"), gridSize, gridSize);
@@ -102,6 +109,8 @@ void setup() {
   LEAF_W = scaleImage(loadImage("treetop_w.png"), gridSize, gridSize);
   LEAF_E = scaleImage(loadImage("treetop_e.png"), gridSize, gridSize);
   BRIDGE = scaleImage(loadImage("bridge_center.png"), gridSize, gridSize);
+  THWOMP_IMG_0 = scaleImage(loadImage("thwomp0.png"), gridSize*2, gridSize*2);
+  THWOMP_IMG_1 = scaleImage(loadImage("thwomp1.png"), gridSize*2, gridSize*2);
 
   LAVA_IMGS = new PImage[6];
   for (int i = 0; i < 6; i++) {
@@ -254,13 +263,21 @@ void setup() {
           rightSensor.setNoFill();
           world.add(rightSensor);
         }
+        else if (c == THWOMP_COLOR) {
+          FThwomp thwomp = new FThwomp(x*gridSize + gridSize/2, y*gridSize + gridSize/2);
+          thwomp.setGrabbable(false);
+          world.add(thwomp);
+          enemies.add(thwomp);
+        }
         continue;
       }
+
       box.setStatic(true);
       box.setStroke(0, 0, 0, 0);
       box.setPosition(x*gridSize, y*gridSize);
       box.setGrabbable(false);
       ground.addBody(box);
+
 
     }
   }
@@ -275,7 +292,7 @@ void setup() {
 
 void draw() {
   // println(frameRate);
-  background(255);
+  background(BG_IMG);
 
   for (FGameObject gameObject : terrain) {
     gameObject.update();
@@ -291,7 +308,7 @@ void draw() {
   translate(-player.getX() + (width/2), -player.getY() + (height/2));
 
   world.draw();
-  // world.drawDebug();
+  world.drawDebug();
 
   popMatrix();
 }

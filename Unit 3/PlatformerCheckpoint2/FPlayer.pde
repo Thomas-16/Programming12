@@ -4,7 +4,7 @@ class FPlayer extends FGameObject {
     private int direction;
 
     public FPlayer() {
-        super(0, 0);
+        super(0, 0, gridSize);
 
         this.setNoFill();
         this.setGrabbable(false);

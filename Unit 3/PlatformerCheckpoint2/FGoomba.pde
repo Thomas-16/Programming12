@@ -4,7 +4,7 @@ class FGoomba extends FGameObject {
     private final int SPEED = 100;
 
     public FGoomba(int x, int y) {
-        super(x, y);
+        super(x, y, gridSize);
 
         frame = 0;
         direction = -1;
