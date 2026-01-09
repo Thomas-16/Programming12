@@ -97,8 +97,8 @@ void setup() {
 
   hammerBroRightImgs = new PImage[] { scaleImage(loadImage("hammerbro0.png"), gridSize, gridSize), scaleImage(loadImage("hammerbro1.png"), gridSize, gridSize) };
   hammerBroLeftImgs = new PImage[] { scaleImage(reverseImage(loadImage("hammerbro0.png")), gridSize, gridSize), scaleImage(reverseImage(loadImage("hammerbro1.png")), gridSize, gridSize) };
-  HAMMER_IMG_RIGHT = scaleImage(loadImage("hammer.png"), gridSize/2, gridSize/2);
-  HAMMER_IMG_LEFT = scaleImage(reverseImage(loadImage("hammer.png")), gridSize/2, gridSize/2);
+  HAMMER_IMG_RIGHT = scaleImage(loadImage("hammer.png"), gridSize, gridSize);
+  HAMMER_IMG_LEFT = scaleImage(reverseImage(loadImage("hammer.png")), gridSize, gridSize);
 
   currentImgs = idleRightImgs;
 

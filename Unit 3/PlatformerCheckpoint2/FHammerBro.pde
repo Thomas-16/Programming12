@@ -67,7 +67,7 @@ class FHammerBro extends FGameObject {
     }
 
     private void throwHammer() {
-        FBox hammer = new FBox(gridSize / 2, gridSize / 2);
+        FBox hammer = new FBox(gridSize, gridSize);
         hammer.setPosition(this.getX(), this.getY() - gridSize / 2);
         hammer.setNoFill();
         hammer.setNoStroke();
