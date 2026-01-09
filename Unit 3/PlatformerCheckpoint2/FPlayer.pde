@@ -3,8 +3,8 @@ class FPlayer extends FGameObject {
     private int frame;
     private int direction;
 
-    public FPlayer() {
-        super(0, 0, gridSize);
+    public FPlayer(int x, int y) {
+        super(x, y, gridSize);
 
         this.setNoFill();
         this.setGrabbable(false);

@@ -2,6 +2,8 @@ import fisica.*;
 
 color TRANSPARENT = color(0, 0, 0, 0);
 
+color SPAWN_COLOR = #990030;
+
 color GROUND_COLOR = #22b14c;
 color SLIME_COLOR = #a8e61d;
 color ICE_COLOR = #00b7ef;
@@ -121,11 +123,18 @@ void setup() {
   world = new FWorld(Integer.MIN_VALUE, Integer.MIN_VALUE, Integer.MAX_VALUE, Integer.MAX_VALUE);
   world.setGravity(0, 400);
 
+  PVector spawnPos = new PVector(0,0);
+
   FCompound ground = new FCompound();
 
   for (int y = 0; y < mapImg.height; y++) {
     for (int x = 0; x < mapImg.width; x++) {
       color c = mapImg.get(x, y);
+
+      if (c == SPAWN_COLOR) {
+        spawnPos.set(x*gridSize, y*gridSize);
+        continue;
+      }
 
       FBox box = null;
 
@@ -286,7 +295,7 @@ void setup() {
   world.add(ground);
 
   // spawn player
-  player = new FPlayer();
+  player = new FPlayer((int)spawnPos.x, (int)spawnPos.y);
   world.add(player);
 }
 
