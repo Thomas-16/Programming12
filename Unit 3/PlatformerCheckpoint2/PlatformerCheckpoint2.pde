@@ -245,7 +245,7 @@ void setup() {
             rightWall++;
           }
 
-          FBox leftSensor = new FBox(gridSize/4, gridSize);
+          FBox leftSensor = new FBox(gridSize/6, gridSize);
           leftSensor.setPosition(leftWall*gridSize + gridSize/2, y*gridSize);
           leftSensor.setStatic(true);
           leftSensor.setSensor(true);
@@ -254,7 +254,7 @@ void setup() {
           leftSensor.setNoFill();
           world.add(leftSensor);
 
-          FBox rightSensor = new FBox(gridSize/4, gridSize);
+          FBox rightSensor = new FBox(gridSize/6, gridSize);
           rightSensor.setPosition(rightWall*gridSize - gridSize/2, y*gridSize);
           rightSensor.setStatic(true);
           rightSensor.setSensor(true);
