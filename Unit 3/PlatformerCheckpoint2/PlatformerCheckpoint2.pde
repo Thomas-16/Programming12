@@ -15,6 +15,7 @@ color LAVA_COLOR = #ed1c24;
 
 color GOOMBA_COLOR = #fff200;
 color THWOMP_COLOR = #546d8e;
+color HAMMER_BRO_COLOR = #ffc20e;
 
 PImage BG_IMG;
 
@@ -258,7 +259,7 @@ void setup() {
           leftSensor.setPosition(leftWall*gridSize + gridSize/2, y*gridSize);
           leftSensor.setStatic(true);
           leftSensor.setSensor(true);
-          leftSensor.setName("goombaWall");
+          leftSensor.setName("wall");
           leftSensor.setNoStroke();
           leftSensor.setNoFill();
           world.add(leftSensor);
@@ -267,7 +268,7 @@ void setup() {
           rightSensor.setPosition(rightWall*gridSize - gridSize/2, y*gridSize);
           rightSensor.setStatic(true);
           rightSensor.setSensor(true);
-          rightSensor.setName("goombaWall");
+          rightSensor.setName("wall");
           rightSensor.setNoStroke();
           rightSensor.setNoFill();
           world.add(rightSensor);

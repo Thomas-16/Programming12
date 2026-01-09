@@ -29,7 +29,7 @@ class FGoomba extends FGameObject {
 
         ArrayList<FContact> contacts = this.getContacts();
         for (FContact contact : contacts) {
-            if(contact.contains("goombaWall") && frameCount > 120) {
+            if(contact.contains("wall") && frameCount > 120) {
                 float contactX = contact.getX();
                 if ((direction == -1 && contactX < this.getX()) || (direction == 1 && contactX > this.getX())) {
                     direction *= -1;
