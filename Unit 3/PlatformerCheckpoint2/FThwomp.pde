@@ -23,12 +23,14 @@ class FThwomp extends FGameObject {
                 if (player.getY() > this.getY() && player.getY() < this.getY() + 8*gridSize && player.getX() > getX()-gridSize && player.getX() < getX()+gridSize) {
                     state = 1;
                     setStatic(false);
+                    attachImage(THWOMP_IMG_1);
                 }
                 break;
             case 1: // Falling
                 if (isTouching("ground") && abs(getVelocityY()) < 1) {
                     state = 2;
                     setStatic(true);
+                    attachImage(THWOMP_IMG_0);
                 }
 
                 // collision with player
