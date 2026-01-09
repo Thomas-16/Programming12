@@ -41,6 +41,10 @@ PImage[] currentImgs;
 
 PImage[] goombaImgs;
 
+PImage[] hammerBroRightImgs;
+PImage[] hammerBroLeftImgs;
+PImage HAMMER_IMG_RIGHT;
+PImage HAMMER_IMG_LEFT;
 
 FWorld world;
 
@@ -87,6 +91,11 @@ void setup() {
   }
 
   goombaImgs = new PImage[] { scaleImage(loadImage("goomba0.png"), gridSize, gridSize), scaleImage(loadImage("goomba1.png"), gridSize, gridSize) };
+
+  hammerBroRightImgs = new PImage[] { scaleImage(loadImage("hammerbro0.png"), gridSize, gridSize), scaleImage(loadImage("hammerbro1.png"), gridSize, gridSize) };
+  hammerBroLeftImgs = new PImage[] { scaleImage(reverseImage(loadImage("hammerbro0.png")), gridSize, gridSize), scaleImage(reverseImage(loadImage("hammerbro1.png")), gridSize, gridSize) };
+  HAMMER_IMG_RIGHT = scaleImage(loadImage("hammer.png"), gridSize/2, gridSize/2);
+  HAMMER_IMG_LEFT = scaleImage(reverseImage(loadImage("hammer.png")), gridSize/2, gridSize/2);
 
   currentImgs = idleRightImgs;
 
@@ -278,6 +287,49 @@ void setup() {
           thwomp.setGrabbable(false);
           world.add(thwomp);
           enemies.add(thwomp);
+        }
+        else if (c == HAMMER_BRO_COLOR) {
+          FHammerBro hammerBro = new FHammerBro(x*gridSize, y*gridSize);
+          hammerBro.setStroke(0,0,0,0);
+          hammerBro.setGrabbable(false);
+          world.add(hammerBro);
+          enemies.add(hammerBro);
+
+          int leftWall = x - 1;
+          while (leftWall >= 0) {
+            color pixelColor = mapImg.get(leftWall, y);
+            if (pixelColor == GROUND_COLOR || pixelColor == SLIME_COLOR || pixelColor == ICE_COLOR || pixelColor == BRIDGE_COLOR) {
+              break;
+            }
+            leftWall--;
+          }
+
+          int rightWall = x + 1;
+          while (rightWall < mapImg.width) {
+            color pixelColor = mapImg.get(rightWall, y);
+            if (pixelColor == GROUND_COLOR || pixelColor == SLIME_COLOR || pixelColor == ICE_COLOR || pixelColor == BRIDGE_COLOR) {
+              break;
+            }
+            rightWall++;
+          }
+
+          FBox leftSensor = new FBox(gridSize/6, gridSize);
+          leftSensor.setPosition(leftWall*gridSize + gridSize/2, y*gridSize);
+          leftSensor.setStatic(true);
+          leftSensor.setSensor(true);
+          leftSensor.setName("wall");
+          leftSensor.setNoStroke();
+          leftSensor.setNoFill();
+          world.add(leftSensor);
+
+          FBox rightSensor = new FBox(gridSize/6, gridSize);
+          rightSensor.setPosition(rightWall*gridSize - gridSize/2, y*gridSize);
+          rightSensor.setStatic(true);
+          rightSensor.setSensor(true);
+          rightSensor.setName("wall");
+          rightSensor.setNoStroke();
+          rightSensor.setNoFill();
+          world.add(rightSensor);
         }
         continue;
       }

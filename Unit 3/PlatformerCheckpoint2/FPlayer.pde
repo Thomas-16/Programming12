@@ -28,7 +28,8 @@ class FPlayer extends FGameObject {
         handleInput();
         handleAnimation();
         handleGoombaCollision();
-        if (isTouching("spike"))
+        handleHammerBroCollision();
+        if (isTouching("spike") || isTouching("hammer"))
             die();
     }
 
@@ -49,6 +50,32 @@ class FPlayer extends FGameObject {
                 enemies.remove(goomba);
 
                 if (this.getY() < goomba.getY() - gridSize/2) {
+                    this.setVelocity(this.getVelocityX(), -350);
+                } else {
+                    die();
+                }
+                break;
+            }
+        }
+    }
+
+    private void handleHammerBroCollision() {
+        ArrayList<FContact> contacts = this.getContacts();
+        for (FContact contact : contacts) {
+            if (contact.contains("hammerbro")) {
+                FBody hammerBro = null;
+                if (contact.getBody1().getName().equals("hammerbro")) {
+                    hammerBro = contact.getBody1();
+                } else if (contact.getBody2().getName().equals("hammerbro")) {
+                    hammerBro = contact.getBody2();
+                }
+
+                if (hammerBro == null) continue;
+
+                world.remove(hammerBro);
+                enemies.remove(hammerBro);
+
+                if (this.getY() < hammerBro.getY() - gridSize/2) {
                     this.setVelocity(this.getVelocityX(), -350);
                 } else {
                     die();
