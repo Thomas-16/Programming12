@@ -3,7 +3,7 @@ class FHammerBro extends FGameObject {
     private int direction;
     private final int SPEED = 100;
     private final float THROW_DISTANCE = 400;
-    private final int THROW_COOLDOWN = 90;
+    private final int THROW_COOLDOWN = 250;
     private int lastThrowFrame;
 
     public FHammerBro(int x, int y) {
