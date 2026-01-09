@@ -99,7 +99,7 @@ class FPlayer extends FGameObject {
 
                 if (thwomp == null) continue;
 
-                if (this.getY() > thwomp.getY() + gridSize) {
+                if (((FThwomp) thwomp).getState() == 1 && this.getY() > thwomp.getY() + gridSize) {
                     die();
                 }
                 break;

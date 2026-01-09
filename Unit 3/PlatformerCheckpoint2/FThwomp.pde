@@ -47,5 +47,7 @@ class FThwomp extends FGameObject {
         this.setVelocity(0, getVelocityY());
     }
 
+    public int getState() { return state; }
+
 
 }
