@@ -21,14 +21,16 @@ class FPlayer extends FGameObject {
     }
 
     public void die() {
-        this.setPosition(0, 0);
+        this.setPosition((int)spawnPos.x, (int)spawnPos.y);
     }
 
     public void update() {
         handleInput();
         handleAnimation();
         handleGoombaCollision();
-        if (isTouching("spike"))
+        handleHammerBroCollision();
+        handleThwompCollision();
+        if (isTouching("spike") || isTouching("hammer"))
             die();
     }
 
@@ -51,6 +53,53 @@ class FPlayer extends FGameObject {
                 if (this.getY() < goomba.getY() - gridSize/2) {
                     this.setVelocity(this.getVelocityX(), -350);
                 } else {
+                    die();
+                }
+                break;
+            }
+        }
+    }
+
+    private void handleHammerBroCollision() {
+        ArrayList<FContact> contacts = this.getContacts();
+        for (FContact contact : contacts) {
+            if (contact.contains("hammerbro")) {
+                FBody hammerBro = null;
+                if (contact.getBody1().getName().equals("hammerbro")) {
+                    hammerBro = contact.getBody1();
+                } else if (contact.getBody2().getName().equals("hammerbro")) {
+                    hammerBro = contact.getBody2();
+                }
+
+                if (hammerBro == null) continue;
+
+                world.remove(hammerBro);
+                enemies.remove(hammerBro);
+
+                if (this.getY() < hammerBro.getY() - gridSize/2) {
+                    this.setVelocity(this.getVelocityX(), -350);
+                } else {
+                    die();
+                }
+                break;
+            }
+        }
+    }
+
+    private void handleThwompCollision() {
+        ArrayList<FContact> contacts = this.getContacts();
+        for (FContact contact : contacts) {
+            if (contact.contains("thwomp")) {
+                FBody thwomp = null;
+                if (contact.getBody1().getName().equals("thwomp")) {
+                    thwomp = contact.getBody1();
+                } else if (contact.getBody2().getName().equals("thwomp")) {
+                    thwomp = contact.getBody2();
+                }
+
+                if (thwomp == null) continue;
+
+                if (((FThwomp) thwomp).getState() == 1 && this.getY() > thwomp.getY() + gridSize) {
                     die();
                 }
                 break;
