@@ -54,6 +54,9 @@ ArrayList<FGameObject> enemies;
 
 int gridSize = 64;
 
+PVector spawnPos = new PVector(0,0);
+
+
 boolean wDown, aDown, sDown, dDown;
 
 void setup() {
@@ -132,8 +135,6 @@ void setup() {
   Fisica.init(this);
   world = new FWorld(Integer.MIN_VALUE, Integer.MIN_VALUE, Integer.MAX_VALUE, Integer.MAX_VALUE);
   world.setGravity(0, 400);
-
-  PVector spawnPos = new PVector(0,0);
 
   FCompound ground = new FCompound();
 

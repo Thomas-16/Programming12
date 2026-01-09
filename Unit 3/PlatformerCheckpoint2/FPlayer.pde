@@ -21,7 +21,7 @@ class FPlayer extends FGameObject {
     }
 
     public void die() {
-        this.setPosition(0, 0);
+        this.setPosition((int)spawnPos.x, (int)spawnPos.y);
     }
 
     public void update() {
