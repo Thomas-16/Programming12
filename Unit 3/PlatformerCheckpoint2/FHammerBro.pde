@@ -58,15 +58,9 @@ class FHammerBro extends FGameObject {
     }
 
     private void tryThrowHammer() {
-        // Check cooldown
         if (frameCount - lastThrowFrame < THROW_COOLDOWN) return;
 
-        // Check distance to player
-        float dx = player.getX() - this.getX();
-        float dy = player.getY() - this.getY();
-        float distance = sqrt(dx * dx + dy * dy);
-
-        if (distance < THROW_DISTANCE) {
+        if (dist(getX(), getY(), player.getX(), player.getY()) < THROW_DISTANCE) {
             throwHammer();
             lastThrowFrame = frameCount;
         }
@@ -81,7 +75,6 @@ class FHammerBro extends FGameObject {
         hammer.setGrabbable(false);
         hammer.setSensor(true);
 
-        // Attach image based on throw direction (toward player)
         int throwDir = (player.getX() > this.getX()) ? 1 : -1;
         if (throwDir == 1) {
             hammer.attachImage(HAMMER_IMG_RIGHT);
@@ -89,7 +82,6 @@ class FHammerBro extends FGameObject {
             hammer.attachImage(HAMMER_IMG_LEFT);
         }
 
-        // Set velocity for arc toward player
         hammer.setVelocity(throwDir * 200, -350);
         hammer.setAngularVelocity(throwDir * 15);
 
