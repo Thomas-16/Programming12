@@ -32,11 +32,6 @@ class FThwomp extends FGameObject {
                     setStatic(true);
                     attachImage(THWOMP_IMG_0);
                 }
-
-                // collision with player
-                if (isTouching("player") && player.getY() > this.getY() + gridSize) {
-                    player.die();
-                }
                 break;
             case 2: // Returning
                 float currentY = getY();

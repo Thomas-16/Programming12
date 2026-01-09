@@ -29,6 +29,7 @@ class FPlayer extends FGameObject {
         handleAnimation();
         handleGoombaCollision();
         handleHammerBroCollision();
+        handleThwompCollision();
         if (isTouching("spike") || isTouching("hammer"))
             die();
     }
@@ -78,6 +79,27 @@ class FPlayer extends FGameObject {
                 if (this.getY() < hammerBro.getY() - gridSize/2) {
                     this.setVelocity(this.getVelocityX(), -350);
                 } else {
+                    die();
+                }
+                break;
+            }
+        }
+    }
+
+    private void handleThwompCollision() {
+        ArrayList<FContact> contacts = this.getContacts();
+        for (FContact contact : contacts) {
+            if (contact.contains("thwomp")) {
+                FBody thwomp = null;
+                if (contact.getBody1().getName().equals("thwomp")) {
+                    thwomp = contact.getBody1();
+                } else if (contact.getBody2().getName().equals("thwomp")) {
+                    thwomp = contact.getBody2();
+                }
+
+                if (thwomp == null) continue;
+
+                if (this.getY() > thwomp.getY() + gridSize) {
                     die();
                 }
                 break;
