@@ -113,10 +113,18 @@ class FPlayer extends FGameObject {
         if (dDown) vx = 200;
         this.setVelocity(vx, this.getVelocityY());
 
+        if(wDown && canJump())
+            this.setVelocity(this.getVelocityX(), -470);
+    }
+    private boolean canJump() {
         ArrayList<FContact> contacts = this.getContacts();
         int contactCount = contacts.size();
-        if(contactCount > 0 && wDown && !contacts.get(0).getBody1().isSensor() && !contacts.get(0).getBody2().isSensor())
-            this.setVelocity(this.getVelocityX(), -450);
+        if (contactCount == 0) return false;
+
+        for (FContact contact : contacts) {
+            if (!contact.getBody1().isSensor() && !contact.getBody2().isSensor() && contact.getY() > this.getY()) return true;
+        }
+        return false;
     }
 
     private void handleAnimation() {

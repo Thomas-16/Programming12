@@ -12,6 +12,7 @@ color TRUNK_COLOR = #9c5a3c;
 color LEAF_COLOR = #d3f9bc;
 color BRIDGE_COLOR = #e5aa7a;
 color LAVA_COLOR = #ed1c24;
+color ONEWAY_COLOR = #f5e49c;
 
 color GOOMBA_COLOR = #fff200;
 color THWOMP_COLOR = #546d8e;
@@ -25,6 +26,7 @@ PImage ICE;
 PImage SPIKE;
 PImage TRUNK, TREE_INTERSECT, LEAF_CENTER, LEAF_W, LEAF_E;
 PImage BRIDGE;
+PImage ONEWAY_PLATFORM;
 PImage[] LAVA_IMGS;
 PImage THWOMP_IMG_0;
 PImage THWOMP_IMG_1;
@@ -124,6 +126,7 @@ void setup() {
   LEAF_W = scaleImage(loadImage("treetop_w.png"), gridSize, gridSize);
   LEAF_E = scaleImage(loadImage("treetop_e.png"), gridSize, gridSize);
   BRIDGE = scaleImage(loadImage("bridge_center.png"), gridSize, gridSize);
+  ONEWAY_PLATFORM = scaleImage(loadImage("bridge_center.png"), gridSize, gridSize);
   THWOMP_IMG_0 = scaleImage(loadImage("thwomp0.png"), gridSize*2, gridSize*2);
   THWOMP_IMG_1 = scaleImage(loadImage("thwomp1.png"), gridSize*2, gridSize*2);
 
@@ -239,6 +242,14 @@ void setup() {
           lava.setGrabbable(false);
           world.add(lava);
           terrain.add(lava);
+        }
+        else if (c == ONEWAY_COLOR) {
+          FOneWayPlatform platform = new FOneWayPlatform(x*gridSize, y*gridSize);
+          platform.setStatic(true);
+          platform.setStroke(0,0,0,0);
+          platform.setGrabbable(false);
+          world.add(platform);
+          terrain.add(platform);
         }
         else if (c == GOOMBA_COLOR) {
           FGoomba goomba = new FGoomba(x*gridSize, y*gridSize);
@@ -371,7 +382,7 @@ void draw() {
   translate(-player.getX() + (width/2), -player.getY() + (height/2));
 
   world.draw();
-  // world.drawDebug();
+  world.drawDebug();
 
   popMatrix();
 }
