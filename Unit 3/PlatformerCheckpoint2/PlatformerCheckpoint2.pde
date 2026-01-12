@@ -26,7 +26,6 @@ PImage ICE;
 PImage SPIKE;
 PImage TRUNK, TREE_INTERSECT, LEAF_CENTER, LEAF_W, LEAF_E;
 PImage BRIDGE;
-PImage ONEWAY_PLATFORM;
 PImage[] LAVA_IMGS;
 PImage THWOMP_IMG_0;
 PImage THWOMP_IMG_1;
@@ -58,8 +57,10 @@ int gridSize = 64;
 
 PVector spawnPos = new PVector(0,0);
 
-
 boolean wDown, aDown, sDown, dDown;
+
+// TODOS:
+// bridge/platform 2 sides
 
 void setup() {
   pixelDensity(1);
@@ -126,7 +127,6 @@ void setup() {
   LEAF_W = scaleImage(loadImage("treetop_w.png"), gridSize, gridSize);
   LEAF_E = scaleImage(loadImage("treetop_e.png"), gridSize, gridSize);
   BRIDGE = scaleImage(loadImage("bridge_center.png"), gridSize, gridSize);
-  ONEWAY_PLATFORM = scaleImage(loadImage("bridge_center.png"), gridSize, gridSize);
   THWOMP_IMG_0 = scaleImage(loadImage("thwomp0.png"), gridSize*2, gridSize*2);
   THWOMP_IMG_1 = scaleImage(loadImage("thwomp1.png"), gridSize*2, gridSize*2);
 

@@ -4,7 +4,7 @@ class FOneWayPlatform extends FGameObject {
 
     public FOneWayPlatform(int x, int y) {
         super(x, y, gridSize);
-        this.attachImage(ONEWAY_PLATFORM);
+        this.attachImage(BRIDGE);
         this.setSensor(true);
         this.setName("platform");
     }
