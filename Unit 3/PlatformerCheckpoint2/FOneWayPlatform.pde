@@ -2,9 +2,9 @@ class FOneWayPlatform extends FGameObject {
     private boolean playerDropping = false;
     private FBox collider = null;
 
-    public FOneWayPlatform(int x, int y) {
+    public FOneWayPlatform(int x, int y, PImage texture) {
         super(x, y, gridSize);
-        this.attachImage(BRIDGE);
+        this.attachImage(texture);
         this.setSensor(true);
         this.setName("platform");
     }

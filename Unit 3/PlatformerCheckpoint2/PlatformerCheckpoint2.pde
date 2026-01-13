@@ -25,7 +25,7 @@ PImage SLIME;
 PImage ICE;
 PImage SPIKE;
 PImage TRUNK, TREE_INTERSECT, LEAF_CENTER, LEAF_W, LEAF_E;
-PImage BRIDGE;
+PImage BRIDGE, BRIDGE_E, BRIDGE_W;
 PImage[] LAVA_IMGS;
 PImage THWOMP_IMG_0;
 PImage THWOMP_IMG_1;
@@ -60,7 +60,6 @@ PVector spawnPos = new PVector(0,0);
 boolean wDown, aDown, sDown, dDown;
 
 // TODOS:
-// bridge/platform 2 sides
 
 void setup() {
   pixelDensity(1);
@@ -127,6 +126,8 @@ void setup() {
   LEAF_W = scaleImage(loadImage("treetop_w.png"), gridSize, gridSize);
   LEAF_E = scaleImage(loadImage("treetop_e.png"), gridSize, gridSize);
   BRIDGE = scaleImage(loadImage("bridge_center.png"), gridSize, gridSize);
+  BRIDGE_E = scaleImage(loadImage("bridge_e.png"), gridSize, gridSize);
+  BRIDGE_W = scaleImage(loadImage("bridge_w.png"), gridSize, gridSize);
   THWOMP_IMG_0 = scaleImage(loadImage("thwomp0.png"), gridSize*2, gridSize*2);
   THWOMP_IMG_1 = scaleImage(loadImage("thwomp1.png"), gridSize*2, gridSize*2);
 
@@ -228,7 +229,16 @@ void setup() {
           world.add(box);
         }
         else if (c == BRIDGE_COLOR) {
-          FBridge bridge = new FBridge(x*gridSize, y*gridSize);
+          color leftColor = x > 0 ? mapImg.get(x-1, y) : 0;
+          color rightColor = x < mapImg.width-1 ? mapImg.get(x+1, y) : 0;
+          boolean leftIsBridge = leftColor == BRIDGE_COLOR || leftColor == ONEWAY_COLOR;
+          boolean rightIsBridge = rightColor == BRIDGE_COLOR || rightColor == ONEWAY_COLOR;
+
+          PImage bridgeTexture = BRIDGE;
+          if (!leftIsBridge && rightIsBridge) bridgeTexture = BRIDGE_W;
+          else if (leftIsBridge && !rightIsBridge) bridgeTexture = BRIDGE_E;
+
+          FBridge bridge = new FBridge(x*gridSize, y*gridSize, bridgeTexture);
           bridge.setStatic(true);
           bridge.setStroke(0,0,0,0);
           bridge.setGrabbable(false);
@@ -244,7 +254,16 @@ void setup() {
           terrain.add(lava);
         }
         else if (c == ONEWAY_COLOR) {
-          FOneWayPlatform platform = new FOneWayPlatform(x*gridSize, y*gridSize);
+          color leftColor = x > 0 ? mapImg.get(x-1, y) : 0;
+          color rightColor = x < mapImg.width-1 ? mapImg.get(x+1, y) : 0;
+          boolean leftIsBridge = leftColor == BRIDGE_COLOR || leftColor == ONEWAY_COLOR;
+          boolean rightIsBridge = rightColor == BRIDGE_COLOR || rightColor == ONEWAY_COLOR;
+
+          PImage platformTexture = BRIDGE;
+          if (!leftIsBridge && rightIsBridge) platformTexture = BRIDGE_W;
+          else if (leftIsBridge && !rightIsBridge) platformTexture = BRIDGE_E;
+
+          FOneWayPlatform platform = new FOneWayPlatform(x*gridSize, y*gridSize, platformTexture);
           platform.setStatic(true);
           platform.setStroke(0,0,0,0);
           platform.setGrabbable(false);
