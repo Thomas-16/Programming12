@@ -60,6 +60,13 @@ PVector spawnPos = new PVector(0,0);
 boolean wDown, aDown, sDown, dDown;
 
 // TODOS:
+// new tiles
+// button
+// a moveable block - block can be pushed and put on button to press the button
+// level design
+// new enemy types
+// rewind time gimmick
+// multiple levels
 
 void setup() {
   pixelDensity(1);
