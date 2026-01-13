@@ -408,7 +408,7 @@ void draw() {
   translate(-player.getX() + (width/2), -player.getY() + (height/2));
 
   world.draw();
-  world.drawDebug();
+  // world.drawDebug();
 
   popMatrix();
 }
