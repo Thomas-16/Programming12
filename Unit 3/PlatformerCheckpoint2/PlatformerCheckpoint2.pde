@@ -85,6 +85,7 @@ FGhost ghost = null;
 // record and replay player and playback gimmick
 //  multiple ghost slots in later levels
 // sound effects
+// animate things
 
 void setup() {
   pixelDensity(1);
