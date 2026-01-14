@@ -1,5 +1,8 @@
 import fisica.*;
 
+// https://nicopardo.itch.io/cyberlab
+// https://nicopardo.itch.io/cyberlab-expansion-pack-1
+
 color TRANSPARENT = color(0, 0, 0, 0);
 
 color SPAWN_COLOR = #990030;
