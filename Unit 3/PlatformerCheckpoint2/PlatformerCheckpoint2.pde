@@ -69,7 +69,7 @@ boolean wDown, aDown, sDown, dDown;
 ArrayList<PVector> recordedPositions;
 boolean isRecording = false;
 int recordStartFrame = 0;
-int RECORD_DURATION = 600;  // 5 seconds
+int RECORD_DURATION = 4 * 120; 
 FGhost ghost = null;
 
 // TODOS:
@@ -78,8 +78,9 @@ FGhost ghost = null;
 // a moveable block - block can be pushed and put on button to press the button
 // level design
 // new enemy types
-// record and replay player and playback gimmick
 // multiple levels
+// record and replay player and playback gimmick
+//  multiple ghost slots in later levels
 // sound effects
 
 void setup() {
@@ -506,7 +507,7 @@ void keyPressed() {
   }
 
   if (key == 'P' || key == 'p') {
-    stopRecording();
+    if(isRecording) stopRecording();
     spawnGhost();
   }
 }
@@ -519,6 +520,7 @@ void startRecording() {
 
 void stopRecording() {
   isRecording = false;
+  player.setPosition(recordedPositions.get(0).x, recordedPositions.get(0).y);
 }
 
 void spawnGhost() {
