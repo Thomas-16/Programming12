@@ -75,17 +75,6 @@ int recordStartFrame = 0;
 int RECORD_DURATION = 4 * 120; 
 FGhost ghost = null;
 
-// TODOS:
-// new tiles - enclosed space
-// button
-// a moveable block - block can be pushed and put on button to press the button
-// level design
-// new enemy types
-// multiple levels
-// record and replay player and playback gimmick
-//  multiple ghost slots in later levels
-// sound effects
-// animate things
 
 void setup() {
   pixelDensity(1);
@@ -470,7 +459,7 @@ private void drawUI() {
   translate(player.getX() - width/2, player.getY() - height/2);
 
   float barWidth = 200;
-  float barHeight = 12;
+  float barHeight = 20;
   float x = width - barWidth - 20;
   float y = 20;
 
