@@ -67,6 +67,7 @@ boolean wDown, aDown, sDown, dDown;
 // new enemy types
 // rewind time gimmick
 // multiple levels
+// sound effects
 
 void setup() {
   pixelDensity(1);
@@ -76,38 +77,41 @@ void setup() {
   terrain = new ArrayList<FGameObject>();
   enemies = new ArrayList<FGameObject>();
 
-  idleRightImgs = new PImage[] { loadImage("idle0.png"), loadImage("idle1.png") };
+  idleRightImgs = new PImage[] { loadImage("Player/idle0.png"), loadImage("Player/idle1.png") };
   int scaleFactor = 2;
   for (int i = 0; i < idleRightImgs.length; i++) {
     idleRightImgs[i] = scaleImage(idleRightImgs[i], idleRightImgs[i].width * scaleFactor, idleRightImgs[i].height * scaleFactor);
   }
-  idleLeftImgs = new PImage[] { reverseImage(loadImage("idle0.png")), reverseImage(loadImage("idle1.png")) };
+  idleLeftImgs = new PImage[] { reverseImage(loadImage("Player/idle0.png")), reverseImage(loadImage("Player/idle1.png")) };
   for (int i = 0; i < idleLeftImgs.length; i++) {
     idleLeftImgs[i] = scaleImage(idleLeftImgs[i], idleLeftImgs[i].width * scaleFactor, idleLeftImgs[i].height * scaleFactor);
   }
-  jumpRightImgs = new PImage[] { loadImage("jump0.png") };
+  jumpRightImgs = new PImage[] { loadImage("Player/jump0.png") };
   for (int i = 0; i < jumpRightImgs.length; i++) {
     jumpRightImgs[i] = scaleImage(jumpRightImgs[i], jumpRightImgs[i].width * scaleFactor, jumpRightImgs[i].height * scaleFactor);
   }
-  jumpLeftImgs = new PImage[] { loadImage("jump1.png") };
+  jumpLeftImgs = new PImage[] { loadImage("Player/jump1.png") };
   for (int i = 0; i < jumpLeftImgs.length; i++) {
     jumpLeftImgs[i] = scaleImage(jumpLeftImgs[i], jumpLeftImgs[i].width * scaleFactor, jumpLeftImgs[i].height * scaleFactor);
   }
-  runRightImgs = new PImage[] { loadImage("runright0.png"), loadImage("runright1.png"), loadImage("runright2.png") };
+  runRightImgs = new PImage[] { loadImage("Player/runright0.png"), loadImage("Player/runright1.png"), loadImage("Player/runright2.png") };
   for (int i = 0; i < runRightImgs.length; i++) {
     runRightImgs[i] = scaleImage(runRightImgs[i], runRightImgs[i].width * scaleFactor, runRightImgs[i].height * scaleFactor);
   }
-  runLeftImgs = new PImage[] { loadImage("runleft0.png"), loadImage("runleft1.png"), loadImage("runleft2.png") };
+  runLeftImgs = new PImage[] { loadImage("Player/runleft0.png"), loadImage("Player/runleft1.png"), loadImage("Player/runleft2.png") };
   for (int i = 0; i < runLeftImgs.length; i++) {
     runLeftImgs[i] = scaleImage(runLeftImgs[i], runLeftImgs[i].width * scaleFactor, runLeftImgs[i].height * scaleFactor);
   }
 
-  goombaImgs = new PImage[] { scaleImage(loadImage("goomba0.png"), gridSize, gridSize), scaleImage(loadImage("goomba1.png"), gridSize, gridSize) };
+  goombaImgs = new PImage[] { scaleImage(loadImage("Enemies/goomba0.png"), gridSize, gridSize), scaleImage(loadImage("Enemies/goomba1.png"), gridSize, gridSize) };
 
-  hammerBroRightImgs = new PImage[] { scaleImage(loadImage("hammerbro0.png"), gridSize, gridSize), scaleImage(loadImage("hammerbro1.png"), gridSize, gridSize) };
-  hammerBroLeftImgs = new PImage[] { scaleImage(reverseImage(loadImage("hammerbro0.png")), gridSize, gridSize), scaleImage(reverseImage(loadImage("hammerbro1.png")), gridSize, gridSize) };
-  HAMMER_IMG_RIGHT = scaleImage(loadImage("hammer.png"), gridSize, gridSize);
-  HAMMER_IMG_LEFT = scaleImage(reverseImage(loadImage("hammer.png")), gridSize, gridSize);
+  hammerBroRightImgs = new PImage[] { scaleImage(loadImage("Enemies/hammerbro0.png"), gridSize, gridSize), scaleImage(loadImage("Enemies/hammerbro1.png"), gridSize, gridSize) };
+  hammerBroLeftImgs = new PImage[] { scaleImage(reverseImage(loadImage("Enemies/hammerbro0.png")), gridSize, gridSize), scaleImage(reverseImage(loadImage("Enemies/hammerbro1.png")), gridSize, gridSize) };
+  HAMMER_IMG_RIGHT = scaleImage(loadImage("Enemies/hammer.png"), gridSize, gridSize);
+  HAMMER_IMG_LEFT = scaleImage(reverseImage(loadImage("Enemies/hammer.png")), gridSize, gridSize);
+
+  THWOMP_IMG_0 = scaleImage(loadImage("Enemies/thwomp0.png"), gridSize*2, gridSize*2);
+  THWOMP_IMG_1 = scaleImage(loadImage("Enemies/thwomp1.png"), gridSize*2, gridSize*2);
 
   currentImgs = idleRightImgs;
 
@@ -115,32 +119,30 @@ void setup() {
 
   BG_IMG = scaleImage(loadImage("background.png"), width, height);
 
-  DIRT_CENTER = scaleImage(loadImage("dirt_center.png"), gridSize, gridSize);
-  DIRT_N = scaleImage(loadImage("dirt_n.png"), gridSize, gridSize);
-  DIRT_S = scaleImage(loadImage("dirt_s.png"), gridSize, gridSize);
-  DIRT_E = scaleImage(loadImage("dirt_e.png"), gridSize, gridSize);
-  DIRT_W = scaleImage(loadImage("dirt_w.png"), gridSize, gridSize);
-  DIRT_NE = scaleImage(loadImage("dirt_ne.png"), gridSize, gridSize);
-  DIRT_NW = scaleImage(loadImage("dirt_nw.png"), gridSize, gridSize);
-  DIRT_SE = scaleImage(loadImage("dirt_se.png"), gridSize, gridSize);
-  DIRT_SW = scaleImage(loadImage("dirt_sw.png"), gridSize, gridSize);
-  SLIME = scaleImage(loadImage("slime_block.png"), gridSize, gridSize);
-  ICE = scaleImage(loadImage("blueBlock.png"), gridSize, gridSize);
-  SPIKE = scaleImage(loadImage("spike.png"), gridSize, gridSize);
-  TRUNK = scaleImage(loadImage("tree_trunk.png"), gridSize, gridSize);
-  TREE_INTERSECT = scaleImage(loadImage("tree_intersect.png"), gridSize, gridSize);
-  LEAF_CENTER = scaleImage(loadImage("treetop_center.png"), gridSize, gridSize);
-  LEAF_W = scaleImage(loadImage("treetop_w.png"), gridSize, gridSize);
-  LEAF_E = scaleImage(loadImage("treetop_e.png"), gridSize, gridSize);
-  BRIDGE = scaleImage(loadImage("bridge_center.png"), gridSize, gridSize);
-  BRIDGE_E = scaleImage(loadImage("bridge_e.png"), gridSize, gridSize);
-  BRIDGE_W = scaleImage(loadImage("bridge_w.png"), gridSize, gridSize);
-  THWOMP_IMG_0 = scaleImage(loadImage("thwomp0.png"), gridSize*2, gridSize*2);
-  THWOMP_IMG_1 = scaleImage(loadImage("thwomp1.png"), gridSize*2, gridSize*2);
-
+  DIRT_CENTER = scaleImage(loadImage("OGTerrain/dirt_center.png"), gridSize, gridSize);
+  DIRT_N = scaleImage(loadImage("OGTerrain/dirt_n.png"), gridSize, gridSize);
+  DIRT_S = scaleImage(loadImage("OGTerrain/dirt_s.png"), gridSize, gridSize);
+  DIRT_E = scaleImage(loadImage("OGTerrain/dirt_e.png"), gridSize, gridSize);
+  DIRT_W = scaleImage(loadImage("OGTerrain/dirt_w.png"), gridSize, gridSize);
+  DIRT_NE = scaleImage(loadImage("OGTerrain/dirt_ne.png"), gridSize, gridSize);
+  DIRT_NW = scaleImage(loadImage("OGTerrain/dirt_nw.png"), gridSize, gridSize);
+  DIRT_SE = scaleImage(loadImage("OGTerrain/dirt_se.png"), gridSize, gridSize);
+  DIRT_SW = scaleImage(loadImage("OGTerrain/dirt_sw.png"), gridSize, gridSize);
+  SLIME = scaleImage(loadImage("OGTerrain/slime_block.png"), gridSize, gridSize);
+  ICE = scaleImage(loadImage("OGTerrain/blueBlock.png"), gridSize, gridSize);
+  SPIKE = scaleImage(loadImage("OGTerrain/spike.png"), gridSize, gridSize);
+  TRUNK = scaleImage(loadImage("OGTerrain/tree_trunk.png"), gridSize, gridSize);
+  TREE_INTERSECT = scaleImage(loadImage("OGTerrain/tree_intersect.png"), gridSize, gridSize);
+  LEAF_CENTER = scaleImage(loadImage("OGTerrain/treetop_center.png"), gridSize, gridSize);
+  LEAF_W = scaleImage(loadImage("OGTerrain/treetop_w.png"), gridSize, gridSize);
+  LEAF_E = scaleImage(loadImage("OGTerrain/treetop_e.png"), gridSize, gridSize);
+  BRIDGE = scaleImage(loadImage("OGTerrain/bridge_center.png"), gridSize, gridSize);
+  BRIDGE_E = scaleImage(loadImage("OGTerrain/bridge_e.png"), gridSize, gridSize);
+  BRIDGE_W = scaleImage(loadImage("OGTerrain/bridge_w.png"), gridSize, gridSize);
+  
   LAVA_IMGS = new PImage[6];
   for (int i = 0; i < 6; i++) {
-    LAVA_IMGS[i] = scaleImage(loadImage("lava" + i + ".png"), gridSize, gridSize);
+    LAVA_IMGS[i] = scaleImage(loadImage("OGTerrain/lava" + i + ".png"), gridSize, gridSize);
   }
 
   Fisica.init(this);
