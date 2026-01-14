@@ -71,7 +71,7 @@ boolean wDown, aDown, sDown, dDown;
 
 void setup() {
   pixelDensity(1);
-  size(1300, 900, P2D);
+  size(1600, 1000, P2D);
   frameRate(120);
 
   terrain = new ArrayList<FGameObject>();
