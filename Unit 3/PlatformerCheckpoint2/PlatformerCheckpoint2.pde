@@ -40,6 +40,13 @@ PImage[] runLeftImgs;
 PImage[] runRightImgs;
 PImage[] currentImgs;
 
+PImage[] ghostIdleRightImgs;
+PImage[] ghostIdleLeftImgs;
+PImage[] ghostJumpLeftImgs;
+PImage[] ghostJumpRightImgs;
+PImage[] ghostRunLeftImgs;
+PImage[] ghostRunRightImgs;
+
 PImage[] goombaImgs;
 
 PImage[] hammerBroRightImgs;
@@ -59,13 +66,19 @@ PVector spawnPos = new PVector(0,0);
 
 boolean wDown, aDown, sDown, dDown;
 
+ArrayList<PVector> recordedPositions;
+boolean isRecording = false;
+int recordStartFrame = 0;
+int RECORD_DURATION = 600;  // 5 seconds
+FGhost ghost = null;
+
 // TODOS:
-// new tiles
+// new tiles - enclosed space
 // button
 // a moveable block - block can be pushed and put on button to press the button
 // level design
 // new enemy types
-// rewind time gimmick
+// record and replay player and playback gimmick
 // multiple levels
 // sound effects
 
@@ -114,6 +127,22 @@ void setup() {
   THWOMP_IMG_1 = scaleImage(loadImage("Enemies/thwomp1.png"), gridSize*2, gridSize*2);
 
   currentImgs = idleRightImgs;
+
+  // Generate ghost versions of player sprites
+  ghostIdleRightImgs = new PImage[idleRightImgs.length];
+  ghostIdleLeftImgs = new PImage[idleLeftImgs.length];
+  ghostJumpRightImgs = new PImage[jumpRightImgs.length];
+  ghostJumpLeftImgs = new PImage[jumpLeftImgs.length];
+  ghostRunRightImgs = new PImage[runRightImgs.length];
+  ghostRunLeftImgs = new PImage[runLeftImgs.length];
+  for (int i = 0; i < idleRightImgs.length; i++) ghostIdleRightImgs[i] = makeGhostImage(idleRightImgs[i]);
+  for (int i = 0; i < idleLeftImgs.length; i++) ghostIdleLeftImgs[i] = makeGhostImage(idleLeftImgs[i]);
+  for (int i = 0; i < jumpRightImgs.length; i++) ghostJumpRightImgs[i] = makeGhostImage(jumpRightImgs[i]);
+  for (int i = 0; i < jumpLeftImgs.length; i++) ghostJumpLeftImgs[i] = makeGhostImage(jumpLeftImgs[i]);
+  for (int i = 0; i < runRightImgs.length; i++) ghostRunRightImgs[i] = makeGhostImage(runRightImgs[i]);
+  for (int i = 0; i < runLeftImgs.length; i++) ghostRunLeftImgs[i] = makeGhostImage(runLeftImgs[i]);
+
+  recordedPositions = new ArrayList<PVector>();
 
   mapImg = loadImage("map.png");
 
@@ -403,7 +432,22 @@ void draw() {
     gameObject.update();
   }
   player.update();
-  
+
+  if (isRecording) {
+    recordedPositions.add(new PVector(player.getX(), player.getY()));
+    if (frameCount - recordStartFrame >= RECORD_DURATION) {
+      stopRecording();
+    }
+  }
+
+  if (ghost != null) {
+    ghost.update();
+    if (ghost.isFinished()) {
+      world.remove(ghost);
+      ghost = null;
+    }
+  }
+
   world.step();
 
   pushMatrix();
@@ -411,6 +455,38 @@ void draw() {
 
   world.draw();
   // world.drawDebug();
+  drawUI();
+
+  popMatrix();
+}
+
+private void drawUI() {
+  pushMatrix();
+  translate(player.getX() - width/2, player.getY() - height/2);
+
+  float barWidth = 200;
+  float barHeight = 12;
+  float x = width - barWidth - 20;
+  float y = 20;
+
+  fill(40);
+  noStroke();
+  rect(x, y, barWidth, barHeight);
+
+  if (isRecording) {
+    // recording bar
+    float progress = map(frameCount - recordStartFrame, 0, RECORD_DURATION, 0, 1);
+    progress = 1 - progress;
+    fill(255, 70, 70);
+    rect(x, y, barWidth * progress, barHeight);
+  } else if (ghost != null && !ghost.isFinished()) {
+    // playback bar
+    float progress = map(ghost.getPlaybackIndex(), 0, ghost.getPositionCount(), 0, 1);
+    progress = 1 - progress;
+
+    fill(70, 150, 255);
+    rect(x, y, barWidth * progress, barHeight);
+  }
 
   popMatrix();
 }
@@ -421,7 +497,38 @@ void keyPressed() {
   if (key == 'S' || key =='s') sDown = true;
   if (key == 'D' || key =='d') dDown = true;
 
-  if (key == 'R' || key == 'r') player.die();
+  if (key == 'R' || key == 'r') {
+    if (isRecording) {
+      stopRecording();
+    } else {
+      startRecording();
+    }
+  }
+
+  if (key == 'P' || key == 'p') {
+    stopRecording();
+    spawnGhost();
+  }
+}
+
+void startRecording() {
+  recordedPositions.clear();
+  isRecording = true;
+  recordStartFrame = frameCount;
+}
+
+void stopRecording() {
+  isRecording = false;
+}
+
+void spawnGhost() {
+  if (recordedPositions.size() == 0) return;
+
+  if (ghost != null) {
+    world.remove(ghost);
+  }
+  ghost = new FGhost(recordedPositions);
+  world.add(ghost);
 }
 
 void keyReleased() {
@@ -447,6 +554,36 @@ PImage scaleImage(PImage src, int w, int h) {
       out.pixels[y * w + x] = src.pixels[sy * src.width + sx];
     }
   }
+  out.updatePixels();
+  return out;
+}
+
+PImage makeGhostImage(PImage src) {
+  PImage out = src.copy();
+  out.loadPixels();
+
+  for (int i = 0; i < out.pixels.length; i++) {
+    color c = out.pixels[i];
+
+    float r = red(c);
+    float g = green(c);
+    float b = blue(c);
+    float a = alpha(c);
+
+    // desaturate
+    float gray = (r + g + b) / 3;
+    r = lerp(r, gray, 0.7);
+    g = lerp(g, gray, 0.7);
+    b = lerp(b, gray, 0.7);
+
+    // Blue tint
+    // b = min(255, b + 30);
+
+    a *= 0.5;
+
+    out.pixels[i] = color(r, g, b, a);
+  }
+
   out.updatePixels();
   return out;
 }
