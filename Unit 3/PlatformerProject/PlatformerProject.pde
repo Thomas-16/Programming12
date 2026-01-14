@@ -7,7 +7,7 @@ color TRANSPARENT = color(0, 0, 0, 0);
 
 color SPAWN_COLOR = #990030;
 
-color GROUND_COLOR = #22b14c;
+color GROUND_COLOR = #4d6df3;
 color SLIME_COLOR = #a8e61d;
 color ICE_COLOR = #00b7ef;
 color SPIKE_COLOR = #464646;
@@ -23,7 +23,10 @@ color HAMMER_BRO_COLOR = #ffc20e;
 
 PImage BG_IMG;
 
-PImage DIRT_CENTER, DIRT_N, DIRT_S, DIRT_E, DIRT_W, DIRT_NE, DIRT_NW, DIRT_SE, DIRT_SW;
+PImage GROUND_CENTER, GROUND_N, GROUND_S, GROUND_E, GROUND_W, GROUND_NE, GROUND_NW, GROUND_SE, GROUND_SW;
+PImage GROUND_INNER_NE, GROUND_INNER_NW, GROUND_INNER_SE, GROUND_INNER_SW;
+PImage GROUND_ALONE, GROUND_ONEDEEP_LEFT, GROUND_ONEDEEP_CENTER, GROUND_ONEDEEP_RIGHT;
+PImage GROUND_PILLAR_TOP, GROUND_PILLAR_CENTER, GROUND_PILLAR_BOTTOM;
 PImage SLIME;
 PImage ICE;
 PImage SPIKE;
@@ -122,7 +125,6 @@ void setup() {
 
   currentImgs = idleRightImgs;
 
-  // Generate ghost versions of player sprites
   ghostIdleRightImgs = new PImage[idleRightImgs.length];
   ghostIdleLeftImgs = new PImage[idleLeftImgs.length];
   ghostJumpRightImgs = new PImage[jumpRightImgs.length];
@@ -142,15 +144,26 @@ void setup() {
 
   BG_IMG = scaleImage(loadImage("background.png"), width, height);
 
-  DIRT_CENTER = scaleImage(loadImage("OGTerrain/dirt_center.png"), gridSize, gridSize);
-  DIRT_N = scaleImage(loadImage("OGTerrain/dirt_n.png"), gridSize, gridSize);
-  DIRT_S = scaleImage(loadImage("OGTerrain/dirt_s.png"), gridSize, gridSize);
-  DIRT_E = scaleImage(loadImage("OGTerrain/dirt_e.png"), gridSize, gridSize);
-  DIRT_W = scaleImage(loadImage("OGTerrain/dirt_w.png"), gridSize, gridSize);
-  DIRT_NE = scaleImage(loadImage("OGTerrain/dirt_ne.png"), gridSize, gridSize);
-  DIRT_NW = scaleImage(loadImage("OGTerrain/dirt_nw.png"), gridSize, gridSize);
-  DIRT_SE = scaleImage(loadImage("OGTerrain/dirt_se.png"), gridSize, gridSize);
-  DIRT_SW = scaleImage(loadImage("OGTerrain/dirt_sw.png"), gridSize, gridSize);
+  GROUND_CENTER = scaleImage(loadImage("CyberLab_ExPack1/ground/ground_center.png"), gridSize, gridSize);
+  GROUND_N = scaleImage(loadImage("CyberLab_ExPack1/ground/ground_top.png"), gridSize, gridSize);
+  GROUND_S = scaleImage(loadImage("CyberLab_ExPack1/ground/ground_bottom.png"), gridSize, gridSize);
+  GROUND_E = scaleImage(loadImage("CyberLab_ExPack1/ground/ground_right.png"), gridSize, gridSize);
+  GROUND_W = scaleImage(loadImage("CyberLab_ExPack1/ground/ground_left.png"), gridSize, gridSize);
+  GROUND_NE = scaleImage(loadImage("CyberLab_ExPack1/ground/ground_outercorner_topright.png"), gridSize, gridSize);
+  GROUND_NW = scaleImage(loadImage("CyberLab_ExPack1/ground/ground_outercorner_topleft.png"), gridSize, gridSize);
+  GROUND_SE = scaleImage(loadImage("CyberLab_ExPack1/ground/ground_outercorner_bottomright.png"), gridSize, gridSize);
+  GROUND_SW = scaleImage(loadImage("CyberLab_ExPack1/ground/ground_outercorner_bottomleft.png"), gridSize, gridSize);
+  GROUND_INNER_NE = scaleImage(loadImage("CyberLab_ExPack1/ground/ground_innercorner_topright.png"), gridSize, gridSize);
+  GROUND_INNER_NW = scaleImage(loadImage("CyberLab_ExPack1/ground/ground_innercorner_topleft.png"), gridSize, gridSize);
+  GROUND_INNER_SE = scaleImage(loadImage("CyberLab_ExPack1/ground/ground_innercorner_bottomright.png"), gridSize, gridSize);
+  GROUND_INNER_SW = scaleImage(loadImage("CyberLab_ExPack1/ground/ground_innercorner_bottomleft.png"), gridSize, gridSize);
+  GROUND_ALONE = scaleImage(loadImage("CyberLab_ExPack1/ground/ground_alone.png"), gridSize, gridSize);
+  GROUND_ONEDEEP_LEFT = scaleImage(loadImage("CyberLab_ExPack1/ground/ground_onedeep_left.png"), gridSize, gridSize);
+  GROUND_ONEDEEP_CENTER = scaleImage(loadImage("CyberLab_ExPack1/ground/ground_onedeep_center.png"), gridSize, gridSize);
+  GROUND_ONEDEEP_RIGHT = scaleImage(loadImage("CyberLab_ExPack1/ground/ground_onedeep_right.png"), gridSize, gridSize);
+  GROUND_PILLAR_TOP = scaleImage(loadImage("CyberLab_ExPack1/ground/ground_pillar_top.png"), gridSize, gridSize);
+  GROUND_PILLAR_CENTER = scaleImage(loadImage("CyberLab_ExPack1/ground/ground_pillar_center.png"), gridSize, gridSize);
+  GROUND_PILLAR_BOTTOM = scaleImage(loadImage("CyberLab_ExPack1/ground/ground_pillar_bottom.png"), gridSize, gridSize);
   SLIME = scaleImage(loadImage("OGTerrain/slime_block.png"), gridSize, gridSize);
   ICE = scaleImage(loadImage("OGTerrain/blueBlock.png"), gridSize, gridSize);
   SPIKE = scaleImage(loadImage("OGTerrain/spike.png"), gridSize, gridSize);
@@ -190,16 +203,37 @@ void setup() {
         boolean s = isTileType(x, y + 1, GROUND_COLOR);
         boolean e = isTileType(x + 1, y, GROUND_COLOR);
         boolean w = isTileType(x - 1, y, GROUND_COLOR);
+        boolean ne = isTileType(x + 1, y - 1, GROUND_COLOR);
+        boolean nw = isTileType(x - 1, y - 1, GROUND_COLOR);
+        boolean se = isTileType(x + 1, y + 1, GROUND_COLOR);
+        boolean sw = isTileType(x - 1, y + 1, GROUND_COLOR);
 
-        PImage texture = DIRT_CENTER;
-        if (!n && !e) texture = DIRT_NE;
-        else if (!n && !w) texture = DIRT_NW;
-        else if (!s && !e) texture = DIRT_SE;
-        else if (!s && !w) texture = DIRT_SW;
-        else if (!n) texture = DIRT_N;
-        else if (!s) texture = DIRT_S;
-        else if (!e) texture = DIRT_E;
-        else if (!w) texture = DIRT_W;
+        PImage texture = GROUND_CENTER;
+        // Alone
+        if (!n && !s && !e && !w) texture = GROUND_ALONE;
+        // Horizontal platform
+        else if (!n && !s && !w && e) texture = GROUND_ONEDEEP_LEFT;
+        else if (!n && !s && w && !e) texture = GROUND_ONEDEEP_RIGHT;
+        else if (!n && !s && w && e) texture = GROUND_ONEDEEP_CENTER;
+        // Virtical platform
+        else if (!n && s && !e && !w) texture = GROUND_PILLAR_TOP;
+        else if (n && !s && !e && !w) texture = GROUND_PILLAR_BOTTOM;
+        else if (n && s && !e && !w) texture = GROUND_PILLAR_CENTER;
+        // Outer corners
+        else if (!n && !e) texture = GROUND_NE;
+        else if (!n && !w) texture = GROUND_NW;
+        else if (!s && !e) texture = GROUND_SE;
+        else if (!s && !w) texture = GROUND_SW;
+        // Edges
+        else if (!n) texture = GROUND_N;
+        else if (!s) texture = GROUND_S;
+        else if (!e) texture = GROUND_E;
+        else if (!w) texture = GROUND_W;
+        // Inner corners
+        else if (n && e && !ne) texture = GROUND_INNER_NE;
+        else if (n && w && !nw) texture = GROUND_INNER_NW;
+        else if (s && e && !se) texture = GROUND_INNER_SE;
+        else if (s && w && !sw) texture = GROUND_INNER_SW;
         
         box = new FBox(gridSize, gridSize);
         box.attachImage(texture);
@@ -534,6 +568,10 @@ void keyReleased() {
 }
 
 boolean isTileType(int x, int y, color clr) {
+  // Blocks outside the map are counted as ground center tiles
+  if (x < 0 || x >= mapImg.width || y < 0 || y >= mapImg.height) {
+    if (clr == GROUND_COLOR) return true;
+  }
   if (x < 0 || x >= mapImg.width || y < 0 || y >= mapImg.height) return false;
   return mapImg.get(x, y) == clr;
 }
