@@ -447,6 +447,7 @@ void setup() {
   // spawn player
   player = new FPlayer((int)spawnPos.x, (int)spawnPos.y);
   world.add(player);
+  world.add(player.getFootSensor());
 }
 
 void draw() {

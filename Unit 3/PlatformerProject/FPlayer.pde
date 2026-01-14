@@ -2,6 +2,7 @@
 class FPlayer extends FGameObject {
     private int frame;
     private int direction;
+    private FBox footSensor;
 
     public FPlayer(int x, int y) {
         super(x, y, gridSize);
@@ -18,6 +19,17 @@ class FPlayer extends FGameObject {
         direction = 1;
 
         this.attachImage(idleRightImgs[0]);
+
+        footSensor = new FBox(gridSize * 0.8, gridSize * 0.2);
+        footSensor.setSensor(true);
+        footSensor.setNoFill();
+        footSensor.setNoStroke();
+        footSensor.setName("footSensor");
+        footSensor.setPosition(x, y + gridSize/2);
+    }
+
+    public FBox getFootSensor() {
+        return footSensor;
     }
 
     public void die() {
@@ -25,6 +37,8 @@ class FPlayer extends FGameObject {
     }
 
     public void update() {
+        footSensor.setPosition(this.getX(), this.getY() + gridSize/2);
+
         handleInput();
         handleAnimation();
         handleGoombaCollision();
@@ -114,15 +128,13 @@ class FPlayer extends FGameObject {
         this.setVelocity(vx, this.getVelocityY());
 
         if(wDown && canJump())
-            this.setVelocity(this.getVelocityX(), -470);
+            this.setVelocity(this.getVelocityX(), -430);
     }
     private boolean canJump() {
-        ArrayList<FContact> contacts = this.getContacts();
-        int contactCount = contacts.size();
-        if (contactCount == 0) return false;
-
+        ArrayList<FContact> contacts = footSensor.getContacts();
         for (FContact contact : contacts) {
-            if (!contact.getBody1().isSensor() && !contact.getBody2().isSensor() && contact.getY() > this.getY()) return true;
+            FBody other = contact.getBody1() == footSensor ? contact.getBody2() : contact.getBody1();
+            if (!other.isSensor() && !other.getName().equals("player")) return true;
         }
         return false;
     }
