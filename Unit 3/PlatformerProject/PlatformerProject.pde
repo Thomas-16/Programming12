@@ -478,19 +478,24 @@ void draw() {
 
   world.step();
 
+  float levelWidth = mapImg.width * gridSize;
+  float levelHeight = mapImg.height * gridSize;
+  float camX = constrain(player.getX(), width/2, levelWidth - width/2) - gridSize/2;
+  float camY = constrain(player.getY(), height/2, levelHeight - height/2) - gridSize/2;
+
   pushMatrix();
-  translate(-player.getX() + (width/2), -player.getY() + (height/2));
+  translate(-camX + width/2, -camY + height/2);
 
   world.draw();
   // world.drawDebug();
-  drawUI();
+  drawUI(camX, camY);
 
   popMatrix();
 }
 
-private void drawUI() {
+private void drawUI(float camX, float camY) {
   pushMatrix();
-  translate(player.getX() - width/2, player.getY() - height/2);
+  translate(camX - width/2, camY - height/2);
 
   float barWidth = 200;
   float barHeight = 20;
