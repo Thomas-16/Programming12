@@ -267,12 +267,12 @@ void setup() {
 
           // Collider
           float hitboxHeight = gridSize * 0.4;
-          box = new FBox(gridSize * 0.3, hitboxHeight);
+          box = new FBox(gridSize * 0.6, hitboxHeight);
           box.setName("spike");
           box.setStatic(true);
           box.setNoFill();
           box.setNoStroke();
-          box.setPosition(x*gridSize, y*gridSize - gridSize/2 + hitboxHeight/2);
+          box.setPosition(x*gridSize, y*gridSize + hitboxHeight/2);
           box.setGrabbable(false);
           world.add(box);
         }
