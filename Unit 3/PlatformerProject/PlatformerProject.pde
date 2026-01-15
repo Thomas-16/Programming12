@@ -143,7 +143,8 @@ void setup() {
 
   mapImg = loadImage("map.png");
 
-  BG_IMG = scaleImage(loadImage("background.png"), width, height);
+  BG_IMG = loadImage("CyberLab_ExPack1/TileSets/background.png");
+  BG_IMG = scaleImage(BG_IMG, 512, 512);
 
   GROUND_CENTER = scaleImage(loadImage("CyberLab_ExPack1/ground/ground_center.png"), gridSize, gridSize);
   GROUND_N = scaleImage(loadImage("CyberLab_ExPack1/ground/ground_top.png"), gridSize, gridSize);
@@ -453,7 +454,7 @@ void setup() {
 
 void draw() {
   // println(frameRate);
-  background(BG_IMG);
+  drawBackground();
 
   for (FGameObject gameObject : terrain) {
     gameObject.update();
@@ -524,6 +525,18 @@ private void drawUI(float camX, float camY) {
   }
 
   popMatrix();
+}
+
+void drawBackground() {
+  int tileSize = BG_IMG.width;
+  int tilesX = (width / tileSize) + 2;
+  int tilesY = (height / tileSize) + 2;
+
+  for (int ty = -tileSize/2; ty < tilesY*2; ty++) {
+    for (int tx = -tileSize/2; tx < tilesX*2; tx++) {
+      image(BG_IMG, tx * tileSize/2, ty * tileSize/2);
+    }
+  }
 }
 
 void keyPressed() {
