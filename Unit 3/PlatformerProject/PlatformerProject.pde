@@ -20,8 +20,10 @@ color ONEWAY_COLOR = #f5e49c;
 color GOOMBA_COLOR = #fff200;
 color THWOMP_COLOR = #546d8e;
 color HAMMER_BRO_COLOR = #ffc20e;
+color BUTTON_COLOR = #709ad1;
 
 PImage BG_IMG;
+PImage BUTTON_IMG, BUTTON_DOWN_IMG;
 
 PImage GROUND_CENTER, GROUND_N, GROUND_S, GROUND_E, GROUND_W, GROUND_NE, GROUND_NW, GROUND_SE, GROUND_SW;
 PImage GROUND_INNER_NE, GROUND_INNER_NW, GROUND_INNER_SE, GROUND_INNER_SW;
@@ -177,7 +179,9 @@ void setup() {
   BRIDGE = scaleImage(loadImage("CyberLab_ExPack1/platforms/bridge.png"), gridSize, gridSize);
   ONEWAY_LEFT = scaleImage(loadImage("CyberLab_ExPack1/platforms/oneway_left.png"), gridSize, gridSize);
   ONEWAY_RIGHT = scaleImage(loadImage("CyberLab_ExPack1/platforms/oneway_right.png"), gridSize, gridSize);
-  
+  BUTTON_IMG = scaleImage(loadImage("button.png"), gridSize, gridSize);
+  BUTTON_DOWN_IMG = scaleImage(loadImage("button_down.png"), gridSize, gridSize);
+
   LAVA_IMGS = new PImage[6];
   for (int i = 0; i < 6; i++) {
     LAVA_IMGS[i] = scaleImage(loadImage("OGTerrain/lava" + i + ".png"), gridSize, gridSize);
@@ -337,6 +341,14 @@ void setup() {
           platform.setGrabbable(false);
           world.add(platform);
           terrain.add(platform);
+        }
+        else if (c == BUTTON_COLOR) {
+          FButton button = new FButton(x*gridSize, y*gridSize);
+          button.setStatic(true);
+          button.setStroke(0,0,0,0);
+          button.setGrabbable(false);
+          world.add(button);
+          terrain.add(button);
         }
         else if (c == GOOMBA_COLOR) {
           FGoomba goomba = new FGoomba(x*gridSize, y*gridSize);

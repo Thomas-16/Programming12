@@ -134,7 +134,7 @@ class FPlayer extends FGameObject {
         ArrayList<FContact> contacts = footSensor.getContacts();
         for (FContact contact : contacts) {
             FBody other = contact.getBody1() == footSensor ? contact.getBody2() : contact.getBody1();
-            if (!other.isSensor() && !other.getName().equals("player")) return true;
+            if (other != null && !other.isSensor() && !other.getName().equals("player")) return true;
         }
         return false;
     }
