@@ -8,7 +8,7 @@ class FButton extends FGameObject {
     }
 
     public void update() {
-        pressed = isInRange(player);
+        pressed = isInRange(player) || isInRange(ghost);
 
         if (pressed) {
             this.attachImage(BUTTON_DOWN_IMG);
@@ -17,10 +17,10 @@ class FButton extends FGameObject {
         }
     }
 
-    private boolean isInRange(FBody thing) {
-        float playerBottom = thing.getY() + gridSize / 2;
-        float playerLeft = thing.getX() - gridSize / 2;
-        float playerRight = thing.getX() + gridSize / 2;
+    private boolean isInRange(FBody body) {
+        float playerBottom = body.getY() + gridSize / 2;
+        float playerLeft = body.getX() - gridSize / 2;
+        float playerRight = body.getX() + gridSize / 2;
 
         float buttonTop = this.getY() - gridSize / 2;
         float buttonBottom = this.getY() + gridSize / 2;
