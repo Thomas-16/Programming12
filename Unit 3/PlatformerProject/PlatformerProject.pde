@@ -21,9 +21,11 @@ color GOOMBA_COLOR = #fff200;
 color THWOMP_COLOR = #546d8e;
 color HAMMER_BRO_COLOR = #ffc20e;
 color BUTTON_COLOR = #709ad1;
+color CUBE_COLOR = #ffa3b1;
 
 PImage BG_IMG;
 PImage BUTTON_IMG, BUTTON_DOWN_IMG;
+PImage CUBE_IMG;
 
 PImage GROUND_CENTER, GROUND_N, GROUND_S, GROUND_E, GROUND_W, GROUND_NE, GROUND_NW, GROUND_SE, GROUND_SW;
 PImage GROUND_INNER_NE, GROUND_INNER_NW, GROUND_INNER_SE, GROUND_INNER_SW;
@@ -181,6 +183,7 @@ void setup() {
   ONEWAY_RIGHT = scaleImage(loadImage("CyberLab_ExPack1/platforms/oneway_right.png"), gridSize, gridSize);
   BUTTON_IMG = scaleImage(loadImage("button.png"), gridSize, gridSize);
   BUTTON_DOWN_IMG = scaleImage(loadImage("button_down.png"), gridSize, gridSize);
+  CUBE_IMG = scaleImage(loadImage("cube.png"), gridSize, gridSize);
 
   LAVA_IMGS = new PImage[6];
   for (int i = 0; i < 6; i++) {
@@ -349,6 +352,18 @@ void setup() {
           button.setGrabbable(false);
           world.add(button);
           terrain.add(button);
+        }
+        else if (c == CUBE_COLOR) {
+          FBox cube = new FBox(gridSize, gridSize);
+          cube.setPosition(x*gridSize, y*gridSize);
+          cube.attachImage(CUBE_IMG);
+          cube.setStroke(0,0,0,0);
+          cube.setDensity(0.5);
+          cube.setFriction(0.5);
+          cube.setGrabbable(false);
+          cube.setRotatable(false);
+          cube.setName("cube");
+          world.add(cube);
         }
         else if (c == GOOMBA_COLOR) {
           FGoomba goomba = new FGoomba(x*gridSize, y*gridSize);

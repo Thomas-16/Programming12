@@ -24,8 +24,8 @@ class FButton extends FGameObject {
 
         float buttonTop = this.getY() - gridSize / 2;
         float buttonBottom = this.getY() + gridSize / 2;
-        float buttonLeft = this.getX() - gridSize / 2;
-        float buttonRight = this.getX() + gridSize / 2;
+        float buttonLeft = this.getX() - (gridSize * 0.3);
+        float buttonRight = this.getX() + (gridSize * 0.3);
 
         float detectionTop = buttonTop - gridSize * 0.01;
         float detectionBottom = buttonBottom + gridSize * 0.1;
