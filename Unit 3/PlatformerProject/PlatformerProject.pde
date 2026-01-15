@@ -166,7 +166,7 @@ void setup() {
   GROUND_PILLAR_BOTTOM = scaleImage(loadImage("CyberLab_ExPack1/ground/ground_pillar_bottom.png"), gridSize, gridSize);
   SLIME = scaleImage(loadImage("OGTerrain/slime_block.png"), gridSize, gridSize);
   ICE = scaleImage(loadImage("OGTerrain/blueBlock.png"), gridSize, gridSize);
-  SPIKE = scaleImage(loadImage("OGTerrain/spike.png"), gridSize, gridSize);
+  SPIKE = scaleImage(loadImage("CyberLab_ExPack1/traps/spike.png"), gridSize, gridSize);
   TRUNK = scaleImage(loadImage("OGTerrain/tree_trunk.png"), gridSize, gridSize);
   TREE_INTERSECT = scaleImage(loadImage("OGTerrain/tree_intersect.png"), gridSize, gridSize);
   LEAF_CENTER = scaleImage(loadImage("OGTerrain/treetop_center.png"), gridSize, gridSize);
@@ -255,12 +255,24 @@ void setup() {
       // not ground terrain
       if(box == null) {
         if (c == SPIKE_COLOR) {
-          box = new FBox(gridSize, gridSize);
-          box.attachImage(SPIKE);
+          // spike visual
+          FBox visual = new FBox(gridSize, gridSize);
+          visual.attachImage(SPIKE);
+          visual.setSensor(true);
+          visual.setStatic(true);
+          visual.setStroke(0, 0, 0, 0);
+          visual.setPosition(x*gridSize, y*gridSize);
+          visual.setGrabbable(false);
+          world.add(visual);
+
+          // Collider
+          float hitboxHeight = gridSize * 0.4;
+          box = new FBox(gridSize * 0.3, hitboxHeight);
           box.setName("spike");
           box.setStatic(true);
-          box.setStroke(0, 0, 0, 0);
-          box.setPosition(x*gridSize, y*gridSize);
+          box.setNoFill();
+          box.setNoStroke();
+          box.setPosition(x*gridSize, y*gridSize - gridSize/2 + hitboxHeight/2);
           box.setGrabbable(false);
           world.add(box);
         }
@@ -317,6 +329,7 @@ void setup() {
           lava.setStroke(0,0,0,0);
           lava.setGrabbable(false);
           world.add(lava);
+          world.add(lava.getVisual());
           terrain.add(lava);
         }
         else if (c == ONEWAY_COLOR) {
@@ -488,7 +501,7 @@ void draw() {
   translate(-camX + width/2, -camY + height/2);
 
   world.draw();
-  // world.drawDebug();
+  world.drawDebug();
   drawUI(camX, camY);
 
   popMatrix();

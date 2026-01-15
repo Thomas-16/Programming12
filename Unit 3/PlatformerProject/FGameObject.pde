@@ -5,6 +5,11 @@ class FGameObject extends FBox {
         this.setPosition(x,y);
     }
 
+    public FGameObject(float x, float y, float w, float h) {
+        super(w, h);
+        this.setPosition(x, y);
+    }
+
     public void update() {
         
     }
