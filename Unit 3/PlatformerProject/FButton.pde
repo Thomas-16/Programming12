@@ -8,7 +8,7 @@ class FButton extends FGameObject {
     }
 
     public void update() {
-        pressed = isInRange(player) || isInRange(ghost);
+        pressed = isInRange(player) || (ghost != null && isInRange(ghost));
 
         if (pressed) {
             this.attachImage(BUTTON_DOWN_IMG);
