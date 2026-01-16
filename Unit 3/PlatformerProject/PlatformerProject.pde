@@ -3,6 +3,13 @@ import fisica.*;
 // https://nicopardo.itch.io/cyberlab
 // https://nicopardo.itch.io/cyberlab-expansion-pack-1
 
+final int INTRO_SCENE = 0;
+final int GAME_SCENE = 1;
+final int GAMEOVER_SCENE = 2;
+int scene = INTRO_SCENE;
+
+int totalLevels = 1;
+
 color TRANSPARENT = color(0, 0, 0, 0);
 
 color SPAWN_COLOR = #990030;
@@ -78,6 +85,8 @@ PImage[] hammerBroLeftImgs;
 PImage HAMMER_IMG_RIGHT;
 PImage HAMMER_IMG_LEFT;
 
+PFont font;
+
 FWorld world;
 
 FPlayer player;
@@ -89,14 +98,14 @@ int gridSize = 64;
 
 float zoom = 1.2;
 
-PVector spawnPos = new PVector(0,0);
+PVector spawnPos = new PVector(0, 0);
 
 boolean wDown, aDown, sDown, dDown;
 
 ArrayList<PVector> recordedPositions;
 boolean isRecording = false;
 int recordStartFrame = 0;
-int RECORD_DURATION = 4 * 120; 
+int RECORD_DURATION = 4 * 120;
 FGhost ghost = null;
 
 
@@ -108,6 +117,18 @@ void setup() {
   terrain = new ArrayList<FGameObject>();
   enemies = new ArrayList<FGameObject>();
   doors = new ArrayList<FDoor>();
+  recordedPositions = new ArrayList<PVector>();
+
+  loadAssets();
+
+  Fisica.init(this);
+
+  loadScene(scene);
+}
+
+void loadAssets() {
+  font = createFont("ARCADECLASSIC.TTF", 40);
+  textFont(font);
 
   int scaleFactor = 2;
 
@@ -138,16 +159,24 @@ void setup() {
   hitRightImgs = new PImage[4];
   hitLeftImgs = new PImage[4];
   for (int i = 0; i < 4; i++) {
-    // String num = nf(i, 3);
     PImage img = loadImage("CyberLab_ExPack1/Animations/MainCharacter/hit00" + i + ".png");
     hitRightImgs[i] = scaleImage(img, img.width * scaleFactor, img.height * scaleFactor);
     hitLeftImgs[i] = scaleImage(reverseImage(img), img.width * scaleFactor, img.height * scaleFactor);
   }
 
-  goombaImgs = new PImage[] { scaleImage(loadImage("Enemies/goomba0.png"), gridSize, gridSize), scaleImage(loadImage("Enemies/goomba1.png"), gridSize, gridSize) };
+  goombaImgs = new PImage[] {
+    scaleImage(loadImage("Enemies/goomba0.png"), gridSize, gridSize),
+    scaleImage(loadImage("Enemies/goomba1.png"), gridSize, gridSize)
+  };
 
-  hammerBroRightImgs = new PImage[] { scaleImage(loadImage("Enemies/hammerbro0.png"), gridSize, gridSize), scaleImage(loadImage("Enemies/hammerbro1.png"), gridSize, gridSize) };
-  hammerBroLeftImgs = new PImage[] { scaleImage(reverseImage(loadImage("Enemies/hammerbro0.png")), gridSize, gridSize), scaleImage(reverseImage(loadImage("Enemies/hammerbro1.png")), gridSize, gridSize) };
+  hammerBroRightImgs = new PImage[] {
+    scaleImage(loadImage("Enemies/hammerbro0.png"), gridSize, gridSize),
+    scaleImage(loadImage("Enemies/hammerbro1.png"), gridSize, gridSize)
+  };
+  hammerBroLeftImgs = new PImage[] {
+    scaleImage(reverseImage(loadImage("Enemies/hammerbro0.png")), gridSize, gridSize),
+    scaleImage(reverseImage(loadImage("Enemies/hammerbro1.png")), gridSize, gridSize)
+  };
   HAMMER_IMG_RIGHT = scaleImage(loadImage("Enemies/hammer.png"), gridSize, gridSize);
   HAMMER_IMG_LEFT = scaleImage(reverseImage(loadImage("Enemies/hammer.png")), gridSize, gridSize);
 
@@ -176,10 +205,6 @@ void setup() {
   for (int i = 0; i < runLeftImgs.length; i++) ghostRunLeftImgs[i] = makeGhostImage(runLeftImgs[i]);
   for (int i = 0; i < hitRightImgs.length; i++) ghostHitRightImgs[i] = makeGhostImage(hitRightImgs[i]);
   for (int i = 0; i < hitLeftImgs.length; i++) ghostHitLeftImgs[i] = makeGhostImage(hitLeftImgs[i]);
-
-  recordedPositions = new ArrayList<PVector>();
-
-  mapImg = loadImage("level1.png");
 
   BG_IMG = loadImage("CyberLab_ExPack1/TileSets/background.png");
   BG_IMG = scaleImage(BG_IMG, 512, 512);
@@ -235,423 +260,94 @@ void setup() {
   for (int i = 0; i < 6; i++) {
     LAVA_IMGS[i] = scaleImage(loadImage("OGTerrain/lava" + i + ".png"), gridSize, gridSize);
   }
+}
 
-  Fisica.init(this);
-  world = new FWorld(Integer.MIN_VALUE, Integer.MIN_VALUE, Integer.MAX_VALUE, Integer.MAX_VALUE);
-  world.setGravity(0, 400);
+void loadScene(int newScene) {
+  scene = newScene;
 
-  FCompound ground = new FCompound();
-  HashMap<Integer, FButton> buttonsByCode = new HashMap<Integer, FButton>();
-
-  for (int y = 0; y < mapImg.height; y++) {
-    for (int x = 0; x < mapImg.width; x++) {
-      color c = mapImg.get(x, y);
-
-      if (c == SPAWN_COLOR) {
-        spawnPos.set(x*gridSize, y*gridSize);
-        continue;
-      }
-
-      FBox box = null;
-
-      if (c == GROUND_COLOR) {
-        boolean n = isTileType(x, y - 1, GROUND_COLOR);
-        boolean s = isTileType(x, y + 1, GROUND_COLOR);
-        boolean e = isTileType(x + 1, y, GROUND_COLOR);
-        boolean w = isTileType(x - 1, y, GROUND_COLOR);
-        boolean ne = isTileType(x + 1, y - 1, GROUND_COLOR);
-        boolean nw = isTileType(x - 1, y - 1, GROUND_COLOR);
-        boolean se = isTileType(x + 1, y + 1, GROUND_COLOR);
-        boolean sw = isTileType(x - 1, y + 1, GROUND_COLOR);
-
-        PImage texture = GROUND_CENTER;
-        // Alone
-        if (!n && !s && !e && !w) texture = GROUND_ALONE;
-        // Horizontal platform
-        else if (!n && !s && !w && e) texture = GROUND_ONEDEEP_LEFT;
-        else if (!n && !s && w && !e) texture = GROUND_ONEDEEP_RIGHT;
-        else if (!n && !s && w && e) texture = GROUND_ONEDEEP_CENTER;
-        // Virtical platform
-        else if (!n && s && !e && !w) texture = GROUND_PILLAR_TOP;
-        else if (n && !s && !e && !w) texture = GROUND_PILLAR_BOTTOM;
-        else if (n && s && !e && !w) texture = GROUND_PILLAR_CENTER;
-        // Outer corners
-        else if (!n && !e) texture = GROUND_NE;
-        else if (!n && !w) texture = GROUND_NW;
-        else if (!s && !e) texture = GROUND_SE;
-        else if (!s && !w) texture = GROUND_SW;
-        // Edges
-        else if (!n) texture = GROUND_N;
-        else if (!s) texture = GROUND_S;
-        else if (!e) texture = GROUND_E;
-        else if (!w) texture = GROUND_W;
-        // Inner corners
-        else if (n && e && !ne) texture = GROUND_INNER_NE;
-        else if (n && w && !nw) texture = GROUND_INNER_NW;
-        else if (s && e && !se) texture = GROUND_INNER_SE;
-        else if (s && w && !sw) texture = GROUND_INNER_SW;
-        
-        box = new FBox(gridSize, gridSize);
-        box.attachImage(texture);
-        box.setName("ground");
-      }
-      else if (c == SLIME_COLOR) {
-        box = new FBox(gridSize, gridSize);
-        box.attachImage(SLIME);
-        box.setRestitution(2);
-        box.setName("slime");
-      }
-      else if (c == ICE_COLOR) {
-        box = new FBox(gridSize, gridSize);
-        box.attachImage(ICE);
-        box.setFriction(0);
-        box.setName("ice");
-      }
-      
-      // not ground terrain
-      if(box == null) {
-        if (c == SPIKE_COLOR) {
-          // spike visual
-          FBox visual = new FBox(gridSize, gridSize);
-          visual.attachImage(SPIKE);
-          visual.setSensor(true);
-          visual.setStatic(true);
-          visual.setStroke(0, 0, 0, 0);
-          visual.setPosition(x*gridSize, y*gridSize);
-          visual.setGrabbable(false);
-          world.add(visual);
-
-          // Collider
-          float hitboxHeight = gridSize * 0.4;
-          box = new FBox(gridSize * 0.6, hitboxHeight);
-          box.setName("spike");
-          box.setStatic(true);
-          box.setNoFill();
-          box.setNoStroke();
-          box.setPosition(x*gridSize, y*gridSize + hitboxHeight/2);
-          box.setGrabbable(false);
-          world.add(box);
-        }
-        else if (c == TRUNK_COLOR) {
-          box = new FBox(gridSize, gridSize);
-          box.attachImage(TRUNK);
-          box.setSensor(true);
-          box.setStatic(true);
-          box.setStroke(0, 0, 0, 0);
-          box.setPosition(x*gridSize, y*gridSize);
-          box.setGrabbable(false);
-          world.add(box);
-        }
-        else if (c == LEAF_COLOR) {
-          boolean s = isTileType(x, y + 1, TRUNK_COLOR);
-          boolean e = isTileType(x + 1, y, LEAF_COLOR);
-          boolean w = isTileType(x - 1, y, LEAF_COLOR);
-
-          PImage texture = LEAF_CENTER;
-          if (s) texture = TREE_INTERSECT;
-          else if (!w && e) texture = LEAF_W;
-          else if (w && !e) texture = LEAF_E;
-          else if (w && e) texture = LEAF_CENTER;
-          
-          box = new FBox(gridSize, gridSize);
-          box.setSensor(true);
-          box.attachImage(texture);
-          box.setStatic(true);
-          box.setStroke(0, 0, 0, 0);
-          box.setPosition(x*gridSize, y*gridSize);
-          box.setGrabbable(false);
-          world.add(box);
-        }
-        else if (c == BRIDGE_COLOR) {
-          FBridge bridge = new FBridge(x*gridSize, y*gridSize, BRIDGE);
-          bridge.setStatic(true);
-          bridge.setStroke(0,0,0,0);
-          bridge.setGrabbable(false);
-          world.add(bridge);
-          terrain.add(bridge);
-        }
-        else if (c == LAVA_COLOR) {
-          FLava lava = new FLava(x*gridSize, y*gridSize);
-          lava.setStatic(true);
-          lava.setStroke(0,0,0,0);
-          lava.setGrabbable(false);
-          world.add(lava);
-          world.add(lava.getVisual());
-          terrain.add(lava);
-        }
-        else if (c == ONEWAY_COLOR) {
-          color leftColor = x > 0 ? mapImg.get(x-1, y) : 0;
-          boolean leftIsOneway = leftColor == ONEWAY_COLOR;
-
-          PImage platformTexture = leftIsOneway ? ONEWAY_RIGHT : ONEWAY_LEFT;
-
-          FOneWayPlatform platform = new FOneWayPlatform(x*gridSize, y*gridSize, platformTexture);
-          platform.setStatic(true);
-          platform.setStroke(0,0,0,0);
-          platform.setGrabbable(false);
-          world.add(platform);
-          terrain.add(platform);
-        }
-        else if (c == BUTTON_COLOR) {
-          FButton button = new FButton(x*gridSize, y*gridSize);
-          button.setStatic(true);
-          button.setStroke(0,0,0,0);
-          button.setGrabbable(false);
-          world.add(button);
-          terrain.add(button);
-
-          if (y > 0) {
-            color codeColor = mapImg.get(x, y - 1);
-            buttonsByCode.put(codeColor, button);
-          }
-        }
-        else if (c == CUBE_COLOR) {
-          FBox cube = new FBox(gridSize * 3/4, gridSize * 3/4);
-          cube.setPosition(x*gridSize, y*gridSize);
-          cube.attachImage(CUBE_IMG);
-          cube.setStroke(0,0,0,0);
-          cube.setDensity(0.5);
-          cube.setFriction(1);
-          cube.setGrabbable(false);
-          cube.setRotatable(false);
-          cube.setName("cube");
-          world.add(cube);
-        }
-        else if (c == STAR_COLOR) {
-          FStar star = new FStar(x*gridSize, y*gridSize);
-          star.setStroke(0,0,0,0);
-          star.setGrabbable(false);
-          world.add(star);
-          terrain.add(star);
-        }
-        else if (c == GOOMBA_COLOR) {
-          FGoomba goomba = new FGoomba(x*gridSize, y*gridSize);
-          goomba.setStroke(0,0,0,0);
-          goomba.setGrabbable(false);
-          world.add(goomba);
-          enemies.add(goomba);
-
-          int leftWall = x - 1;
-          while (leftWall >= 0) {
-            color pixelColor = mapImg.get(leftWall, y);
-            if (pixelColor == GROUND_COLOR || pixelColor == SLIME_COLOR || pixelColor == ICE_COLOR || pixelColor == BRIDGE_COLOR) {
-              break;
-            }
-            leftWall--;
-          }
-
-          int rightWall = x + 1;
-          while (rightWall < mapImg.width) {
-            color pixelColor = mapImg.get(rightWall, y);
-            if (pixelColor == GROUND_COLOR || pixelColor == SLIME_COLOR || pixelColor == ICE_COLOR || pixelColor == BRIDGE_COLOR) {
-              break;
-            }
-            rightWall++;
-          }
-
-          FBox leftSensor = new FBox(gridSize/6, gridSize);
-          leftSensor.setPosition(leftWall*gridSize + gridSize/2, y*gridSize);
-          leftSensor.setStatic(true);
-          leftSensor.setSensor(true);
-          leftSensor.setName("wall");
-          leftSensor.setNoStroke();
-          leftSensor.setNoFill();
-          world.add(leftSensor);
-
-          FBox rightSensor = new FBox(gridSize/6, gridSize);
-          rightSensor.setPosition(rightWall*gridSize - gridSize/2, y*gridSize);
-          rightSensor.setStatic(true);
-          rightSensor.setSensor(true);
-          rightSensor.setName("wall");
-          rightSensor.setNoStroke();
-          rightSensor.setNoFill();
-          world.add(rightSensor);
-        }
-        else if (c == THWOMP_COLOR) {
-          FThwomp thwomp = new FThwomp(x*gridSize + gridSize/2, y*gridSize + gridSize/2);
-          thwomp.setGrabbable(false);
-          world.add(thwomp);
-          enemies.add(thwomp);
-        }
-        else if (c == HAMMER_BRO_COLOR) {
-          FHammerBro hammerBro = new FHammerBro(x*gridSize, y*gridSize);
-          hammerBro.setStroke(0,0,0,0);
-          hammerBro.setGrabbable(false);
-          world.add(hammerBro);
-          enemies.add(hammerBro);
-
-          int leftWall = x - 1;
-          while (leftWall >= 0) {
-            color pixelColor = mapImg.get(leftWall, y);
-            if (pixelColor == GROUND_COLOR || pixelColor == SLIME_COLOR || pixelColor == ICE_COLOR || pixelColor == BRIDGE_COLOR) {
-              break;
-            }
-            leftWall--;
-          }
-
-          int rightWall = x + 1;
-          while (rightWall < mapImg.width) {
-            color pixelColor = mapImg.get(rightWall, y);
-            if (pixelColor == GROUND_COLOR || pixelColor == SLIME_COLOR || pixelColor == ICE_COLOR || pixelColor == BRIDGE_COLOR) {
-              break;
-            }
-            rightWall++;
-          }
-
-          FBox leftSensor = new FBox(gridSize/6, gridSize);
-          leftSensor.setPosition(leftWall*gridSize + gridSize/2, y*gridSize);
-          leftSensor.setStatic(true);
-          leftSensor.setSensor(true);
-          leftSensor.setName("wall");
-          leftSensor.setNoStroke();
-          leftSensor.setNoFill();
-          world.add(leftSensor);
-
-          FBox rightSensor = new FBox(gridSize/6, gridSize);
-          rightSensor.setPosition(rightWall*gridSize - gridSize/2, y*gridSize);
-          rightSensor.setStatic(true);
-          rightSensor.setSensor(true);
-          rightSensor.setName("wall");
-          rightSensor.setNoStroke();
-          rightSensor.setNoFill();
-          world.add(rightSensor);
-        }
-        continue;
-      }
-
-      box.setStatic(true);
-      box.setStroke(0, 0, 0, 0);
-      box.setPosition(x*gridSize, y*gridSize);
-      box.setGrabbable(false);
-      ground.addBody(box);
-
-
-    }
+  switch (scene) {
+    case INTRO_SCENE:
+      introSceneSetup();
+      break;
+    case GAME_SCENE:
+      gameSceneSetup();
+      break;
+    case GAMEOVER_SCENE:
+      gameOverSceneSetup();
+      break;
   }
-
-  // Second pass to create doors
-  for (int y = 0; y < mapImg.height; y++) {
-    for (int x = 0; x < mapImg.width; x++) {
-      color c = mapImg.get(x, y);
-
-      if (c == DOOR_COLOR) {
-        boolean isTopOfDoor = y == 0 || mapImg.get(x, y - 1) != DOOR_COLOR;
-        if (!isTopOfDoor) continue;
-
-        color leftColor = x > 0 ? mapImg.get(x - 1, y) : 0;
-        color rightColor = x < mapImg.width - 1 ? mapImg.get(x + 1, y) : 0;
-
-        boolean isLeft = false;
-        color codeColor = 0;
-
-        if (leftColor != DOOR_COLOR && leftColor != 0 && alpha(leftColor) > 0) {
-          isLeft = true;
-          codeColor = leftColor;
-        }
-        else if (rightColor != DOOR_COLOR && rightColor != 0 && alpha(rightColor) > 0) {
-          isLeft = false;
-          codeColor = rightColor;
-        }
-
-        FButton button = buttonsByCode.get(codeColor);
-        if (button != null) {
-          FDoor door = new FDoor(x * gridSize, y * gridSize, button, isLeft);
-          door.setStatic(true);
-          door.setStroke(0, 0, 0, 0);
-          door.setGrabbable(false);
-          world.add(door);
-          doors.add(door);
-        }
-      }
-    }
-  }
-
-  ground.setStatic(true);
-  ground.setName("ground");
-  world.add(ground);
-
-  // spawn player
-  player = new FPlayer((int)spawnPos.x, (int)spawnPos.y);
-  world.add(player);
-  world.add(player.getFootSensor());
 }
 
 void draw() {
-  // println(frameRate);
-  drawBackground();
-
-  for (FGameObject gameObject : terrain) {
-    gameObject.update();
-  }
-  for (FGameObject gameObject : enemies) {
-    gameObject.update();
-  }
-  for (FDoor door : doors) {
-    door.update();
-  }
-  player.update();
-
-  if (isRecording) {
-    recordedPositions.add(new PVector(player.getX(), player.getY()));
-    if (frameCount - recordStartFrame >= RECORD_DURATION) {
-      stopRecording();
-    }
-  }
-
-  if (ghost != null) {
-    ghost.update();
-    if (ghost.isFinished()) {
-      world.remove(ghost);
-      ghost = null;
-    }
-  }
-
-  world.step();
-
-  float levelWidth = mapImg.width * gridSize;
-  float levelHeight = mapImg.height * gridSize;
-  float viewWidth = width / zoom;
-  float viewHeight = height / zoom;
-  float camX = constrain(player.getX(), viewWidth/2, levelWidth - viewWidth/2) - gridSize/2;
-  float camY = constrain(player.getY(), viewHeight/2, levelHeight - viewHeight/2) - gridSize/2;
-
-  pushMatrix();
-  scale(zoom);
-  translate(-camX + viewWidth/2, -camY + viewHeight/2);
-
-  world.draw();
-  // world.drawDebug();
-
-  popMatrix();
-
-  drawUI();
-}
-
-private void drawUI() {
-  float barWidth = 200;
-  float barHeight = 20;
-  float x = width - barWidth - 20;
-  float y = 20;
-
-  fill(40);
-  noStroke();
-  rect(x, y, barWidth, barHeight);
-
-  if (isRecording) {
-    // recording bar
-    float progress = map(frameCount - recordStartFrame, 0, RECORD_DURATION, 0, 1);
-    progress = 1 - progress;
-    fill(255, 70, 70);
-    rect(x, y, barWidth * progress, barHeight);
-  } else if (ghost != null && !ghost.isFinished()) {
-    // playback bar
-    float progress = map(ghost.getPlaybackIndex(), 0, ghost.getPositionCount(), 0, 1);
-    progress = 1 - progress;
-
-    fill(70, 150, 255);
-    rect(x, y, barWidth * progress, barHeight);
+  switch (scene) {
+    case INTRO_SCENE:
+      introSceneDraw();
+      break;
+    case GAME_SCENE:
+      gameSceneDraw();
+      break;
+    case GAMEOVER_SCENE:
+      gameOverSceneDraw();
+      break;
   }
 }
+
+void keyPressed() {
+  switch (scene) {
+    case INTRO_SCENE:
+      introSceneKeyPressed();
+      break;
+    case GAME_SCENE:
+      gameSceneKeyPressed();
+      break;
+    case GAMEOVER_SCENE:
+      gameOverSceneKeyPressed();
+      break;
+  }
+}
+
+void keyReleased() {
+  switch (scene) {
+    case INTRO_SCENE:
+      introSceneKeyReleased();
+      break;
+    case GAME_SCENE:
+      gameSceneKeyReleased();
+      break;
+    case GAMEOVER_SCENE:
+      gameOverSceneKeyReleased();
+      break;
+  }
+}
+
+void mousePressed() {
+  switch (scene) {
+    case INTRO_SCENE:
+      introSceneMousePressed();
+      break;
+    case GAME_SCENE:
+      gameSceneMousePressed();
+      break;
+    case GAMEOVER_SCENE:
+      gameOverSceneMousePressed();
+      break;
+  }
+}
+
+void mouseReleased() {
+  switch (scene) {
+    case INTRO_SCENE:
+      introSceneMouseReleased();
+      break;
+    case GAME_SCENE:
+      gameSceneMouseReleased();
+      break;
+    case GAMEOVER_SCENE:
+      gameOverSceneMouseReleased();
+      break;
+  }
+}
+
 
 void drawBackground() {
   int tileSize = BG_IMG.width;
@@ -665,26 +361,6 @@ void drawBackground() {
   }
 }
 
-void keyPressed() {
-  if (key == 'W' || key =='w') wDown = true;
-  if (key == 'A' || key =='a') aDown = true;
-  if (key == 'S' || key =='s') sDown = true;
-  if (key == 'D' || key =='d') dDown = true;
-
-  if (key == 'R' || key == 'r') {
-    if (isRecording) {
-      stopRecording();
-    } else {
-      startRecording();
-    }
-  }
-
-  if (key == 'P' || key == 'p') {
-    if(isRecording) stopRecording();
-    spawnGhost();
-  }
-}
-
 void startRecording() {
   recordedPositions.clear();
   isRecording = true;
@@ -693,7 +369,9 @@ void startRecording() {
 
 void stopRecording() {
   isRecording = false;
-  player.setPosition(recordedPositions.get(0).x, recordedPositions.get(0).y);
+  if (recordedPositions.size() > 0) {
+    player.setPosition(recordedPositions.get(0).x, recordedPositions.get(0).y);
+  }
 }
 
 void spawnGhost() {
@@ -706,15 +384,7 @@ void spawnGhost() {
   world.add(ghost);
 }
 
-void keyReleased() {
-  if (key == 'W' || key =='w') wDown = false;
-  if (key == 'A' || key =='a') aDown = false;
-  if (key == 'S' || key =='s') sDown = false;
-  if (key == 'D' || key =='d') dDown = false;
-}
-
 boolean isTileType(int x, int y, color clr) {
-  // Blocks outside the map are counted as ground center tiles
   if (x < 0 || x >= mapImg.width || y < 0 || y >= mapImg.height) {
     if (clr == GROUND_COLOR) return true;
   }
@@ -749,14 +419,10 @@ PImage makeGhostImage(PImage src) {
     float b = blue(c);
     float a = alpha(c);
 
-    // desaturate
     float gray = (r + g + b) / 3;
     r = lerp(r, gray, 0.7);
     g = lerp(g, gray, 0.7);
     b = lerp(b, gray, 0.7);
-
-    // Blue tint
-    // b = min(255, b + 30);
 
     a *= 0.5;
 
