@@ -215,7 +215,7 @@ void setup() {
   ONEWAY_RIGHT = scaleImage(loadImage("CyberLab_ExPack1/platforms/oneway_right.png"), gridSize, gridSize);
   BUTTON_IMG = scaleImage(loadImage("button.png"), gridSize, gridSize);
   BUTTON_DOWN_IMG = scaleImage(loadImage("button_down.png"), gridSize, gridSize);
-  CUBE_IMG = scaleImage(loadImage("cube.png"), gridSize, gridSize);
+  CUBE_IMG = scaleImage(loadImage("cube.png"), gridSize * 3/4, gridSize * 3/4);
 
   DOOR_LEFT_IMGS = new PImage[4];
   DOOR_RIGHT_IMGS = new PImage[4];
@@ -399,12 +399,12 @@ void setup() {
           }
         }
         else if (c == CUBE_COLOR) {
-          FBox cube = new FBox(gridSize, gridSize);
+          FBox cube = new FBox(gridSize * 3/4, gridSize * 3/4);
           cube.setPosition(x*gridSize, y*gridSize);
           cube.attachImage(CUBE_IMG);
           cube.setStroke(0,0,0,0);
           cube.setDensity(0.5);
-          cube.setFriction(0.5);
+          cube.setFriction(1);
           cube.setGrabbable(false);
           cube.setRotatable(false);
           cube.setName("cube");
