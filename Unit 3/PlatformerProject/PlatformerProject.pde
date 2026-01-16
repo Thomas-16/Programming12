@@ -23,12 +23,14 @@ color HAMMER_BRO_COLOR = #ffc20e;
 color BUTTON_COLOR = #709ad1;
 color CUBE_COLOR = #ffa3b1;
 color DOOR_COLOR = #2f3699;
+color STAR_COLOR = #6f3198;
 
 PImage BG_IMG;
 PImage BUTTON_IMG, BUTTON_DOWN_IMG;
 PImage CUBE_IMG;
 PImage[] DOOR_LEFT_IMGS;
 PImage[] DOOR_RIGHT_IMGS;
+PImage[] STAR_IMGS;
 
 PImage GROUND_CENTER, GROUND_N, GROUND_S, GROUND_E, GROUND_W, GROUND_NE, GROUND_NW, GROUND_SE, GROUND_SW;
 PImage GROUND_INNER_NE, GROUND_INNER_NW, GROUND_INNER_SE, GROUND_INNER_SW;
@@ -177,7 +179,7 @@ void setup() {
 
   recordedPositions = new ArrayList<PVector>();
 
-  mapImg = loadImage("map.png");
+  mapImg = loadImage("level1.png");
 
   BG_IMG = loadImage("CyberLab_ExPack1/TileSets/background.png");
   BG_IMG = scaleImage(BG_IMG, 512, 512);
@@ -222,6 +224,11 @@ void setup() {
   for (int i = 0; i < 4; i++) {
     DOOR_LEFT_IMGS[i] = scaleImage(loadImage("door/door" + (i + 1) + ".png"), gridSize, gridSize * 2);
     DOOR_RIGHT_IMGS[i] = scaleImage(reverseImage(loadImage("door/door" + (i + 1) + ".png")), gridSize, gridSize * 2);
+  }
+
+  STAR_IMGS = new PImage[13];
+  for (int i = 0; i < 13; i++) {
+    STAR_IMGS[i] = scaleImage(loadImage("star/star" + (i + 1) + ".png"), gridSize, gridSize);
   }
 
   LAVA_IMGS = new PImage[6];
@@ -409,6 +416,13 @@ void setup() {
           cube.setRotatable(false);
           cube.setName("cube");
           world.add(cube);
+        }
+        else if (c == STAR_COLOR) {
+          FStar star = new FStar(x*gridSize, y*gridSize);
+          star.setStroke(0,0,0,0);
+          star.setGrabbable(false);
+          world.add(star);
+          terrain.add(star);
         }
         else if (c == GOOMBA_COLOR) {
           FGoomba goomba = new FGoomba(x*gridSize, y*gridSize);
