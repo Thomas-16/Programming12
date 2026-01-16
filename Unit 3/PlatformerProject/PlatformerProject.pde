@@ -85,7 +85,7 @@ ArrayList<FDoor> doors;
 
 int gridSize = 64;
 
-float zoom = 1.3;
+float zoom = 1.2;
 
 PVector spawnPos = new PVector(0,0);
 
