@@ -21,7 +21,8 @@ void gameOverSceneSetup() {
 }
 
 void gameOverSceneDraw() {
-  background(30);
+  // background(30);
+  drawBackground();
 
   textAlign(CENTER);
   textSize(100);

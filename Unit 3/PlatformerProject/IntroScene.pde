@@ -34,7 +34,8 @@ void introSceneSetup() {
 }
 
 void introSceneDraw() {
-  background(50);
+  // background(50);
+  drawBackground();
 
   textAlign(CENTER);
   textSize(80);
