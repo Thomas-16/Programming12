@@ -49,28 +49,38 @@ class FGhost extends FGameObject {
         PVector pos = positions.get(playbackIndex);
 
         float vx = 0;
+        float vy = 0;
         if (playbackIndex > 0) {
             vx = pos.x - positions.get(playbackIndex - 1).x;
+            vy = pos.y - positions.get(playbackIndex - 1).y;
         }
 
         this.setPosition(pos.x, pos.y);
         playbackIndex++;
 
-        handleAnimation(vx);
+        handleAnimation(vx, vy);
     }
 
-    private void handleAnimation(float vx) {
+    private void handleAnimation(float vx, float vy) {
         boolean isGrounded = this.getContacts().size() > 0;
 
         if (vx > 0) direction = 1;
         else if (vx < 0) direction = -1;
 
         PImage[] targetImgs;
-        if (!isGrounded) {
+        if (!isGrounded && vy < 0) {
+            // Jumping (going up)
             if (direction == 1) {
                 targetImgs = ghostJumpRightImgs;
             } else {
                 targetImgs = ghostJumpLeftImgs;
+            }
+        } else if (!isGrounded && vy >= 0) {
+            // Falling (going down)
+            if (direction == 1) {
+                targetImgs = ghostFallRightImgs;
+            } else {
+                targetImgs = ghostFallLeftImgs;
             }
         } else if (abs(vx) > 0.5) {
             if (direction == 1) {

@@ -141,18 +141,26 @@ class FPlayer extends FGameObject {
 
     private void handleAnimation() {
         float vx = this.getVelocityX();
-        boolean isGrounded = this.getContacts().size() > 0;
+        float vy = this.getVelocityY();
+        boolean isGrounded = canJump();
 
         if (vx > 0) direction = 1;
         else if (vx < 0) direction = -1;
 
         PImage[] targetImgs;
-        if (!isGrounded) {
-            // Jumping
+        if (!isGrounded && vy < 0) {
+            // Jumping (going up)
             if (direction == 1) {
                 targetImgs = jumpRightImgs;
             } else {
                 targetImgs = jumpLeftImgs;
+            }
+        } else if (!isGrounded && vy >= 0) {
+            // Falling (going down)
+            if (direction == 1) {
+                targetImgs = fallRightImgs;
+            } else {
+                targetImgs = fallLeftImgs;
             }
         } else if (abs(vx) > 10) {
             // Running

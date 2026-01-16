@@ -50,16 +50,24 @@ PImage[] idleRightImgs;
 PImage[] idleLeftImgs;
 PImage[] jumpLeftImgs;
 PImage[] jumpRightImgs;
+PImage[] fallLeftImgs;
+PImage[] fallRightImgs;
 PImage[] runLeftImgs;
 PImage[] runRightImgs;
+PImage[] hitLeftImgs;
+PImage[] hitRightImgs;
 PImage[] currentImgs;
 
 PImage[] ghostIdleRightImgs;
 PImage[] ghostIdleLeftImgs;
 PImage[] ghostJumpLeftImgs;
 PImage[] ghostJumpRightImgs;
+PImage[] ghostFallLeftImgs;
+PImage[] ghostFallRightImgs;
 PImage[] ghostRunLeftImgs;
 PImage[] ghostRunRightImgs;
+PImage[] ghostHitLeftImgs;
+PImage[] ghostHitRightImgs;
 
 PImage[] goombaImgs;
 
@@ -97,30 +105,39 @@ void setup() {
   enemies = new ArrayList<FGameObject>();
   doors = new ArrayList<FDoor>();
 
-  idleRightImgs = new PImage[] { loadImage("Player/idle0.png"), loadImage("Player/idle1.png") };
   int scaleFactor = 2;
-  for (int i = 0; i < idleRightImgs.length; i++) {
-    idleRightImgs[i] = scaleImage(idleRightImgs[i], idleRightImgs[i].width * scaleFactor, idleRightImgs[i].height * scaleFactor);
+
+  idleRightImgs = new PImage[6];
+  idleLeftImgs = new PImage[6];
+  for (int i = 0; i < 6; i++) {
+    PImage img = loadImage("CyberLab_ExPack1/Animations/MainCharacter/idle00" + i + ".png");
+    idleRightImgs[i] = scaleImage(img, img.width * scaleFactor, img.height * scaleFactor);
+    idleLeftImgs[i] = scaleImage(reverseImage(img), img.width * scaleFactor, img.height * scaleFactor);
   }
-  idleLeftImgs = new PImage[] { reverseImage(loadImage("Player/idle0.png")), reverseImage(loadImage("Player/idle1.png")) };
-  for (int i = 0; i < idleLeftImgs.length; i++) {
-    idleLeftImgs[i] = scaleImage(idleLeftImgs[i], idleLeftImgs[i].width * scaleFactor, idleLeftImgs[i].height * scaleFactor);
+
+  runRightImgs = new PImage[10];
+  runLeftImgs = new PImage[10];
+  for (int i = 0; i < 10; i++) {
+    PImage img = loadImage("CyberLab_ExPack1/Animations/MainCharacter/run00" + i + ".png");
+    runRightImgs[i] = scaleImage(img, img.width * scaleFactor, img.height * scaleFactor);
+    runLeftImgs[i] = scaleImage(reverseImage(img), img.width * scaleFactor, img.height * scaleFactor);
   }
-  jumpRightImgs = new PImage[] { loadImage("Player/jump0.png") };
-  for (int i = 0; i < jumpRightImgs.length; i++) {
-    jumpRightImgs[i] = scaleImage(jumpRightImgs[i], jumpRightImgs[i].width * scaleFactor, jumpRightImgs[i].height * scaleFactor);
-  }
-  jumpLeftImgs = new PImage[] { loadImage("Player/jump1.png") };
-  for (int i = 0; i < jumpLeftImgs.length; i++) {
-    jumpLeftImgs[i] = scaleImage(jumpLeftImgs[i], jumpLeftImgs[i].width * scaleFactor, jumpLeftImgs[i].height * scaleFactor);
-  }
-  runRightImgs = new PImage[] { loadImage("Player/runright0.png"), loadImage("Player/runright1.png"), loadImage("Player/runright2.png") };
-  for (int i = 0; i < runRightImgs.length; i++) {
-    runRightImgs[i] = scaleImage(runRightImgs[i], runRightImgs[i].width * scaleFactor, runRightImgs[i].height * scaleFactor);
-  }
-  runLeftImgs = new PImage[] { loadImage("Player/runleft0.png"), loadImage("Player/runleft1.png"), loadImage("Player/runleft2.png") };
-  for (int i = 0; i < runLeftImgs.length; i++) {
-    runLeftImgs[i] = scaleImage(runLeftImgs[i], runLeftImgs[i].width * scaleFactor, runLeftImgs[i].height * scaleFactor);
+
+  PImage jumpImg = loadImage("CyberLab_ExPack1/Animations/MainCharacter/jump.png");
+  jumpRightImgs = new PImage[] { scaleImage(jumpImg, jumpImg.width * scaleFactor, jumpImg.height * scaleFactor) };
+  jumpLeftImgs = new PImage[] { scaleImage(reverseImage(jumpImg), jumpImg.width * scaleFactor, jumpImg.height * scaleFactor) };
+
+  PImage fallImg = loadImage("CyberLab_ExPack1/Animations/MainCharacter/fall.png");
+  fallRightImgs = new PImage[] { scaleImage(fallImg, fallImg.width * scaleFactor, fallImg.height * scaleFactor) };
+  fallLeftImgs = new PImage[] { scaleImage(reverseImage(fallImg), fallImg.width * scaleFactor, fallImg.height * scaleFactor) };
+
+  hitRightImgs = new PImage[4];
+  hitLeftImgs = new PImage[4];
+  for (int i = 0; i < 4; i++) {
+    // String num = nf(i, 3);
+    PImage img = loadImage("CyberLab_ExPack1/Animations/MainCharacter/hit00" + i + ".png");
+    hitRightImgs[i] = scaleImage(img, img.width * scaleFactor, img.height * scaleFactor);
+    hitLeftImgs[i] = scaleImage(reverseImage(img), img.width * scaleFactor, img.height * scaleFactor);
   }
 
   goombaImgs = new PImage[] { scaleImage(loadImage("Enemies/goomba0.png"), gridSize, gridSize), scaleImage(loadImage("Enemies/goomba1.png"), gridSize, gridSize) };
@@ -139,14 +156,22 @@ void setup() {
   ghostIdleLeftImgs = new PImage[idleLeftImgs.length];
   ghostJumpRightImgs = new PImage[jumpRightImgs.length];
   ghostJumpLeftImgs = new PImage[jumpLeftImgs.length];
+  ghostFallRightImgs = new PImage[fallRightImgs.length];
+  ghostFallLeftImgs = new PImage[fallLeftImgs.length];
   ghostRunRightImgs = new PImage[runRightImgs.length];
   ghostRunLeftImgs = new PImage[runLeftImgs.length];
+  ghostHitRightImgs = new PImage[hitRightImgs.length];
+  ghostHitLeftImgs = new PImage[hitLeftImgs.length];
   for (int i = 0; i < idleRightImgs.length; i++) ghostIdleRightImgs[i] = makeGhostImage(idleRightImgs[i]);
   for (int i = 0; i < idleLeftImgs.length; i++) ghostIdleLeftImgs[i] = makeGhostImage(idleLeftImgs[i]);
   for (int i = 0; i < jumpRightImgs.length; i++) ghostJumpRightImgs[i] = makeGhostImage(jumpRightImgs[i]);
   for (int i = 0; i < jumpLeftImgs.length; i++) ghostJumpLeftImgs[i] = makeGhostImage(jumpLeftImgs[i]);
+  for (int i = 0; i < fallRightImgs.length; i++) ghostFallRightImgs[i] = makeGhostImage(fallRightImgs[i]);
+  for (int i = 0; i < fallLeftImgs.length; i++) ghostFallLeftImgs[i] = makeGhostImage(fallLeftImgs[i]);
   for (int i = 0; i < runRightImgs.length; i++) ghostRunRightImgs[i] = makeGhostImage(runRightImgs[i]);
   for (int i = 0; i < runLeftImgs.length; i++) ghostRunLeftImgs[i] = makeGhostImage(runLeftImgs[i]);
+  for (int i = 0; i < hitRightImgs.length; i++) ghostHitRightImgs[i] = makeGhostImage(hitRightImgs[i]);
+  for (int i = 0; i < hitLeftImgs.length; i++) ghostHitLeftImgs[i] = makeGhostImage(hitLeftImgs[i]);
 
   recordedPositions = new ArrayList<PVector>();
 
