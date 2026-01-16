@@ -22,10 +22,13 @@ color THWOMP_COLOR = #546d8e;
 color HAMMER_BRO_COLOR = #ffc20e;
 color BUTTON_COLOR = #709ad1;
 color CUBE_COLOR = #ffa3b1;
+color DOOR_COLOR = #2f3699;
 
 PImage BG_IMG;
 PImage BUTTON_IMG, BUTTON_DOWN_IMG;
 PImage CUBE_IMG;
+PImage[] DOOR_LEFT_IMGS;
+PImage[] DOOR_RIGHT_IMGS;
 
 PImage GROUND_CENTER, GROUND_N, GROUND_S, GROUND_E, GROUND_W, GROUND_NE, GROUND_NW, GROUND_SE, GROUND_SW;
 PImage GROUND_INNER_NE, GROUND_INNER_NW, GROUND_INNER_SE, GROUND_INNER_SW;
@@ -70,6 +73,7 @@ FWorld world;
 FPlayer player;
 ArrayList<FGameObject> terrain;
 ArrayList<FGameObject> enemies;
+ArrayList<FDoor> doors;
 
 int gridSize = 64;
 
@@ -91,6 +95,7 @@ void setup() {
 
   terrain = new ArrayList<FGameObject>();
   enemies = new ArrayList<FGameObject>();
+  doors = new ArrayList<FDoor>();
 
   idleRightImgs = new PImage[] { loadImage("Player/idle0.png"), loadImage("Player/idle1.png") };
   int scaleFactor = 2;
@@ -185,6 +190,13 @@ void setup() {
   BUTTON_DOWN_IMG = scaleImage(loadImage("button_down.png"), gridSize, gridSize);
   CUBE_IMG = scaleImage(loadImage("cube.png"), gridSize, gridSize);
 
+  DOOR_LEFT_IMGS = new PImage[4];
+  DOOR_RIGHT_IMGS = new PImage[4];
+  for (int i = 0; i < 4; i++) {
+    DOOR_LEFT_IMGS[i] = scaleImage(loadImage("door/door" + (i + 1) + ".png"), gridSize, gridSize * 2);
+    DOOR_RIGHT_IMGS[i] = scaleImage(reverseImage(loadImage("door/door" + (i + 1) + ".png")), gridSize, gridSize * 2);
+  }
+
   LAVA_IMGS = new PImage[6];
   for (int i = 0; i < 6; i++) {
     LAVA_IMGS[i] = scaleImage(loadImage("OGTerrain/lava" + i + ".png"), gridSize, gridSize);
@@ -195,6 +207,7 @@ void setup() {
   world.setGravity(0, 400);
 
   FCompound ground = new FCompound();
+  HashMap<Integer, FButton> buttonsByCode = new HashMap<Integer, FButton>();
 
   for (int y = 0; y < mapImg.height; y++) {
     for (int x = 0; x < mapImg.width; x++) {
@@ -352,6 +365,11 @@ void setup() {
           button.setGrabbable(false);
           world.add(button);
           terrain.add(button);
+
+          if (y > 0) {
+            color codeColor = mapImg.get(x, y - 1);
+            buttonsByCode.put(codeColor, button);
+          }
         }
         else if (c == CUBE_COLOR) {
           FBox cube = new FBox(gridSize, gridSize);
@@ -469,6 +487,44 @@ void setup() {
 
     }
   }
+
+  // Second pass to create doors
+  for (int y = 0; y < mapImg.height; y++) {
+    for (int x = 0; x < mapImg.width; x++) {
+      color c = mapImg.get(x, y);
+
+      if (c == DOOR_COLOR) {
+        boolean isTopOfDoor = y == 0 || mapImg.get(x, y - 1) != DOOR_COLOR;
+        if (!isTopOfDoor) continue;
+
+        color leftColor = x > 0 ? mapImg.get(x - 1, y) : 0;
+        color rightColor = x < mapImg.width - 1 ? mapImg.get(x + 1, y) : 0;
+
+        boolean isLeft = false;
+        color codeColor = 0;
+
+        if (leftColor != DOOR_COLOR && leftColor != 0 && alpha(leftColor) > 0) {
+          isLeft = true;
+          codeColor = leftColor;
+        }
+        else if (rightColor != DOOR_COLOR && rightColor != 0 && alpha(rightColor) > 0) {
+          isLeft = false;
+          codeColor = rightColor;
+        }
+
+        FButton button = buttonsByCode.get(codeColor);
+        if (button != null) {
+          FDoor door = new FDoor(x * gridSize, y * gridSize, button, isLeft);
+          door.setStatic(true);
+          door.setStroke(0, 0, 0, 0);
+          door.setGrabbable(false);
+          world.add(door);
+          doors.add(door);
+        }
+      }
+    }
+  }
+
   ground.setStatic(true);
   ground.setName("ground");
   world.add(ground);
@@ -488,6 +544,9 @@ void draw() {
   }
   for (FGameObject gameObject : enemies) {
     gameObject.update();
+  }
+  for (FDoor door : doors) {
+    door.update();
   }
   player.update();
 
