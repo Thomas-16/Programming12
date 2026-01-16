@@ -85,6 +85,8 @@ ArrayList<FDoor> doors;
 
 int gridSize = 64;
 
+float zoom = 1.2;
+
 PVector spawnPos = new PVector(0,0);
 
 boolean wDown, aDown, sDown, dDown;
@@ -594,23 +596,24 @@ void draw() {
 
   float levelWidth = mapImg.width * gridSize;
   float levelHeight = mapImg.height * gridSize;
-  float camX = constrain(player.getX(), width/2, levelWidth - width/2) - gridSize/2;
-  float camY = constrain(player.getY(), height/2, levelHeight - height/2) - gridSize/2;
+  float viewWidth = width / zoom;
+  float viewHeight = height / zoom;
+  float camX = constrain(player.getX(), viewWidth/2, levelWidth - viewWidth/2) - gridSize/2;
+  float camY = constrain(player.getY(), viewHeight/2, levelHeight - viewHeight/2) - gridSize/2;
 
   pushMatrix();
-  translate(-camX + width/2, -camY + height/2);
+  scale(zoom);
+  translate(-camX + viewWidth/2, -camY + viewHeight/2);
 
   world.draw();
   // world.drawDebug();
-  drawUI(camX, camY);
 
   popMatrix();
+
+  drawUI();
 }
 
-private void drawUI(float camX, float camY) {
-  pushMatrix();
-  translate(camX - width/2, camY - height/2);
-
+private void drawUI() {
   float barWidth = 200;
   float barHeight = 20;
   float x = width - barWidth - 20;
@@ -634,8 +637,6 @@ private void drawUI(float camX, float camY) {
     fill(70, 150, 255);
     rect(x, y, barWidth * progress, barHeight);
   }
-
-  popMatrix();
 }
 
 void drawBackground() {
