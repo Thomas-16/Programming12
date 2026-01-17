@@ -65,7 +65,7 @@ class FPlayer extends FGameObject {
                 enemies.remove(goomba);
 
                 if (this.getY() < goomba.getY() - gridSize/2) {
-                    this.setVelocity(this.getVelocityX(), -350);
+                    this.setVelocity(this.getVelocityX(), -280);
                 } else {
                     die();
                 }
@@ -128,7 +128,7 @@ class FPlayer extends FGameObject {
         this.setVelocity(vx, this.getVelocityY());
 
         if(wDown && canJump())
-            this.setVelocity(this.getVelocityX(), -430);
+            this.setVelocity(this.getVelocityX(), -380);
     }
     private boolean canJump() {
         ArrayList<FContact> contacts = footSensor.getContacts();
