@@ -49,9 +49,22 @@ void gameSceneDraw() {
   world.draw();
   // world.drawDebug();
 
+  drawTextInWorld();
+
   popMatrix();
 
   drawGameUI();
+}
+
+void drawTextInWorld() {
+  textAlign(LEFT);
+  textSize(50);
+  fill(#cfd2ff);
+  textLeading(60);
+
+  if (currentLevel == 1) {
+    text("Press R  to start recording your movement\nPress P  to play it.", 150, 150);
+  }
 }
 
 void drawGameUI() {
