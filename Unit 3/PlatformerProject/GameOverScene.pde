@@ -36,7 +36,7 @@ void gameOverSceneDraw() {
   menuButton.draw();
 
   textAlign(CENTER, CENTER);
-  textSize(24);
+  textSize(32);
   fill(255);
   text("Main Menu", width/2, 500);
 }

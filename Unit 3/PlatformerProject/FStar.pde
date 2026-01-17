@@ -21,7 +21,7 @@ class FStar extends FGameObject {
         }
 
         if (isTouching("player")) {
-            nextLevel();
+            pendingNextLevel = true;
         }
     }
 }

@@ -8,7 +8,7 @@ final int GAME_SCENE = 1;
 final int GAMEOVER_SCENE = 2;
 int scene = INTRO_SCENE;
 
-int totalLevels = 1;
+int totalLevels = 2;
 
 color TRANSPARENT = color(0, 0, 0, 0);
 
@@ -253,7 +253,7 @@ void loadAssets() {
 
   STAR_IMGS = new PImage[13];
   for (int i = 0; i < 13; i++) {
-    STAR_IMGS[i] = scaleImage(loadImage("star/star" + (i + 1) + ".png"), gridSize, gridSize);
+    STAR_IMGS[i] = scaleImage(loadImage("star/star" + (i + 1) + ".png"), gridSize * 6/4, gridSize * 6/4);
   }
 
   LAVA_IMGS = new PImage[6];

@@ -1,4 +1,5 @@
 int currentLevel = 1;
+boolean pendingNextLevel = false;
 
 void gameSceneSetup() {
   loadLevel(currentLevel);
@@ -17,6 +18,12 @@ void gameSceneDraw() {
     door.update();
   }
   player.update();
+
+  if (pendingNextLevel) {
+    pendingNextLevel = false;
+    nextLevel();
+    return;
+  }
 
   if (isRecording) {
     recordedPositions.add(new PVector(player.getX(), player.getY()));
@@ -62,7 +69,7 @@ void drawTextInWorld() {
   fill(#cfd2ff);
   textLeading(60);
 
-  if (currentLevel == 1) {
+  if (currentLevel == 2) {
     text("Press R  to start recording your movement\nPress P  to play it.", 150, 150);
   }
 }
@@ -93,7 +100,7 @@ void drawGameUI() {
 
   fill(255);
   textAlign(LEFT);
-  textSize(24);
+  textSize(30);
   text("Level " + currentLevel, 20, 35);
 }
 
@@ -132,6 +139,7 @@ void gameSceneMouseReleased() {
 
 void loadLevel(int level) {
   currentLevel = level;
+  pendingNextLevel = false;
 
   terrain.clear();
   enemies.clear();
@@ -462,6 +470,7 @@ void loadLevel(int level) {
 
   ground.setStatic(true);
   ground.setName("ground");
+  ground.setGrabbable(false);
   world.add(ground);
 
   player = new FPlayer((int)spawnPos.x, (int)spawnPos.y);
