@@ -18,7 +18,7 @@ class FGhost extends FGameObject {
 
         this.setNoFill();
         this.setGrabbable(false);
-        this.setStatic(true);
+        // this.setStatic(true);
         this.setNoStroke();
         this.setFriction(2.2);
         this.setDensity(1);

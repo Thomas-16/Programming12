@@ -30,6 +30,7 @@ color HAMMER_BRO_COLOR = #ffc20e;
 color BUTTON_COLOR = #709ad1;
 color CUBE_COLOR = #ffa3b1;
 color DOOR_COLOR = #2f3699;
+color DOOR_INVERTED_COLOR = #b5a5d5;
 color STAR_COLOR = #6f3198;
 
 PImage BG_IMG;
@@ -390,6 +391,11 @@ boolean isTileType(int x, int y, color clr) {
   }
   if (x < 0 || x >= mapImg.width || y < 0 || y >= mapImg.height) return false;
   return mapImg.get(x, y) == clr;
+}
+
+boolean isWallTile(int x, int y) {
+  return isTileType(x, y, GROUND_COLOR) || isTileType(x, y, SLIME_COLOR) ||
+         isTileType(x, y, ICE_COLOR) || isTileType(x, y, BRIDGE_COLOR);
 }
 
 PImage scaleImage(PImage src, int w, int h) {

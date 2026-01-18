@@ -2,16 +2,19 @@ class FDoor extends FGameObject {
     private FBox collider = null;
     private FButton button;
     private boolean isLeft;
-    private int frameIndex = 3; // Start closed
+    private boolean inverted;
+    private int frameIndex;
     private int animationTimer = 0;
     private int animationDelay = 8;
     private float colliderX;
     private float colliderY;
 
-    public FDoor(int x, int y, FButton button, boolean isLeft) {
+    public FDoor(int x, int y, FButton button, boolean isLeft, boolean inverted) {
         super(x, y + gridSize / 2, gridSize, gridSize * 2);
         this.button = button;
         this.isLeft = isLeft;
+        this.inverted = inverted;
+        this.frameIndex = inverted ? 0 : 3; // Inverted starts open, normal starts closed
         this.setSensor(true);
 
         PImage[] imgs = isLeft ? DOOR_LEFT_IMGS : DOOR_RIGHT_IMGS;
@@ -25,7 +28,9 @@ class FDoor extends FGameObject {
         }
         colliderY = y + gridSize / 2;
 
-        spawnCollider();
+        if (!inverted) {
+            spawnCollider();
+        }
     }
 
     private void spawnCollider() {
@@ -53,12 +58,14 @@ class FDoor extends FGameObject {
         if (animationTimer < animationDelay) return;
         animationTimer = 0;
 
-        if (button.isPressed() && frameIndex > 0) {
+        boolean shouldOpen = inverted ? !button.isPressed() : button.isPressed();
+
+        if (shouldOpen && frameIndex > 0) {
             frameIndex--;
-        } else if (!button.isPressed() && frameIndex < 3) {
+        } else if (!shouldOpen && frameIndex < 3) {
             frameIndex++;
         }
-        
+
         PImage[] imgs = isLeft ? DOOR_LEFT_IMGS : DOOR_RIGHT_IMGS;
         this.attachImage(imgs[frameIndex]);
 

@@ -65,12 +65,12 @@ void gameSceneDraw() {
 
 void drawTextInWorld() {
   textAlign(LEFT);
-  textSize(50);
   fill(#cfd2ff);
   textLeading(60);
 
   if (currentLevel == 2) {
-    text("Press R  to start recording your movement\nPress P  to play it.", 150, 150);
+    textSize(30);
+    text("Press R  to record your movement\nPress P  to play it.", 120, 520);
   }
 }
 
@@ -284,9 +284,7 @@ void loadLevel(int level) {
           terrain.add(lava);
         }
         else if (c == ONEWAY_COLOR) {
-          color leftColor = x > 0 ? mapImg.get(x-1, y) : 0;
-          boolean leftIsOneway = leftColor == ONEWAY_COLOR;
-
+          boolean leftIsOneway = isTileType(x - 1, y, ONEWAY_COLOR);
           PImage platformTexture = leftIsOneway ? ONEWAY_RIGHT : ONEWAY_LEFT;
 
           FOneWayPlatform platform = new FOneWayPlatform(x*gridSize, y*gridSize, platformTexture);
@@ -336,22 +334,10 @@ void loadLevel(int level) {
           enemies.add(goomba);
 
           int leftWall = x - 1;
-          while (leftWall >= 0) {
-            color pixelColor = mapImg.get(leftWall, y);
-            if (pixelColor == GROUND_COLOR || pixelColor == SLIME_COLOR || pixelColor == ICE_COLOR || pixelColor == BRIDGE_COLOR) {
-              break;
-            }
-            leftWall--;
-          }
+          while (!isWallTile(leftWall, y)) leftWall--;
 
           int rightWall = x + 1;
-          while (rightWall < mapImg.width) {
-            color pixelColor = mapImg.get(rightWall, y);
-            if (pixelColor == GROUND_COLOR || pixelColor == SLIME_COLOR || pixelColor == ICE_COLOR || pixelColor == BRIDGE_COLOR) {
-              break;
-            }
-            rightWall++;
-          }
+          while (!isWallTile(rightWall, y)) rightWall++;
 
           FBox leftSensor = new FBox(gridSize/6, gridSize);
           leftSensor.setPosition(leftWall*gridSize + gridSize/2, y*gridSize);
@@ -385,22 +371,10 @@ void loadLevel(int level) {
           enemies.add(hammerBro);
 
           int leftWall = x - 1;
-          while (leftWall >= 0) {
-            color pixelColor = mapImg.get(leftWall, y);
-            if (pixelColor == GROUND_COLOR || pixelColor == SLIME_COLOR || pixelColor == ICE_COLOR || pixelColor == BRIDGE_COLOR) {
-              break;
-            }
-            leftWall--;
-          }
+          while (!isWallTile(leftWall, y)) leftWall--;
 
           int rightWall = x + 1;
-          while (rightWall < mapImg.width) {
-            color pixelColor = mapImg.get(rightWall, y);
-            if (pixelColor == GROUND_COLOR || pixelColor == SLIME_COLOR || pixelColor == ICE_COLOR || pixelColor == BRIDGE_COLOR) {
-              break;
-            }
-            rightWall++;
-          }
+          while (!isWallTile(rightWall, y)) rightWall++;
 
           FBox leftSensor = new FBox(gridSize/6, gridSize);
           leftSensor.setPosition(leftWall*gridSize + gridSize/2, y*gridSize);
@@ -437,27 +411,34 @@ void loadLevel(int level) {
       color c = mapImg.get(x, y);
 
       if (c == DOOR_COLOR) {
-        boolean isTopOfDoor = y == 0 || mapImg.get(x, y - 1) != DOOR_COLOR;
-        if (!isTopOfDoor) continue;
-
-        color leftColor = x > 0 ? mapImg.get(x - 1, y) : 0;
-        color rightColor = x < mapImg.width - 1 ? mapImg.get(x + 1, y) : 0;
+        if (isTileType(x, y - 1, DOOR_COLOR)) continue;
 
         boolean isLeft = false;
         color codeColor = 0;
+        int codeX = 0;
 
-        if (leftColor != DOOR_COLOR && leftColor != 0 && alpha(leftColor) > 0) {
-          isLeft = true;
-          codeColor = leftColor;
+        if (!isTileType(x - 1, y, DOOR_COLOR)) {
+          color leftColor = mapImg.get(x - 1, y);
+          if (leftColor != 0 && alpha(leftColor) > 0) {
+            isLeft = true;
+            codeColor = leftColor;
+            codeX = x - 1;
+          }
         }
-        else if (rightColor != DOOR_COLOR && rightColor != 0 && alpha(rightColor) > 0) {
-          isLeft = false;
-          codeColor = rightColor;
+        if (codeColor == 0 && !isTileType(x + 1, y, DOOR_COLOR)) {
+          color rightColor = mapImg.get(x + 1, y);
+          if (rightColor != 0 && alpha(rightColor) > 0) {
+            isLeft = false;
+            codeColor = rightColor;
+            codeX = x + 1;
+          }
         }
 
         FButton button = buttonsByCode.get(codeColor);
         if (button != null) {
-          FDoor door = new FDoor(x * gridSize, y * gridSize, button, isLeft);
+          boolean inverted = isTileType(codeX, y + 1, DOOR_INVERTED_COLOR);
+
+          FDoor door = new FDoor(x * gridSize, y * gridSize, button, isLeft, inverted);
           door.setStatic(true);
           door.setStroke(0, 0, 0, 0);
           door.setGrabbable(false);
