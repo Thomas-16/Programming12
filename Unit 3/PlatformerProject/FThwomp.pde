@@ -20,7 +20,8 @@ class FThwomp extends FGameObject {
     public void update() {
         switch(state) {
             case 0: // Stationary
-                if (player.getY() > this.getY() && player.getY() < this.getY() + 8*gridSize && player.getX() > getX()-gridSize && player.getX() < getX()+gridSize) {
+                if ((player.getY() > this.getY() && player.getY() < this.getY() + 8*gridSize && player.getX() > getX()-gridSize && player.getX() < getX()+gridSize) ||
+                    (ghost != null && ghost.getY() > this.getY() && ghost.getY() < this.getY() + 8*gridSize && ghost.getX() > getX()-gridSize && ghost.getX() < getX()+gridSize)) {
                     state = 1;
                     setStatic(false);
                     attachImage(THWOMP_IMG_1);
