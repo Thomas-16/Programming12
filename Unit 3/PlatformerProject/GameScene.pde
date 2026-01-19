@@ -1,7 +1,15 @@
 int currentLevel = 1;
 boolean pendingNextLevel = false;
 
+RectButton resetButton;
+
 void gameSceneSetup() {
+  resetButton = new RectButton(70, 75, 100, 35,
+    btnFill, btnOutline, btnHoverOutline, btnClickFill, btnOutlineW, btnCornerRadius);
+  resetButton.setOnClick(() -> {
+    loadLevel(currentLevel);
+  });
+
   loadLevel(currentLevel);
 }
 
@@ -78,30 +86,40 @@ void drawGameUI() {
   rectMode(CORNER);
   
   float barWidth = 200;
-  float barHeight = 20;
+  float barHeight = 16;
   float x = width - barWidth - 20;
   float y = 20;
 
-  fill(40);
-  noStroke();
-  rect(x, y, barWidth, barHeight);
+  fill(20, 35, 70, 200);
+  stroke(0, 180, 220, 150);
+  strokeWeight(2);
+  rect(x, y, barWidth, barHeight, 4);
 
+  noStroke();
   if (isRecording) {
     float progress = map(frameCount - recordStartFrame, 0, RECORD_DURATION, 0, 1);
     progress = 1 - progress;
-    fill(255, 70, 70);
-    rect(x, y, barWidth * progress, barHeight);
+    fill(220, 60, 80);
+    rect(x + 2, y + 2, (barWidth - 4) * progress, barHeight - 4, 2);
   } else if (ghost != null && !ghost.isFinished()) {
     float progress = map(ghost.getPlaybackIndex(), 0, ghost.getPositionCount(), 0, 1);
     progress = 1 - progress;
-    fill(70, 150, 255);
-    rect(x, y, barWidth * progress, barHeight);
+    fill(0, 180, 220);
+    rect(x + 2, y + 2, (barWidth - 4) * progress, barHeight - 4, 2);
   }
 
-  fill(255);
   textAlign(LEFT);
-  textSize(30);
+  textSize(28);
+  fill(0, 180, 220, 100);
+  text("Level " + currentLevel, 21, 36);
+  fill(255);
   text("Level " + currentLevel, 20, 35);
+
+  resetButton.draw();
+  textAlign(CENTER, CENTER);
+  textSize(16);
+  fill(255);
+  text("Reset", 70, 75);
 }
 
 void gameSceneKeyPressed() {
@@ -132,9 +150,11 @@ void gameSceneKeyReleased() {
 }
 
 void gameSceneMousePressed() {
+  resetButton.mousePressed();
 }
 
 void gameSceneMouseReleased() {
+  resetButton.mouseReleased();
 }
 
 void loadLevel(int level) {

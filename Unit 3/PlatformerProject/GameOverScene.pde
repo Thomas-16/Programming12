@@ -1,44 +1,41 @@
-int gameOverButtonW = 200;
-int gameOverButtonH = 60;
-
-color gameOverFillCol = color(70, 180, 140);
-color gameOverOutlineCol = color(30, 90, 70);
-color gameOverHoverOutlineCol = color(255, 220, 0);
-color gameOverClickFillCol = color(40, 140, 110);
-int gameOverOutlineW = 4;
-int gameOverCornerRadius = 8;
-
 RectButton menuButton;
 
 void gameOverSceneSetup() {
-  int buttonY = 500;
+  int buttonY = height / 2 + 120;
 
-  menuButton = new RectButton(width/2, buttonY, gameOverButtonW, gameOverButtonH,
-    gameOverFillCol, gameOverOutlineCol, gameOverHoverOutlineCol, gameOverClickFillCol, gameOverOutlineW, gameOverCornerRadius);
-    menuButton.setOnClick(() -> {
-      loadScene(INTRO_SCENE);
-    });
+  menuButton = new RectButton(width/2, buttonY, 180, 55,
+    btnFill, btnOutline, btnHoverOutline, btnClickFill, btnOutlineW, btnCornerRadius);
+  menuButton.setOnClick(() -> {
+    loadScene(INTRO_SCENE);
+  });
 }
 
 void gameOverSceneDraw() {
-  // background(30);
   drawBackground();
 
   textAlign(CENTER);
-  textSize(100);
-  fill(255);
-  text("Congratulations!", width/2, 200);
 
-  textSize(40);
-  fill(200);
-  text("You completed all levels!", width/2, 300);
+  textSize(82);
+  fill(0, 180, 220, 30);
+  text("YOU WIN!", width/2, height/2 - 100);
+  fill(0, 180, 220, 60);
+  text("YOU WIN!", width/2, height/2 - 100);
+
+  textSize(80);
+  fill(255);
+  text("YOU WIN!", width/2, height/2 - 100);
+
+  textSize(28);
+  fill(150, 200, 220);
+  text("You completed all levels!", width/2, height/2 - 20);
 
   menuButton.draw();
 
+  int buttonY = height / 2 + 120;
   textAlign(CENTER, CENTER);
-  textSize(32);
+  textSize(22);
   fill(255);
-  text("Main Menu", width/2, 500);
+  text("Main Menu", width/2, buttonY);
 }
 
 void gameOverSceneMousePressed() {
