@@ -8,7 +8,7 @@ final int GAME_SCENE = 1;
 final int GAMEOVER_SCENE = 2;
 int scene = INTRO_SCENE;
 
-int totalLevels = 2;
+int totalLevels = 3;
 
 color TRANSPARENT = color(0, 0, 0, 0);
 
