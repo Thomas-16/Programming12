@@ -193,6 +193,12 @@ void loadLevel(int level) {
   currentLevel = level;
   pendingNextLevel = false;
 
+  if (world != null) {
+    world = new FWorld(Integer.MIN_VALUE, Integer.MIN_VALUE, Integer.MAX_VALUE, Integer.MAX_VALUE);
+    world.setGravity(0, 400);
+    world.setGrabbable(false);
+  }
+
   terrain.clear();
   enemies.clear();
   doors.clear();
@@ -200,10 +206,16 @@ void loadLevel(int level) {
   isRecording = false;
   recordedPositions.clear();
 
+  wDown = false;
+  aDown = false;
+  sDown = false;
+  dDown = false;
+
   mapImg = loadImage("level" + level + ".png");
 
   world = new FWorld(Integer.MIN_VALUE, Integer.MIN_VALUE, Integer.MAX_VALUE, Integer.MAX_VALUE);
   world.setGravity(0, 400);
+  world.setGrabbable(false);
 
   FCompound ground = new FCompound();
   HashMap<Integer, FButton> buttonsByCode = new HashMap<Integer, FButton>();
