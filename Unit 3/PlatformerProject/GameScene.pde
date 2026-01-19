@@ -1,6 +1,8 @@
 int currentLevel = 1;
 boolean pendingNextLevel = false;
 
+PGraphics darknessPG;
+
 RectButton resetButton;
 
 void gameSceneSetup() {
@@ -9,6 +11,29 @@ void gameSceneSetup() {
   resetButton.setOnClick(() -> {
     loadLevel(currentLevel);
   });
+  
+  float innerRadius = 70;
+  float outerRadius = 200;
+
+  darknessPG = createGraphics(width*2, height*2);
+  darknessPG.beginDraw();
+  darknessPG.background(0);
+  darknessPG.blendMode(REPLACE);
+  darknessPG.noStroke();
+
+  for (float r = outerRadius; r >= 0; r -= 3) {
+    float alpha;
+    if (r > innerRadius) {
+      alpha = map(r, outerRadius, innerRadius, 255, 0);
+    } else {
+      alpha = 0;
+    }
+    darknessPG.fill(0, 0, 0, alpha);
+    darknessPG.ellipse(darknessPG.width/2, darknessPG.height/2, r * 2, r * 2);
+  }
+
+  darknessPG.blendMode(BLEND);
+  darknessPG.endDraw();
 
   loadLevel(currentLevel);
 }
@@ -66,7 +91,14 @@ void gameSceneDraw() {
 
   drawTextInWorld();
 
+  float playerScreenX = screenX(player.getX(), player.getY());
+  float playerScreenY = screenY(player.getX(), player.getY());
+
   popMatrix();
+
+  if (currentLevel == 4) {
+    image(darknessPG, playerScreenX - darknessPG.width/2, playerScreenY - darknessPG.height/2);
+  }
 
   drawGameUI();
 }
