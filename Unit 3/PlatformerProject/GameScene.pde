@@ -109,7 +109,7 @@ void drawTextInWorld() {
   textLeading(60);
 
   if (currentLevel == 2) {
-    textSize(30);
+    textSize(34);
     text("Press R  to record your movement\nPress P  to play it.", 120, 520);
   }
 }
