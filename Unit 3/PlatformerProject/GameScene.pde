@@ -193,12 +193,6 @@ void loadLevel(int level) {
   currentLevel = level;
   pendingNextLevel = false;
 
-  if (world != null) {
-    world = new FWorld(Integer.MIN_VALUE, Integer.MIN_VALUE, Integer.MAX_VALUE, Integer.MAX_VALUE);
-    world.setGravity(0, 400);
-    world.setGrabbable(false);
-  }
-
   terrain.clear();
   enemies.clear();
   doors.clear();
